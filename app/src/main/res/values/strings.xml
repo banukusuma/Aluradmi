@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Aluradmi</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="urut_alur">Urut Alur</string>
+    <string name="nama_alur">Nama Alur</string>
+    <string name="nama_kategori">Nama Kategori</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="item_lokasi_keterangan">Lokasi</string>
+    <string name="item_berkas_keterangan">Berkas</string>
+</resources>

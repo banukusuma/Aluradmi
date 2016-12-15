@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/nama_keterangan_text_view"
+            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:textAlignment="center"
+            android:textStyle="normal|bold"
+            android:textColor="@color/primary_text"
+            android:layout_margin="5dp" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/keterangan_text_view"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:layout_margin="5dp" />
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/item_lokasi_keterangan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tulisan_lokasi_text_view"
+                android:layout_weight="1"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/nama_lokasi_text_view"
+                android:layout_weight="3"
+                android:layout_margin="5dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="@string/item_berkas_keterangan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/tulisan_berkas_text_view"
+                android:layout_weight="1"
+                android:layout_margin="5dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/nama_berkas_text_view"
+                android:layout_weight="3"
+                android:layout_margin="5dp" />
+        </LinearLayout>
+
+        <Button
+            android:text="Done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/btn_check_list_keterangan_text_view"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+</android.support.v7.widget.CardView>
