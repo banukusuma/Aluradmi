@@ -1,7 +1,11 @@
 package com.spp.banu.aluradmi;
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 
+import com.spp.banu.aluradmi.cursorwrapper.JurusanCursorWrapper;
+import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
 import com.spp.banu.aluradmi.model.Jurusan;
 
 import java.util.ArrayList;
@@ -13,16 +17,12 @@ import java.util.List;
 
 public class ReuniJurusan {
     private static ReuniJurusan reuniJurusan;
-    private List<Jurusan> jurusanList;
+    private Context context;
+    private SQLiteDatabase database;
     private ReuniJurusan(Context context){
-        jurusanList = new ArrayList<>();
-        for (int i = 0; i < 4 ; i++){
-            Jurusan jurusan = new Jurusan();
-            jurusan.setId_jurusan(i+ 1);
-            int no = i+1;
-            jurusan.setNama(Integer.toString(no));
-            jurusanList.add(jurusan);
-        }
+            this.context = context;
+        database = new DatabaseHelper(this.context, true)
+                .getWritableDatabase();
     }
 
     public static ReuniJurusan get(Context context){
@@ -33,15 +33,37 @@ public class ReuniJurusan {
     }
 
     public List<Jurusan> getJurusanList(){
+        List<Jurusan> jurusanList = new ArrayList<>();
+        JurusanCursorWrapper cursorWrapper = queryJurusan(null,null);
+        try {
+            if (cursorWrapper.getCount() > 0){
+                cursorWrapper.moveToFirst();
+                while (!cursorWrapper.isAfterLast()){
+                    jurusanList.add(cursorWrapper.getJurusan());
+                    cursorWrapper.moveToNext();
+                }
+            }else{
+                Jurusan jurusan = new Jurusan();
+                jurusan.setNama("data tidak ada");
+                jurusanList.add(jurusan);
+            }
+        } finally {
+            cursorWrapper.close();
+        }
         return jurusanList;
     }
 
-    public Jurusan getJurusan(Integer id_jurusan){
-        for (Jurusan jurusan : jurusanList){
-            if (jurusan.getId_jurusan() == id_jurusan){
-                return jurusan;
-            }
-        }
-        return null;
+
+    public JurusanCursorWrapper queryJurusan(String whereClause, String[] whereArgs){
+        Cursor cursor = database.query(
+                JurusanDbSchema.JurusanTable.TABLE_NAME,
+                null,
+                whereClause,
+                whereArgs,
+                null,
+                null,
+                null
+        );
+        return new JurusanCursorWrapper(cursor);
     }
 }

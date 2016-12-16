@@ -1,6 +1,5 @@
 package com.spp.banu.aluradmi.model;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public class Keterangan {
     private String keterangan;
     private String timestamp;
     private int urut;
-    private int status;
+    private boolean status;
 
 
     public Lokasi getLokasi() {
@@ -27,11 +26,11 @@ public class Keterangan {
         this.lokasi = lokasi;
     }
 
-    public int getStatus() {
+    public boolean isStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(boolean status) {
         this.status = status;
     }
 

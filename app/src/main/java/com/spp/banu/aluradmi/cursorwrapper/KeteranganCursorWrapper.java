@@ -7,7 +7,10 @@ import android.database.CursorWrapper;
 import com.spp.banu.aluradmi.ReuniBerkas;
 import com.spp.banu.aluradmi.ReuniLokasi;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
+
 import com.spp.banu.aluradmi.model.Keterangan;
+
+
 
 
 /**
@@ -36,12 +39,11 @@ public class KeteranganCursorWrapper extends CursorWrapper {
         keterangan.setId_alur(id_alur);
         keterangan.setTimestamp(timestamp);
         keterangan.setUrut(urut);
-        keterangan.setStatus(status);
+        keterangan.setStatus(status != 0);
         keterangan.setKeterangan(isi_keterangan);
         ReuniLokasi reuniLokasi = new ReuniLokasi(context);
         ReuniBerkas reuniBerkas = new ReuniBerkas(context);
         keterangan.setLokasi(reuniLokasi.getLokasi(id_lokasi));
-        keterangan.setBerkasList(reuniBerkas.getBerkasList(id_keterangan));
         return keterangan;
     }
 }

@@ -50,12 +50,15 @@ public class JurusanListFragment extends Fragment {
 
         public JurusanHolder(View itemView) {
             super(itemView);
+
             radioJurusan = (RadioButton) itemView.findViewById(R.id.radioJurusan);
         }
 
         public void bindJurusan(Jurusan jurusan){
             this.jurusan = jurusan;
+
             radioJurusan.setText(this.jurusan.getNama());
+            radioJurusan.setChecked(this.jurusan.isChoose());
         }
     }
 

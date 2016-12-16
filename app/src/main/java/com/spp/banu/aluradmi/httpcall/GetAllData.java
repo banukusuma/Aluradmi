@@ -5,8 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
+import com.spp.banu.aluradmi.AsyncBooleanListener;
 import com.spp.banu.aluradmi.DatabaseHelper;
 import com.spp.banu.aluradmi.MainActivity;
 import com.spp.banu.aluradmi.SplashActivity;
@@ -22,35 +26,35 @@ import java.util.Iterator;
  * Created by banu on 10/12/16.
  */
 
-public class GetAllData extends AsyncTask<Void, Void,Void> {
+public class GetAllData extends AsyncTask<Void, Void,Boolean> {
     private Context context;
-    public ProgressDialog dialog;
+    private TextView textView;
+    private AsyncBooleanListener listener;
     private final String TAG = GetAllData.class.getSimpleName();
     private static final String url = "http://aluradmi.pe.hu/data/semua";
-    public GetAllData(Context context) {
+    public GetAllData(Context context, AsyncBooleanListener asyncBooleanListener, TextView textView) {
         this.context = context;
+        this.listener = asyncBooleanListener;
+        this.textView = textView;
+        this.textView.setText("Sedang Mengunduh Data");
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-         dialog =  new ProgressDialog(context);
-        dialog.setMessage("Sedang Mengunduh Data");
-        dialog.setCancelable(false);
-        dialog.show();
+
     }
 
     @Override
-    protected void onPostExecute(Void aVoid) {
-        super.onPostExecute(aVoid);
-        dialog.dismiss();
-        context.startActivity(new Intent(context,MainActivity.class));
+    protected void onPostExecute(Boolean result) {
+        super.onPostExecute(result);
+        listener.getResult(result);
     }
 
     @Override
-    protected Void doInBackground(Void... voids) {
+    protected Boolean doInBackground(Void... voids) {
         HttpHandler httpHandler = new HttpHandler();
-        DatabaseHelper db = new DatabaseHelper(context, true);
+        DatabaseHelper db = new DatabaseHelper(context, false);
         String jsonstring = httpHandler.makeServiceCall(url);
         Log.e(TAG, "data json from server: " + jsonstring );
         if (jsonstring != null){
@@ -65,13 +69,15 @@ public class GetAllData extends AsyncTask<Void, Void,Void> {
                         db.insertData(table,jsonArray);
                     }
                 }
+                return true;
             } catch (JSONException e) {
                 Log.e(TAG, "Json parsing error: " + e.getMessage() );
             }
         }
         else{
             Log.e(TAG, "Couldn't get json from server.");
+            return false;
         }
-        return null;
+        return false;
     }
 }

@@ -5,6 +5,7 @@ package com.spp.banu.aluradmi.model;
  */
 
 public class Jurusan {
+    private String timestamp;
     private int id_jurusan;
     private String nama;
     private boolean isChoose;
@@ -31,5 +32,13 @@ public class Jurusan {
 
     public void setChoose(boolean choose) {
         isChoose = choose;
+    }
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
     }
 }

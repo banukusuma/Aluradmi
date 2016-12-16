@@ -80,19 +80,21 @@ public class ReuniAlur {
                 JurusanDbSchema.JurusanTable.TABLE_NAME,
                 new String[]{"id_jurusan"}, // Columns - null selects all columns
                 "status = ?",
-                new String []{"1"},
+                new String []{Integer.toString(1)},
                 null, // groupBy
                 null, // having
                 null // orderBy
         );
         try {
             cursor.moveToFirst();
-            Integer id_jurusan = cursor.getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.ID_JURUSAN);
-            return id_jurusan;
+            if (cursor.getCount() == 1){
+                Integer id_jurusan = cursor.getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.ID_JURUSAN);
+                return id_jurusan;
+            }
         } finally {
             cursor.close();
         }
-
+        return 0;
     }
 
 }

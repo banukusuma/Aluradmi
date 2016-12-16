@@ -5,12 +5,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.R;
+import com.spp.banu.aluradmi.ReuniBerkas;
 import com.spp.banu.aluradmi.ReuniKeterangan;
 import com.spp.banu.aluradmi.model.Berkas;
 import com.spp.banu.aluradmi.model.Keterangan;
@@ -62,6 +65,9 @@ public class KeteranganListFragment extends Fragment {
         private TextView isiLokasi;
         private TextView isiBerkas;
         private Keterangan keterangan;
+        private String kumpulanBerkas;
+        private String tempBerkas;
+        private List<String> groupBerkas;
 
         public KeteranganHolder(View itemView) {
             super(itemView);
@@ -76,6 +82,15 @@ public class KeteranganListFragment extends Fragment {
             namaKeterangan.setText(this.keterangan.getNama());
             isiKeterangan.setText(this.keterangan.getKeterangan());
             isiLokasi.setText(this.keterangan.getLokasi().getNama());
+
+            ReuniBerkas reuniBerkas = new ReuniBerkas(getActivity());
+            List<Berkas> berkasList = reuniBerkas.getBerkasList(this.keterangan.getId_keterangan());
+            List<String> strings = new ArrayList<>();
+            for (Berkas berkas: berkasList){
+                strings.add(berkas.getNama());
+            }
+            kumpulanBerkas = TextUtils.join(",", strings).toString();
+            isiBerkas.setText(kumpulanBerkas);
             //nanti menggunakan perulangan di sebelah sini untuk menampilkan list berkas
 
         }

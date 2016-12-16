@@ -18,6 +18,13 @@ public class CheckNetwork {
         ConnectivityManager connectivityManager = (ConnectivityManager) context
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
-        return info != null && info.isConnected();
+        if (info == null){
+            return false;
+        }else if (!info.isConnected()){
+            return false;
+        }else if (!info.isAvailable()){
+            return false;
+        }
+        return true;
     }
 }

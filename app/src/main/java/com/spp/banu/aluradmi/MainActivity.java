@@ -10,18 +10,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.text.format.DateFormat;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.spp.banu.aluradmi.fragment.JurusanListFragment;
 import com.spp.banu.aluradmi.fragment.KategoriListFragment;
-import com.spp.banu.aluradmi.httpcall.GetAllData;
-import com.spp.banu.aluradmi.httpcall.GetJsonData;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
