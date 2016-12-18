@@ -1,8 +1,10 @@
 package com.spp.banu.aluradmi;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.spp.banu.aluradmi.cursorwrapper.KeteranganCursorWrapper;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
@@ -17,52 +19,38 @@ import java.util.List;
  */
 
 public class ReuniKeterangan {
-    private static ReuniKeterangan reuniKeterangan;
     private Context context;
     private SQLiteDatabase database;
 
-
-    public static ReuniKeterangan get(Context context){
-        if (reuniKeterangan == null){
-            reuniKeterangan = new ReuniKeterangan(context);
-        }
-        return reuniKeterangan;
-    }
-
-    private ReuniKeterangan(Context context){
+    public ReuniKeterangan(Context context){
        this.context = context;
-        this.database = new DatabaseHelper(this.context, true)
-        .getReadableDatabase();
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this.context,true);
+        this.database = databaseHelper
+        .getWritableDatabase();
     }
 
-    public List<Keterangan> getKeteranganList(int id_alur){
+    public List<Keterangan> getKeteranganList(String whereClause, String[] whereArgs){
         List<Keterangan> keteranganList = new ArrayList<>();
-        KeteranganCursorWrapper cursorWrapper = queryKeterangan("id_alur = ? ", new String[]{Integer.toString(id_alur)});
+        KeteranganCursorWrapper cursorWrapper = queryKeterangan(whereClause,whereArgs);
         try {
-            if (cursorWrapper.getCount() > 0){
                 cursorWrapper.moveToFirst();
                 while (!cursorWrapper.isAfterLast()){
                     keteranganList.add(cursorWrapper.getKeterangan());
                     cursorWrapper.moveToNext();
                 }
-            }else{
-                Keterangan keterangan = new Keterangan();
-                keterangan.setNama("Data Tidak ada");
-                keterangan.setKeterangan(" ");
-                Lokasi lokasi = new Lokasi();
-                lokasi.setNama("tidak ada");
-                keterangan.setLokasi(lokasi);
-                keteranganList.add(keterangan);
-            }
         }finally {
             cursorWrapper.close();
-
         }
         return keteranganList;
     }
 
 
-    public KeteranganCursorWrapper queryKeterangan(String whereClause, String[] whereArgs){
+    private KeteranganCursorWrapper queryKeterangan(String whereClause, String[] whereArgs){
+        Cursor cursor = cursorKeterangan(whereClause, whereArgs);
+        return new KeteranganCursorWrapper(cursor, context);
+    }
+
+    private Cursor cursorKeterangan(String whereClause, String[] whereArgs){
         Cursor cursor = database.query(
                 KeteranganDbSchema.KeteranganTable.TABLE_NAME,
                 null,
@@ -70,8 +58,25 @@ public class ReuniKeterangan {
                 whereArgs,
                 null,
                 null,
-                KeteranganDbSchema.KeteranganTable.Kolom.URUT + " ASC"
+                KeteranganDbSchema.KeteranganTable.Kolom.URUT + " ASC "
         );
-        return new KeteranganCursorWrapper(cursor, context);
+        return cursor;
+    }
+
+    public void cekketerangan(boolean isChecked, int id_keterangan){
+        ContentValues values = new ContentValues();
+        if (isChecked){
+            values.put(KeteranganDbSchema.KeteranganTable.Kolom.STATUS, 1);
+        }else {
+            values.put(KeteranganDbSchema.KeteranganTable.Kolom.STATUS, 0);
+        }
+
+        int cek = database.update(
+                KeteranganDbSchema.KeteranganTable.TABLE_NAME,
+                values,
+                KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN + " = ? ",
+                new String[]{Integer.toString(id_keterangan)}
+        );
+        Log.i("Reuni Keterangan", "cekketerangan: " + cek);
     }
 }

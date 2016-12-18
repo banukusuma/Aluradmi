@@ -9,22 +9,15 @@ import java.util.List;
 public class Keterangan {
     private int id_keterangan;
     private String nama;
-    private Lokasi lokasi;
+    private int id_lokasi;
     private int id_alur;
-    private List<Berkas> berkasList;
     private String keterangan;
     private String timestamp;
     private int urut;
     private boolean status;
 
 
-    public Lokasi getLokasi() {
-        return lokasi;
-    }
 
-    public void setLokasi(Lokasi lokasi) {
-        this.lokasi = lokasi;
-    }
 
     public boolean isStatus() {
         return status;
@@ -43,12 +36,12 @@ public class Keterangan {
     }
 
 
-    public List<Berkas> getBerkasList() {
-        return berkasList;
+    public int getId_lokasi() {
+        return id_lokasi;
     }
 
-    public void setBerkasList(List<Berkas> berkasList) {
-        this.berkasList = berkasList;
+    public void setId_lokasi(int id_lokasi) {
+        this.id_lokasi = id_lokasi;
     }
 
     public int getId_keterangan() {

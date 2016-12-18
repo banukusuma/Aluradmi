@@ -62,12 +62,6 @@ public class SetupActivity extends AppCompatActivity {
         finish();
     }
 
-    public void writeFirstRunPreferences(){
-        final SharedPreferences preferences = getSharedPreferences(KEY,Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(KEY_FIRST_TIME, false);
-        editor.commit();
-    }
 
     @Override
     protected void onStart() {
@@ -112,5 +106,12 @@ public class SetupActivity extends AppCompatActivity {
             }, textView);
             getAllData.execute();
 
+    }
+
+    public void writeFirstRunPreferences(){
+        final SharedPreferences preferences = getSharedPreferences(KEY,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(KEY_FIRST_TIME, false);
+        editor.commit();
     }
 }

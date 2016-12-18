@@ -17,7 +17,11 @@ import com.spp.banu.aluradmi.AlurListActivity;
 import com.spp.banu.aluradmi.KeteranganListActivity;
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniAlur;
+import com.spp.banu.aluradmi.ReuniJurusan;
+import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
+import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
+import com.spp.banu.aluradmi.model.Jurusan;
 
 import java.util.List;
 
@@ -37,6 +41,7 @@ public class AlurListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
+        Log.i("" +this, "onResume: this");
     }
 
     @Override
@@ -48,8 +53,19 @@ public class AlurListFragment extends Fragment {
     }
 
     public void updateUI(){
-        ReuniAlur reuniAlur = ReuniAlur.get(getActivity());
-        List<Alur> alurList = reuniAlur.getAlurs(id_kategori);
+        ReuniAlur reuniAlur = new ReuniAlur(getActivity());
+        ReuniJurusan reuniJurusan = new ReuniJurusan(getActivity());
+        Jurusan jurusan = reuniJurusan.getSelectJurusan();
+        List<Alur> alurList = reuniAlur.getAlurs(
+                AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                        AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
+                new String[]{Integer.toString(id_kategori), Integer.toString(jurusan.getId_jurusan())}
+        );
+        if (alurList.isEmpty()){
+            Alur alur = new Alur();
+            alur.setNama("Data Tidak Ada");
+            alurList.add(alur);
+        }
         if (alurAdapter == null){
             alurAdapter = new AlurAdapter(alurList);
             alurRecyclerView.setAdapter(alurAdapter);
@@ -92,11 +108,12 @@ public class AlurListFragment extends Fragment {
             namaAlur.setText(urut + ". " + this.alur.getNama());
             progressBar.setProgress(this.alur.getProgress());
             //progressbar nanti ditambahkan
+
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(getActivity(), KeteranganListActivity.class);
+            Intent intent = KeteranganListActivity.newIntent(getActivity(),alur.getId_alur());
             startActivity(intent);
         }
     }

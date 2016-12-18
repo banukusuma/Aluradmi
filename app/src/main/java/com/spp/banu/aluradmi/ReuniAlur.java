@@ -18,50 +18,38 @@ import java.util.List;
  */
 
 public class ReuniAlur {
-    private static ReuniAlur reuniAlur;
     private Context context;
     private SQLiteDatabase db;
 
-    public static ReuniAlur get(Context context){
-        if (reuniAlur == null){
-            reuniAlur = new ReuniAlur(context);
-        }
-        return reuniAlur;
-    }
-    private ReuniAlur(Context context){
+    public ReuniAlur(Context context){
         this.context = context.getApplicationContext();
-        db = new DatabaseHelper(this.context, true)
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this.context,true);
+        db = databaseHelper
         .getReadableDatabase();
 
     }
 
-    public List<Alur> getAlurs(Integer id_kategori){
+    public List<Alur> getAlurs(String whereClause, String[] whereArgs){
         List<Alur> alurList = new ArrayList<>();
-        AlurCursorWrapper cursorWrapper = queryAlur(AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + "= ? " +
-                "AND " + AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
-                new String[]{id_kategori.toString(), isSelectedJurusanQuery().toString()}
-        );
-
+        AlurCursorWrapper cursorWrapper = queryAlur(whereClause, whereArgs);
             try {
-                if (cursorWrapper.getCount() > 0) {
                     cursorWrapper.moveToFirst();
                     while (!cursorWrapper.isAfterLast()) {
                         alurList.add(cursorWrapper.getAlur());
                         cursorWrapper.moveToNext();
                     }
-                }else {
-                    Alur alur = new Alur();
-                    alur.setNama("Data Tidak Ada");
-                    alurList.add(alur);
-                }
             } finally {
                 cursorWrapper.close();
-
             }
         return alurList;
 
     }
     private AlurCursorWrapper queryAlur(String whereClause, String[] whereArgs){
+        Cursor cursor = cursorAlur(whereClause,whereArgs);
+        return new AlurCursorWrapper(cursor, this.context);
+    }
+
+    private Cursor cursorAlur(String whereClause, String[] whereArgs){
         Cursor cursor = db.query(
                 AlurDbSchema.AlurTable.TABLE_NAME,
                 null, // Columns - null selects all columns
@@ -71,30 +59,6 @@ public class ReuniAlur {
                 null, // having
                 AlurDbSchema.AlurTable.Kolom.URUT + " ASC" // orderBy
         );
-
-        return new AlurCursorWrapper(cursor);
+        return cursor;
     }
-
-    private Integer isSelectedJurusanQuery(){
-        Cursor cursor = db.query(
-                JurusanDbSchema.JurusanTable.TABLE_NAME,
-                new String[]{"id_jurusan"}, // Columns - null selects all columns
-                "status = ?",
-                new String []{Integer.toString(1)},
-                null, // groupBy
-                null, // having
-                null // orderBy
-        );
-        try {
-            cursor.moveToFirst();
-            if (cursor.getCount() == 1){
-                Integer id_jurusan = cursor.getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.ID_JURUSAN);
-                return id_jurusan;
-            }
-        } finally {
-            cursor.close();
-        }
-        return 0;
-    }
-
 }

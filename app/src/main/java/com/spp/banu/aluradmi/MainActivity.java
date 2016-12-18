@@ -1,6 +1,7 @@
 package com.spp.banu.aluradmi;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,9 +11,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.spp.banu.aluradmi.fragment.JurusanDialogFragment;
 import com.spp.banu.aluradmi.fragment.JurusanListFragment;
 import com.spp.banu.aluradmi.fragment.KategoriListFragment;
 
@@ -26,13 +29,7 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        //menambahkan fragment listKategori diawal aplikasi
-        //untuk cadangan kalau tidak bisa menambahkan lewat click navigation drawer
-        //setelah navigation drawer dan seluruh fragment jadi
-        // tolong cari cara lain agar fragment listkategori langsung ditambahkan
-
-            FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
             if (fragment == null){
                 fragment = new KategoriListFragment();
@@ -40,6 +37,14 @@ public class MainActivity extends AppCompatActivity
                         .add(R.id.content_main, fragment)
                         .commit();
             }
+
+        //menambahkan fragment listKategori diawal aplikasi
+        //untuk cadangan kalau tidak bisa menambahkan lewat click navigation drawer
+        //setelah navigation drawer dan seluruh fragment jadi
+        // tolong cari cara lain agar fragment listkategori langsung ditambahkan
+
+
+
 
 
 
@@ -80,6 +85,11 @@ public class MainActivity extends AppCompatActivity
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+        } else if (id == R.id.menu_jurusan){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
+            dialogFragment.show(fragmentManager, "jurusanDialog");
+            dialogFragment.setCancelable(false);
         }
 
         return super.onOptionsItemSelected(item);
@@ -101,15 +111,7 @@ public class MainActivity extends AppCompatActivity
                     .commit();
         } else if (id == R.id.nav_lokasi) {
 
-        } else if (id == R.id.nav_jurusan) {
-            // Handle navigation view item clicks here.
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
-            fragment = new JurusanListFragment();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_main, fragment)
-                    .commit();
-        } else if (id == R.id.nav_bantuan) {
+        }  else if (id == R.id.nav_bantuan) {
 
         } else if (id == R.id.nav_about) {
 
@@ -120,5 +122,23 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
+        boolean isFirstRun = reuniJurusan.isSelectedJurusan();
+        Log.i("" +this, "onResume: " + isFirstRun);
+        if (isFirstRun){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
+            dialogFragment.show(fragmentManager, "jurusanDialog");
+            dialogFragment.setCancelable(false);
+        }
+    }
 }

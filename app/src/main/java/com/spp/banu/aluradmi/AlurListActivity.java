@@ -17,7 +17,7 @@ import com.spp.banu.aluradmi.fragment.AlurListFragment;
  */
 
 public class AlurListActivity extends AppCompatActivity{
-    public static final String EXTRA_ID_KATEGORI = "com.spp.aluradmi.alurIntent.id.kategori";
+    public static final String EXTRA_ID_KATEGORI = "com.spp.aluradmi.alurIntent.id_kategori";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

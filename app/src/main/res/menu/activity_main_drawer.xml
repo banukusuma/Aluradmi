@@ -11,10 +11,6 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="Lokasi" />
         <item
-            android:id="@+id/nav_jurusan"
-            android:icon="@drawable/ic_menu_slideshow"
-            android:title="Ganti Jurusan" />
-        <item
             android:id="@+id/nav_bantuan"
             android:icon="@drawable/ic_menu_manage"
             android:title="Bantuan" />

@@ -28,7 +28,7 @@ import java.util.Iterator;
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "aluradmi.sqlite";
     private static final String TAG = "com.spp.aluradmi.databaseHelper";
-
+    private static DatabaseHelper helper;
     private static final String TABLE_JURUSAN = "CREATE TABLE "+ JurusanDbSchema.JurusanTable.TABLE_NAME +
             " (" + JurusanDbSchema.JurusanTable.Kolom.ID_JURUSAN + " INTEGER PRIMARY KEY NOT NULL, " +
             JurusanDbSchema.JurusanTable.Kolom.NAMA + " TEXT NOT NULL, " +
@@ -72,7 +72,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             ""+ BerkasDbSchema.BerkasTable.Kolom.ID_KETERANGAN+" INTEGER NOT NULL, FOREIGN KEY (id_keterangan) REFERENCES "+ KeteranganDbSchema.KeteranganTable.TABLE_NAME+" (id_keterangan))";
 
     private boolean walModeEnabled;
-    public DatabaseHelper(Context context, boolean gwalMode) {
+    private DatabaseHelper(Context context, boolean gwalMode) {
         super(context, DATABASE_NAME, null , 1);
         this.walModeEnabled = gwalMode;
 
@@ -83,7 +83,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
     }
-
+    public static synchronized DatabaseHelper getInstance(Context context, boolean gwalMode){
+        if (helper == null){
+            helper = new DatabaseHelper(context, gwalMode);
+        }
+        return helper;
+    }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(TABLE_JURUSAN);

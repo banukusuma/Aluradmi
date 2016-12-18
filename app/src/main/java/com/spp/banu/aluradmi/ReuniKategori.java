@@ -17,47 +17,32 @@ import java.util.UUID;
  */
 
 public class ReuniKategori {
-    private static ReuniKategori reuniKategori;
     private Context context;
     private SQLiteDatabase sqLiteDatabase;
 
-
-    public static ReuniKategori get(Context context){
-        if (reuniKategori == null){
-            reuniKategori = new ReuniKategori(context);
-        }
-        return reuniKategori;
-    }
-
-    private ReuniKategori(Context context){
+    public ReuniKategori(Context context){
         this.context = context.getApplicationContext();
-
-        sqLiteDatabase = new DatabaseHelper(this.context, true)
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this.context,true);
+        sqLiteDatabase = databaseHelper
         .getReadableDatabase();
 
     }
 
-    public List<Kategori> getKategoris(){
+    public List<Kategori> getKategoris(String whereClause, String[] whereArgs) {
         List<Kategori> kategoriList = new ArrayList<>();
-        KategoriCursorWrapper cursorWrapper = queryKategori(null,null);
+        KategoriCursorWrapper cursorWrapper = queryKategori(whereClause, whereArgs);
 
         try {
-            if (cursorWrapper.getCount() >0 ){
-                cursorWrapper.moveToFirst();
-                while (!cursorWrapper.isAfterLast()){
-                    kategoriList.add(cursorWrapper.getKategori());
-                    cursorWrapper.moveToNext();
-                }
-            }else{
-                Kategori kategori = new Kategori();
-                kategori.setNama("Data Tidak Ada");
-                kategoriList.add(kategori);
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast()) {
+                kategoriList.add(cursorWrapper.getKategori());
+                cursorWrapper.moveToNext();
             }
-        }finally {
-            cursorWrapper.close();
+        }finally{
+                cursorWrapper.close();
+            }
+            return kategoriList;
         }
-        return kategoriList;
-    }
 
 
     private KategoriCursorWrapper queryKategori(String whereClause, String[] whereArgs){
@@ -73,4 +58,5 @@ public class ReuniKategori {
 
         return new KategoriCursorWrapper(cursor);
     }
+
 }

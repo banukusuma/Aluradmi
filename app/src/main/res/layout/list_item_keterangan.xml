@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/nama_keterangan_text_view"
-            android:textAppearance="@android:style/TextAppearance.Material.Large"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
             android:textAlignment="center"
             android:textStyle="normal|bold"
             android:textColor="@color/primary_text"
@@ -39,6 +39,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tulisan_lokasi_text_view"
                 android:layout_weight="1"
+                android:textColor="@color/secondary_text"
                 android:layout_margin="5dp" />
 
             <TextView
@@ -46,6 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/nama_lokasi_text_view"
+                android:textColor="@color/secondary_text"
                 android:layout_weight="3"
                 android:layout_margin="5dp" />
         </LinearLayout>
@@ -60,6 +62,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/tulisan_berkas_text_view"
+                android:textColor="@color/secondary_text"
                 android:layout_weight="1"
                 android:layout_margin="5dp" />
 
@@ -68,6 +71,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/nama_berkas_text_view"
+                android:textColor="@color/secondary_text"
                 android:layout_weight="3"
                 android:layout_margin="5dp" />
         </LinearLayout>
@@ -76,7 +80,7 @@
             android:text="Done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_check_list_keterangan_text_view"
+            android:id="@+id/btn_check_list_keterangan"
             android:layout_weight="1" />
 
     </LinearLayout>

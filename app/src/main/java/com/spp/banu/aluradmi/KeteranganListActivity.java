@@ -1,5 +1,7 @@
 package com.spp.banu.aluradmi;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +17,7 @@ import com.spp.banu.aluradmi.fragment.KeteranganListFragment;
  */
 
 public class KeteranganListActivity extends AppCompatActivity {
+    public static final String EXTRA_ID_ALUR = "com.spp.aluradmi.keteranganIntent.id_alur";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,5 +33,11 @@ public class KeteranganListActivity extends AppCompatActivity {
                     .add(R.id.fragment_container, fragment)
                     .commit();
         }
+    }
+
+    public static Intent newIntent(Context packageContext, int id_alur){
+        Intent intent = new Intent(packageContext, KeteranganListActivity.class);
+        intent.putExtra(EXTRA_ID_ALUR,id_alur);
+        return intent;
     }
 }

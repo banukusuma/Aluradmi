@@ -41,9 +41,7 @@ public class KeteranganCursorWrapper extends CursorWrapper {
         keterangan.setUrut(urut);
         keterangan.setStatus(status != 0);
         keterangan.setKeterangan(isi_keterangan);
-        ReuniLokasi reuniLokasi = new ReuniLokasi(context);
-        ReuniBerkas reuniBerkas = new ReuniBerkas(context);
-        keterangan.setLokasi(reuniLokasi.getLokasi(id_lokasi));
+        keterangan.setId_lokasi(id_lokasi);
         return keterangan;
     }
 }

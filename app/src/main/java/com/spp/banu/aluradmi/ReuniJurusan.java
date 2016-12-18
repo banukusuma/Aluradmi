@@ -1,8 +1,10 @@
 package com.spp.banu.aluradmi;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 import com.spp.banu.aluradmi.cursorwrapper.JurusanCursorWrapper;
 import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
@@ -16,21 +18,15 @@ import java.util.List;
  */
 
 public class ReuniJurusan {
-    private static ReuniJurusan reuniJurusan;
     private Context context;
     private SQLiteDatabase database;
-    private ReuniJurusan(Context context){
-            this.context = context;
-        database = new DatabaseHelper(this.context, true)
+    public ReuniJurusan(Context context){
+            this.context = context.getApplicationContext();
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this.context, true);
+        database = databaseHelper
                 .getWritableDatabase();
     }
 
-    public static ReuniJurusan get(Context context){
-        if (reuniJurusan == null){
-            reuniJurusan = new ReuniJurusan(context);
-        }
-        return reuniJurusan;
-    }
 
     public List<Jurusan> getJurusanList(){
         List<Jurusan> jurusanList = new ArrayList<>();
@@ -54,7 +50,45 @@ public class ReuniJurusan {
     }
 
 
-    public JurusanCursorWrapper queryJurusan(String whereClause, String[] whereArgs){
+    private JurusanCursorWrapper queryJurusan(String whereClause, String[] whereArgs){
+        Cursor cursor = cursorJurusan(whereClause, whereArgs);
+        return new JurusanCursorWrapper(cursor);
+    }
+
+    public int getPositionSelectedJurusan(String whereClause, String[] whereArgs){
+        int angka = 0;
+        Cursor cursor = cursorJurusan(whereClause, whereArgs);
+        cursor.moveToFirst();
+        while (cursor.getInt(cursor.getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.STATUS)) != 1){
+            cursor.moveToNext();
+        }
+        angka = cursor.getPosition();
+        cursor.close();
+        return angka;
+    }
+
+    public void SelectJurusan(String nama){
+        unSelectAllJurusan();
+        ContentValues values = new ContentValues();
+        values.put(JurusanDbSchema.JurusanTable.Kolom.STATUS, "1");
+        int cek = database.update(JurusanDbSchema.JurusanTable.TABLE_NAME, values, JurusanDbSchema.JurusanTable.Kolom.NAMA + " = ? ", new String[]{nama});
+        Log.i("Reuni Jurusan", "SelectJurusan: " + cek);
+    }
+
+    public void unSelectAllJurusan(){
+        ContentValues values = new ContentValues();
+        values.put(JurusanDbSchema.JurusanTable.Kolom.STATUS,"0");
+        int cek = database.update(JurusanDbSchema.JurusanTable.TABLE_NAME, values, null, null);
+        Log.i("Reuni Jurusan", "unSelectAllJurusan: " +cek);
+    }
+
+    public boolean isSelectedJurusan(){
+        Cursor cursor = cursorJurusan(JurusanDbSchema.JurusanTable.Kolom.STATUS + " = ? ", new String[]{"1"});
+        boolean isSelect = cursor.getCount() != 1;
+        return isSelect;
+    }
+
+    private Cursor cursorJurusan(String whereClause, String[] whereArgs){
         Cursor cursor = database.query(
                 JurusanDbSchema.JurusanTable.TABLE_NAME,
                 null,
@@ -64,6 +98,14 @@ public class ReuniJurusan {
                 null,
                 null
         );
-        return new JurusanCursorWrapper(cursor);
+        return cursor;
     }
+    public Jurusan getSelectJurusan(){
+        Cursor cursor = cursorJurusan(JurusanDbSchema.JurusanTable.Kolom.STATUS + " = ? ", new String[]{"1"});
+        JurusanCursorWrapper cursorWrapper = new JurusanCursorWrapper(cursor);
+        cursorWrapper.moveToFirst();
+        return cursorWrapper.getJurusan();
+    }
+
+
 }

@@ -54,7 +54,7 @@ public class GetAllData extends AsyncTask<Void, Void,Boolean> {
     @Override
     protected Boolean doInBackground(Void... voids) {
         HttpHandler httpHandler = new HttpHandler();
-        DatabaseHelper db = new DatabaseHelper(context, false);
+        DatabaseHelper db =  DatabaseHelper.getInstance(context, false);
         String jsonstring = httpHandler.makeServiceCall(url);
         Log.e(TAG, "data json from server: " + jsonstring );
         if (jsonstring != null){

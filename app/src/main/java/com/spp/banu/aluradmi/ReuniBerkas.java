@@ -24,11 +24,31 @@ public class ReuniBerkas {
 
     public ReuniBerkas(Context context) {
         this.context = context;
-        this.database = new DatabaseHelper(this.context, true)
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this.context,true);
+        this.database = databaseHelper
         .getReadableDatabase();
     }
 
     public BerkasCursorWrapper queryBerkas(String whereClause, String[] whereArgs){
+        Cursor cursor = cursorBerkas(whereClause,whereArgs);
+        return new BerkasCursorWrapper(cursor);
+    }
+    public List<Berkas> getBerkasList(int id_keterangan){
+        List<Berkas> berkasList = new ArrayList<>();
+        BerkasCursorWrapper cursorWrapper = queryBerkas("id_keterangan = ? ", new String[]{Integer.toString(id_keterangan)});
+        try {
+                cursorWrapper.moveToFirst();
+                while (!cursorWrapper.isAfterLast()){
+                    berkasList.add(cursorWrapper.getBerkas());
+                    cursorWrapper.moveToNext();
+                }
+        }finally {
+            cursorWrapper.close();
+        }
+        return berkasList;
+    }
+
+    private Cursor cursorBerkas(String whereClause, String[] whereArgs){
         Cursor cursor = database.query(
                 BerkasDbSchema.BerkasTable.TABLE_NAME,
                 null,
@@ -38,26 +58,6 @@ public class ReuniBerkas {
                 null,
                 null
         );
-        return new BerkasCursorWrapper(cursor);
-    }
-    public List<Berkas> getBerkasList(int id_keterangan){
-        List<Berkas> berkasList = new ArrayList<>();
-        BerkasCursorWrapper cursorWrapper = queryBerkas("id_keterangan = ? ", new String[]{Integer.toString(id_keterangan)});
-        try {
-            if (cursorWrapper.getCount() > 0){
-                cursorWrapper.moveToFirst();
-                while (!cursorWrapper.isAfterLast()){
-                    berkasList.add(cursorWrapper.getBerkas());
-                    cursorWrapper.moveToNext();
-                }
-            }else{
-                Berkas berkas = new Berkas();
-                berkas.setNama("tidak ada");
-                berkasList.add(berkas);
-            }
-        }finally {
-            cursorWrapper.close();
-        }
-        return berkasList;
+        return cursor;
     }
 }

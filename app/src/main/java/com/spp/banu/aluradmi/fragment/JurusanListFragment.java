@@ -38,7 +38,7 @@ public class JurusanListFragment extends Fragment {
     }
 
     public void updateUI(){
-        ReuniJurusan reuniJurusan = ReuniJurusan.get(getActivity());
+        ReuniJurusan reuniJurusan = new ReuniJurusan(getActivity());
         List<Jurusan> jurusanList = reuniJurusan.getJurusanList();
         jurusanAdapter = new JurusanAdapter(jurusanList);
         jurusanRecyclerView.setAdapter(jurusanAdapter);

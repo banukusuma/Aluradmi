@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,21 +36,21 @@ public class KategoriListFragment extends Fragment {
         updateUI();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateUI();
-    }
-
     public KategoriListFragment() {
         // Required empty public constructor
     }
 
     public void updateUI(){
-        ReuniKategori reuniKategori = ReuniKategori.get(getActivity());
-        List<Kategori> kategoris = reuniKategori.getKategoris();
+        ReuniKategori reuniKategori = new ReuniKategori(getActivity());
+        List<Kategori> kategoriList = reuniKategori.getKategoris(null,null);
+        Log.i("Fragment Kategori", "updateUI: " + kategoriList.isEmpty());
+        if (kategoriList.isEmpty()){
+            Kategori kategori = new Kategori();
+            kategori.setNama("Data Masih Kosong");
+            kategoriList.add(kategori);
+        }
         if (kategoriAdapter == null){
-            kategoriAdapter = new KategoriAdapter(kategoris);
+            kategoriAdapter = new KategoriAdapter(kategoriList);
             kategoriRecyclerView.setAdapter(kategoriAdapter);
         } else{
             kategoriAdapter.notifyDataSetChanged();

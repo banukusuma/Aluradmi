@@ -54,7 +54,7 @@ public class GetJsonData extends AsyncTask<Void, Void, Void> {
     @Override
     protected Void doInBackground(Void... voids) {
         HttpHandler httpHandler = new HttpHandler();
-        DatabaseHelper db = new DatabaseHelper(context, true);
+        DatabaseHelper db =  DatabaseHelper.getInstance(context, true);
         if (method != "delete"){
             String jsonString = httpHandler.makeServiceCall(this.url);
             Log.d(TAG, "url: " + this.url);

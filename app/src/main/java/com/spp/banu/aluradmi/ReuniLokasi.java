@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.spp.banu.aluradmi.cursorwrapper.LokasiCursorWrapper;
+import com.spp.banu.aluradmi.dbSchema.LokasiDbSchema;
 import com.spp.banu.aluradmi.model.Lokasi;
 
 /**
@@ -12,12 +13,11 @@ import com.spp.banu.aluradmi.model.Lokasi;
  */
 
 public class ReuniLokasi {
-    private Context context;
     private SQLiteDatabase database;
 
     public ReuniLokasi(Context context) {
-        this.context = context;
-        database = new DatabaseHelper(this.context, true)
+        DatabaseHelper databaseHelper = DatabaseHelper.getInstance(context.getApplicationContext(),true);
+        database = databaseHelper
         .getReadableDatabase();
     }
 
@@ -25,22 +25,22 @@ public class ReuniLokasi {
         Lokasi lokasi = new Lokasi();
         LokasiCursorWrapper cursorWrapper = queryLokasi("id_lokasi = ? ", new String[] {Integer.toString(id_lokasi)});
         try {
-            if (cursorWrapper.getCount() > 0){
                 cursorWrapper.moveToFirst();
                 lokasi = cursorWrapper.getLokasi();
-            }
-            else {
-                lokasi.setNama("Tidak Ada");
-            }
         }finally {
             cursorWrapper.close();
         }
         return lokasi;
     }
 
-    public LokasiCursorWrapper queryLokasi(String whereClause, String[] whereArgs){
+    private LokasiCursorWrapper queryLokasi(String whereClause, String[] whereArgs){
+        Cursor cursor = cursorLokasi(whereClause,whereArgs);
+        return new LokasiCursorWrapper(cursor);
+    }
+
+    private Cursor cursorLokasi(String whereClause, String[] whereArgs){
         Cursor cursor = database.query(
-                "lokasi",
+                LokasiDbSchema.LokasiTable.TABLE_NAME,
                 null,
                 whereClause,
                 whereArgs,
@@ -48,6 +48,6 @@ public class ReuniLokasi {
                 null,
                 null
         );
-        return new LokasiCursorWrapper(cursor);
+        return cursor;
     }
 }
