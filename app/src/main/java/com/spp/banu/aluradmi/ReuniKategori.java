@@ -46,6 +46,26 @@ public class ReuniKategori {
 
 
     private KategoriCursorWrapper queryKategori(String whereClause, String[] whereArgs){
+        return new KategoriCursorWrapper(cursorKategori(whereClause,
+                whereArgs
+                ));
+    }
+
+    public Kategori getKategori(int id_kategori){
+        Kategori kategori = new Kategori();
+        KategoriCursorWrapper cursorWrapper = queryKategori(
+                KategoriDbSchema.KategoriTable.Kolom.ID_KATEGORI + " = ? ",
+                new String[]{Integer.toString(id_kategori)}
+        );
+        try {
+             cursorWrapper.moveToFirst();
+            kategori = cursorWrapper.getKategori();
+        }finally {
+            cursorWrapper.close();
+        }
+        return kategori;
+    }
+    private Cursor cursorKategori(String whereClause, String[] whereArgs){
         Cursor cursor = sqLiteDatabase.query(
                 KategoriDbSchema.KategoriTable.TABLE_NAME,
                 null, // Columns - null selects all columns
@@ -55,8 +75,7 @@ public class ReuniKategori {
                 null, // having
                 null // orderBy
         );
-
-        return new KategoriCursorWrapper(cursor);
+        return cursor;
     }
 
 }

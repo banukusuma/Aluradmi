@@ -6,11 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.AlurListActivity;
@@ -35,13 +38,12 @@ public class KeteranganListFragment extends Fragment {
     private RecyclerView keteranganRecyclerView;
     private KeteranganAdapter keteranganAdapter;
     private int id_alur;
-    private ReuniKeterangan reuniKeterangan;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         id_alur = (Integer) getActivity().getIntent().getIntExtra(KeteranganListActivity.EXTRA_ID_ALUR,0);
-        Log.i("Keterangan List Fragment", "id_alur: " + id_alur);
+        Log.i("KeteranganListFragment", "id_alur: " + id_alur);
     }
 
     @Override
@@ -61,7 +63,7 @@ public class KeteranganListFragment extends Fragment {
         return view;
     }
     public void updateUI(){
-        reuniKeterangan = new ReuniKeterangan(getActivity());
+        ReuniKeterangan reuniKeterangan = new ReuniKeterangan(getActivity());
         List<Keterangan> keteranganList = reuniKeterangan.getKeteranganList(
                 KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? ", new String[]{Integer.toString(id_alur)});
         if (keteranganList.isEmpty()){
@@ -73,6 +75,7 @@ public class KeteranganListFragment extends Fragment {
             keteranganAdapter = new KeteranganAdapter(keteranganList);
             keteranganRecyclerView.setAdapter(keteranganAdapter);
         }else{
+            keteranganAdapter.setKeteranganList(keteranganList);
             keteranganAdapter.notifyDataSetChanged();
         }
     }
@@ -80,13 +83,14 @@ public class KeteranganListFragment extends Fragment {
     public KeteranganListFragment() {
     }
 
-    private class KeteranganHolder extends RecyclerView.ViewHolder{
+    private class KeteranganHolder extends RecyclerView.ViewHolder {
         private TextView namaKeterangan;
         private TextView isiKeterangan;
         private TextView isiLokasi;
         private TextView isiBerkas;
-        private Button btnOk;
+        private CheckBox checkBox;
         private String kumpulanBerkas;
+        private Keterangan keterangan;
 
         public KeteranganHolder(View itemView) {
             super(itemView);
@@ -94,20 +98,26 @@ public class KeteranganListFragment extends Fragment {
             isiKeterangan = (TextView) itemView.findViewById(R.id.keterangan_text_view);
             isiLokasi = (TextView) itemView.findViewById(R.id.nama_lokasi_text_view);
             isiBerkas = (TextView) itemView.findViewById(R.id.nama_berkas_text_view);
-            btnOk = (Button) itemView.findViewById(R.id.btn_check_list_keterangan);
+            checkBox= (CheckBox) itemView.findViewById(R.id.checkBox_keterangan);
+
         }
 
-        public void bindKeterangan(final Keterangan keterangan){
-            namaKeterangan.setText(keterangan.getNama());
-            isiKeterangan.setText(keterangan.getKeterangan());
+        public void bindKeterangan(Keterangan keterangan){
+            this.keterangan = keterangan;
+            namaKeterangan.setText(this.keterangan.getNama());
+            isiKeterangan.setText(this.keterangan.getKeterangan());
+            isiKeterangan.setMovementMethod(LinkMovementMethod.getInstance());
             ReuniLokasi reuniLokasi = new ReuniLokasi(getActivity());
             ReuniBerkas reuniBerkas = new ReuniBerkas(getActivity());
-            Lokasi lokasi = reuniLokasi.getLokasi(keterangan.getId_lokasi());
-            List<Berkas> berkasList = reuniBerkas.getBerkasList(keterangan.getId_keterangan());
+            Lokasi lokasi = reuniLokasi.getLokasi(this.keterangan.getId_lokasi());
+            List<Berkas> berkasList = reuniBerkas.getBerkasList(this.keterangan.getId_keterangan());
             if (berkasList.isEmpty()){
                 Berkas berkas = new Berkas();
                 berkas.setNama("Tidak Ada");
                 berkasList.add(berkas);
+            }
+            if (this.keterangan.getNama() == "Data Tidak Ada"){
+                checkBox.setVisibility(View.INVISIBLE);
             }
             List<String> strings = new ArrayList<>();
             for (Berkas berkas: berkasList){
@@ -116,21 +126,18 @@ public class KeteranganListFragment extends Fragment {
             kumpulanBerkas = TextUtils.join(",", strings).toString();
             isiBerkas.setText(kumpulanBerkas);
             isiLokasi.setText(lokasi.getNama());
-            btnOk.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    reuniKeterangan.cekketerangan(keterangan.isStatus(),keterangan.getId_keterangan());
-                }
-            });
+            checkBox.setChecked(keterangan.isStatus());
         }
+
     }
 
-    private class KeteranganAdapter extends RecyclerView.Adapter<KeteranganHolder>{
+    private class KeteranganAdapter extends RecyclerView.Adapter<KeteranganHolder> {
         private List<Keterangan> keteranganList;
 
         public KeteranganAdapter(List<Keterangan> keteranganList) {
             this.keteranganList = keteranganList;
         }
+
 
         @Override
         public KeteranganHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -141,13 +148,24 @@ public class KeteranganListFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(KeteranganHolder holder, int position) {
-            Keterangan keterangan = keteranganList.get(position);
+            final Keterangan keterangan = keteranganList.get(position);
             holder.bindKeterangan(keterangan);
+            holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    ReuniKeterangan reuniKeterangan = new ReuniKeterangan(getActivity());
+                    reuniKeterangan.cekKeterangan(b,keterangan.getId_keterangan());
+                }
+            });
         }
 
         @Override
         public int getItemCount() {
             return keteranganList.size();
+        }
+
+        public void setKeteranganList(List<Keterangan> keteranganList){
+            this.keteranganList = keteranganList;
         }
     }
 }

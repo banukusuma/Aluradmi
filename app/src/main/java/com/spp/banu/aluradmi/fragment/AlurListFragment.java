@@ -18,6 +18,7 @@ import com.spp.banu.aluradmi.KeteranganListActivity;
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniJurusan;
+import com.spp.banu.aluradmi.ReuniKategori;
 import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
 import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
@@ -41,7 +42,7 @@ public class AlurListFragment extends Fragment {
     public void onResume() {
         super.onResume();
         updateUI();
-        Log.i("" +this, "onResume: this");
+        Log.i("Alur List Fragment", "onResume: ");
     }
 
     @Override
@@ -69,11 +70,10 @@ public class AlurListFragment extends Fragment {
         if (alurAdapter == null){
             alurAdapter = new AlurAdapter(alurList);
             alurRecyclerView.setAdapter(alurAdapter);
-        }else
-        {
+        } else {
+            alurAdapter.setAlurList(alurList);
             alurAdapter.notifyDataSetChanged();
         }
-
 
     }
     @Nullable
@@ -140,6 +140,10 @@ public class AlurListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return alurList.size();
+        }
+
+        public void setAlurList(List<Alur> alurList){
+            this.alurList = alurList;
         }
     }
 

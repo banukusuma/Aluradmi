@@ -8,8 +8,13 @@
     <string name="urut_alur">Urut Alur</string>
     <string name="nama_alur">Nama Alur</string>
     <string name="nama_kategori">Nama Kategori</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="item_lokasi_keterangan">Lokasi</string>
-    <string name="item_berkas_keterangan">Berkas</string>
+    <string name="item_lokasi_keterangan">Lokasi : </string>
+    <string name="item_berkas_keterangan">Berkas : </string>
+    <string name="action_pilih_jurusan">Pilih Jurusan</string>
+    <string name="kategori">Kategori</string>
+    <string name="lokasi">Lokasi</string>
+    <string name="about">About</string>
+    <string name="bantuan">Bantuan</string>
+    <string name="alur">Alur</string>
+    <string name="keterangan">Keterangan</string>
 </resources>

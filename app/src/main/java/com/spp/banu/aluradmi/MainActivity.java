@@ -22,6 +22,8 @@ import com.spp.banu.aluradmi.fragment.KategoriListFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    private CharSequence mDrawerTitle;
+    private CharSequence mTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        mTitle = mDrawerTitle = getTitle();
+
         FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
             if (fragment == null){
@@ -38,16 +42,6 @@ public class MainActivity extends AppCompatActivity
                         .commit();
             }
 
-        //menambahkan fragment listKategori diawal aplikasi
-        //untuk cadangan kalau tidak bisa menambahkan lewat click navigation drawer
-        //setelah navigation drawer dan seluruh fragment jadi
-        // tolong cari cara lain agar fragment listkategori langsung ditambahkan
-
-
-
-
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -56,6 +50,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override
@@ -63,8 +58,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
+            getSupportActionBar().setTitle(mTitle);
         } else {
             super.onBackPressed();
+            getSupportActionBar().setTitle(mTitle);
         }
     }
 
@@ -83,9 +80,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        } else if (id == R.id.menu_jurusan){
+       if (id == R.id.menu_jurusan){
             FragmentManager fragmentManager = getSupportFragmentManager();
             JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
             dialogFragment.show(fragmentManager, "jurusanDialog");
@@ -105,10 +100,12 @@ public class MainActivity extends AppCompatActivity
             // Handle navigation view item clicks here.
             FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
-            fragment = new KategoriListFragment();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_main, fragment)
-                    .commit();
+            if (fragment == null){
+                fragment = new KategoriListFragment();
+                fragmentManager.beginTransaction()
+                        .replace(R.id.content_main, fragment)
+                        .commit();
+            }
         } else if (id == R.id.nav_lokasi) {
 
         }  else if (id == R.id.nav_bantuan) {

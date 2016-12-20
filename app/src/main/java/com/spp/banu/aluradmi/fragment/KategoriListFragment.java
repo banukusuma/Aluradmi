@@ -41,9 +41,9 @@ public class KategoriListFragment extends Fragment {
     }
 
     public void updateUI(){
+        getActivity().setTitle(R.string.kategori);
         ReuniKategori reuniKategori = new ReuniKategori(getActivity());
         List<Kategori> kategoriList = reuniKategori.getKategoris(null,null);
-        Log.i("Fragment Kategori", "updateUI: " + kategoriList.isEmpty());
         if (kategoriList.isEmpty()){
             Kategori kategori = new Kategori();
             kategori.setNama("Data Masih Kosong");
@@ -53,6 +53,7 @@ public class KategoriListFragment extends Fragment {
             kategoriAdapter = new KategoriAdapter(kategoriList);
             kategoriRecyclerView.setAdapter(kategoriAdapter);
         } else{
+            kategoriAdapter.setKategoris(kategoriList);
             kategoriAdapter.notifyDataSetChanged();
         }
 
@@ -119,6 +120,10 @@ public class KategoriListFragment extends Fragment {
         @Override
         public int getItemCount() {
             return kategoris.size();
+        }
+
+        public void setKategoris(List<Kategori> kategoriList){
+            kategoris = kategoriList;
         }
 
     }

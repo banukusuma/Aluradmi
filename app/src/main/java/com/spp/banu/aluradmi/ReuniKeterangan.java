@@ -63,7 +63,7 @@ public class ReuniKeterangan {
         return cursor;
     }
 
-    public void cekketerangan(boolean isChecked, int id_keterangan){
+    public void cekKeterangan(boolean isChecked, int id_keterangan){
         ContentValues values = new ContentValues();
         if (isChecked){
             values.put(KeteranganDbSchema.KeteranganTable.Kolom.STATUS, 1);
@@ -71,12 +71,11 @@ public class ReuniKeterangan {
             values.put(KeteranganDbSchema.KeteranganTable.Kolom.STATUS, 0);
         }
 
-        int cek = database.update(
+        database.update(
                 KeteranganDbSchema.KeteranganTable.TABLE_NAME,
                 values,
                 KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN + " = ? ",
                 new String[]{Integer.toString(id_keterangan)}
         );
-        Log.i("Reuni Keterangan", "cekketerangan: " + cek);
     }
 }

@@ -18,7 +18,11 @@
             android:textAlignment="center"
             android:textStyle="normal|bold"
             android:textColor="@color/primary_text"
-            android:layout_margin="5dp" />
+            android:layout_margin="10dp"
+            android:fontFamily="sans-serif"
+            style="?android:attr/listSeparatorTextViewStyle"
+            android:textAllCaps="false"
+            android:textSize="18sp" />
 
         <TextView
             android:text="TextView"
@@ -26,12 +30,13 @@
             android:layout_height="wrap_content"
             android:id="@+id/keterangan_text_view"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:layout_margin="5dp" />
+            android:layout_margin="10dp" />
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            style="?android:attr/listSeparatorTextViewStyle">
 
             <TextView
                 android:text="@string/item_lokasi_keterangan"
@@ -40,7 +45,7 @@
                 android:id="@+id/tulisan_lokasi_text_view"
                 android:layout_weight="1"
                 android:textColor="@color/secondary_text"
-                android:layout_margin="5dp" />
+                android:layout_margin="10dp" />
 
             <TextView
                 android:text="TextView"
@@ -49,13 +54,14 @@
                 android:id="@+id/nama_lokasi_text_view"
                 android:textColor="@color/secondary_text"
                 android:layout_weight="3"
-                android:layout_margin="5dp" />
+                android:layout_margin="10dp" />
         </LinearLayout>
 
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            style="?android:attr/listSeparatorTextViewStyle">
 
             <TextView
                 android:text="@string/item_berkas_keterangan"
@@ -64,7 +70,7 @@
                 android:id="@+id/tulisan_berkas_text_view"
                 android:textColor="@color/secondary_text"
                 android:layout_weight="1"
-                android:layout_margin="5dp" />
+                android:layout_margin="10dp" />
 
             <TextView
                 android:text="TextView"
@@ -73,15 +79,16 @@
                 android:id="@+id/nama_berkas_text_view"
                 android:textColor="@color/secondary_text"
                 android:layout_weight="3"
-                android:layout_margin="5dp" />
+                android:layout_margin="10dp" />
         </LinearLayout>
 
-        <Button
-            android:text="Done"
+        <CheckBox
+            android:text="Selesai"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_check_list_keterangan"
-            android:layout_weight="1" />
+            android:id="@+id/checkBox_keterangan"
+            android:checked="false"
+            android:layout_gravity="start|end" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>
