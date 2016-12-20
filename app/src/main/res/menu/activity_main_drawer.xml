@@ -5,19 +5,19 @@
         <item
             android:id="@+id/nav_kategori"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Kategori" />
+            android:title="@string/kategori" />
         <item
             android:id="@+id/nav_lokasi"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Lokasi" />
+            android:title="@string/lokasi" />
         <item
             android:id="@+id/nav_bantuan"
             android:icon="@drawable/ic_menu_manage"
-            android:title="Bantuan" />
+            android:title="@string/bantuan" />
         <item
             android:id="@+id/nav_about"
             android:icon="@drawable/ic_menu_send"
-            android:title="About" />
+            android:title="@string/about" />
     </group>
 
 </menu>
