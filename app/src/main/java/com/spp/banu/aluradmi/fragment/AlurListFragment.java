@@ -62,6 +62,7 @@ public class AlurListFragment extends Fragment {
                         AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
                 new String[]{Integer.toString(id_kategori), Integer.toString(jurusan.getId_jurusan())}
         );
+        //
         if (alurList.isEmpty()){
             Alur alur = new Alur();
             alur.setNama("Data Tidak Ada");
