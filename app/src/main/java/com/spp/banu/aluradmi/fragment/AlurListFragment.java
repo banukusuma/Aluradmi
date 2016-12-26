@@ -1,5 +1,6 @@
 package com.spp.banu.aluradmi.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,13 +9,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.AlurListActivity;
 import com.spp.banu.aluradmi.KeteranganListActivity;
+import com.spp.banu.aluradmi.MainActivity;
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniJurusan;
@@ -31,13 +35,31 @@ import java.util.List;
  */
 
 public class AlurListFragment extends Fragment {
-
+    public String ALUR_ARG_ID_KATEGORI;
     private RecyclerView alurRecyclerView;
     private AlurAdapter alurAdapter;
+    private onAlurListSelected listSelectListener;
     private int id_kategori;
+
     public AlurListFragment() {
     }
 
+    public interface onAlurListSelected{
+         void onSelectAlur(int id_alur);
+    }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof onAlurListSelected){
+            listSelectListener = (AlurListFragment.onAlurListSelected) context;
+        }else {
+            throw new RuntimeException(context.toString() +
+                    " must implement onAlurListSelected"
+            );
+        }
+    }
     @Override
     public void onResume() {
         super.onResume();
@@ -48,12 +70,21 @@ public class AlurListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         this.id_kategori = (Integer) getActivity().getIntent().getIntExtra(AlurListActivity.EXTRA_ID_KATEGORI, 0);
+         this.id_kategori = getArguments().getInt(ALUR_ARG_ID_KATEGORI);
         Log.i("alur fragment", "id_kategori : " + Integer.toString(id_kategori));
 
     }
 
+
     public void updateUI(){
+        ReuniKategori reuniKategori = new ReuniKategori(getActivity());
+        String title = reuniKategori.getKategori(id_kategori).getNama();
+        if (title != null){
+            getActivity().setTitle("Alur " + title);
+        } else {
+            getActivity().setTitle("Alur");
+        }
+
         ReuniAlur reuniAlur = new ReuniAlur(getActivity());
         ReuniJurusan reuniJurusan = new ReuniJurusan(getActivity());
         Jurusan jurusan = reuniJurusan.getSelectJurusan();
@@ -62,12 +93,14 @@ public class AlurListFragment extends Fragment {
                         AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
                 new String[]{Integer.toString(id_kategori), Integer.toString(jurusan.getId_jurusan())}
         );
-        //
         if (alurList.isEmpty()){
             Alur alur = new Alur();
             alur.setNama("Data Tidak Ada");
             alurList.add(alur);
         }
+        alurAdapter = new AlurAdapter(alurList);
+        alurRecyclerView.setAdapter(alurAdapter);
+        /*
         if (alurAdapter == null){
             alurAdapter = new AlurAdapter(alurList);
             alurRecyclerView.setAdapter(alurAdapter);
@@ -75,7 +108,7 @@ public class AlurListFragment extends Fragment {
             alurAdapter.setAlurList(alurList);
             alurAdapter.notifyDataSetChanged();
         }
-
+        */
     }
     @Nullable
     @Override
@@ -90,15 +123,14 @@ public class AlurListFragment extends Fragment {
 
     private class AlurHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
-        private TextView namaAlur;
-
-        private ProgressBar progressBar;
+        private TextView namaAlur, progress_text, urut_Alur;
         private Alur alur;
 
         public AlurHolder(View itemView) {
             super(itemView);
             namaAlur = (TextView) itemView.findViewById(R.id.nama_alur_text_view);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.alur_progress_bar);
+            progress_text = (TextView) itemView.findViewById(R.id.progress_text_view);
+            urut_Alur = (TextView)itemView.findViewById(R.id.urut_alur_text_view);
             itemView.setOnClickListener(this);
             //progressBar = (ProgressBar) itemView.findViewById(R.id.progress_alur_progress_bar);
         }
@@ -106,16 +138,14 @@ public class AlurListFragment extends Fragment {
         public void bindAlur(Alur alur){
             this.alur = alur;
             int urut = this.alur.getUrut();
-            namaAlur.setText(urut + ". " + this.alur.getNama());
-            progressBar.setProgress(this.alur.getProgress());
-            //progressbar nanti ditambahkan
-
+            urut_Alur.setText(Integer.toString(urut));
+            namaAlur.setText(this.alur.getNama());
+            progress_text.setText("Progress : " + this.alur.getProgress() + "%");
         }
 
         @Override
         public void onClick(View view) {
-            Intent intent = KeteranganListActivity.newIntent(getActivity(),alur.getId_alur());
-            startActivity(intent);
+            listSelectListener.onSelectAlur(alur.getId_alur());
         }
     }
 

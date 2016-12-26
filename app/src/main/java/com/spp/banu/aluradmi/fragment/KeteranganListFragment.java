@@ -18,11 +18,14 @@ import android.widget.TextView;
 
 import com.spp.banu.aluradmi.AlurListActivity;
 import com.spp.banu.aluradmi.KeteranganListActivity;
+import com.spp.banu.aluradmi.MainActivity;
 import com.spp.banu.aluradmi.R;
+import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniBerkas;
 import com.spp.banu.aluradmi.ReuniKeterangan;
 import com.spp.banu.aluradmi.ReuniLokasi;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
+import com.spp.banu.aluradmi.model.Alur;
 import com.spp.banu.aluradmi.model.Berkas;
 import com.spp.banu.aluradmi.model.Keterangan;
 import com.spp.banu.aluradmi.model.Lokasi;
@@ -37,12 +40,13 @@ import java.util.List;
 public class KeteranganListFragment extends Fragment {
     private RecyclerView keteranganRecyclerView;
     private KeteranganAdapter keteranganAdapter;
+    public String KETERANGAN_ARG_ID_ALUR;
     private int id_alur;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        id_alur = (Integer) getActivity().getIntent().getIntExtra(KeteranganListActivity.EXTRA_ID_ALUR,0);
+        id_alur = (Integer) getArguments().getInt(KETERANGAN_ARG_ID_ALUR,0);
         Log.i("KeteranganListFragment", "id_alur: " + id_alur);
     }
 
@@ -63,6 +67,15 @@ public class KeteranganListFragment extends Fragment {
         return view;
     }
     public void updateUI(){
+        if (id_alur != 0){
+            ReuniAlur reuniAlur = new ReuniAlur(getActivity());
+            Alur alur = reuniAlur.getAlur(id_alur);
+            getActivity().setTitle("Keterangan " + alur.getNama());
+        } else {
+            getActivity().setTitle("Keterangan");
+        }
+
+
         ReuniKeterangan reuniKeterangan = new ReuniKeterangan(getActivity());
         List<Keterangan> keteranganList = reuniKeterangan.getKeteranganList(
                 KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? ", new String[]{Integer.toString(id_alur)});
@@ -71,13 +84,8 @@ public class KeteranganListFragment extends Fragment {
             keterangan.setNama("Data Tidak Ada");
             keteranganList.add(keterangan);
         }
-        if (keteranganAdapter == null) {
             keteranganAdapter = new KeteranganAdapter(keteranganList);
             keteranganRecyclerView.setAdapter(keteranganAdapter);
-        }else{
-            keteranganAdapter.setKeteranganList(keteranganList);
-            keteranganAdapter.notifyDataSetChanged();
-        }
     }
     //constuctor must be blank
     public KeteranganListFragment() {
@@ -85,8 +93,8 @@ public class KeteranganListFragment extends Fragment {
 
     private class KeteranganHolder extends RecyclerView.ViewHolder {
         private TextView namaKeterangan;
-        private TextView isiKeterangan;
-        private TextView isiLokasi;
+        private TextView isiKeterangan, urut_Keterangan;
+        private Button isiLokasi;
         private TextView isiBerkas;
         private CheckBox checkBox;
         private String kumpulanBerkas;
@@ -96,9 +104,10 @@ public class KeteranganListFragment extends Fragment {
             super(itemView);
             namaKeterangan = (TextView) itemView.findViewById(R.id.nama_keterangan_text_view);
             isiKeterangan = (TextView) itemView.findViewById(R.id.keterangan_text_view);
-            isiLokasi = (TextView) itemView.findViewById(R.id.nama_lokasi_text_view);
+            isiLokasi = (Button) itemView.findViewById(R.id.nama_lokasi_btn);
             isiBerkas = (TextView) itemView.findViewById(R.id.nama_berkas_text_view);
             checkBox= (CheckBox) itemView.findViewById(R.id.checkBox_keterangan);
+            urut_Keterangan = (TextView) itemView.findViewById(R.id.urut_keterangan_textview);
 
         }
 
@@ -127,6 +136,7 @@ public class KeteranganListFragment extends Fragment {
             isiBerkas.setText(kumpulanBerkas);
             isiLokasi.setText(lokasi.getNama());
             checkBox.setChecked(keterangan.isStatus());
+            urut_Keterangan.setText(Integer.toString(this.keterangan.getUrut()));
         }
 
     }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp">
@@ -7,22 +8,52 @@
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
 
-        <TextView
-            android:text="TextView"
+        android:layout_margin="5dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/nama_keterangan_text_view"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-            android:textAlignment="center"
-            android:textStyle="normal|bold"
-            android:textColor="@color/primary_text"
-            android:layout_margin="10dp"
-            android:fontFamily="sans-serif"
-            style="?android:attr/listSeparatorTextViewStyle"
-            android:textAllCaps="false"
-            android:textSize="18sp" />
+            android:layout_height="match_parent">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+                <ImageView
+                    android:layout_height="match_parent"
+                    android:src="@drawable/ic_number_keterangan"
+                    android:id="@+id/image_urut_keterangan"
+                    android:layout_alignParentLeft="true"
+                    android:scaleType="fitXY"
+                    android:layout_margin="5dp"
+                    android:layout_width="30dp" />
+                <TextView
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/urut_keterangan_textview" />
+            </RelativeLayout>
+
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/nama_keterangan_text_view"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
+                android:textAlignment="gravity"
+                android:textStyle="normal|bold"
+                android:textColor="@color/primary_text"
+                android:layout_margin="5dp"
+                android:fontFamily="sans-serif"
+                android:textAllCaps="false"
+                android:textSize="18sp"
+                android:layout_weight="3"
+                android:layout_gravity="center_vertical" />
+        </LinearLayout>
 
         <TextView
             android:text="TextView"
@@ -30,65 +61,83 @@
             android:layout_height="wrap_content"
             android:id="@+id/keterangan_text_view"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:layout_margin="10dp" />
+            android:layout_margin="5dp" />
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            style="?android:attr/listSeparatorTextViewStyle">
+            >
 
-            <TextView
-                android:text="@string/item_lokasi_keterangan"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/tulisan_lokasi_text_view"
-                android:layout_weight="1"
-                android:textColor="@color/secondary_text"
-                android:layout_margin="10dp" />
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
 
-            <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:text="@string/item_lokasi_keterangan"
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tulisan_lokasi_text_view"
+                    android:textColor="@color/secondary_text"
+                    android:layout_margin="5dp"
+                    android:gravity="center_vertical" />
+
+                <Button
+                    android:text="Button"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/nama_lokasi_btn"
+                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
+                    android:layout_margin="5dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:textAlignment="center" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/nama_lokasi_text_view"
-                android:textColor="@color/secondary_text"
-                android:layout_weight="3"
-                android:layout_margin="10dp" />
+                android:layout_weight="3">
+
+                <TextView
+                    android:text="@string/item_berkas_keterangan"
+                    android:layout_width="64dp"
+                    android:layout_height="match_parent"
+                    android:id="@+id/tulisan_berkas_text_view"
+                    android:textColor="@color/secondary_text"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center_vertical" />
+
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/nama_berkas_text_view"
+                    android:textColor="@color/secondary_text"
+                    android:layout_weight="3"
+                    android:layout_margin="5dp"
+                    android:layout_gravity="center_vertical" />
+
+            </LinearLayout>
+
         </LinearLayout>
-
-        <LinearLayout
-            android:orientation="horizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            style="?android:attr/listSeparatorTextViewStyle">
-
-            <TextView
-                android:text="@string/item_berkas_keterangan"
+            android:layout_height="wrap_content">
+            <CheckBox
+                android:text="Selesai"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/tulisan_berkas_text_view"
-                android:textColor="@color/secondary_text"
-                android:layout_weight="1"
-                android:layout_margin="10dp" />
+                android:layout_centerHorizontal="true"
+                android:id="@+id/checkBox_keterangan"
+                android:checked="false"
+                android:layout_margin="5dp" />
+        </RelativeLayout>
 
-            <TextView
-                android:text="TextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/nama_berkas_text_view"
-                android:textColor="@color/secondary_text"
-                android:layout_weight="3"
-                android:layout_margin="10dp" />
-        </LinearLayout>
-
-        <CheckBox
-            android:text="Selesai"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/checkBox_keterangan"
-            android:checked="false"
-            android:layout_gravity="start|end" />
 
     </LinearLayout>
 </android.support.v7.widget.CardView>

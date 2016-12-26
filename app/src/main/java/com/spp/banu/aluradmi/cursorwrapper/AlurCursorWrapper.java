@@ -40,20 +40,19 @@ public class AlurCursorWrapper extends CursorWrapper {
         alur.setUrut(urut);
         alur.setTimestamp(timestamp);
         ReuniKeterangan reuniKeterangan = new ReuniKeterangan(context);
-        List<Keterangan> keteranganList_selesai = reuniKeterangan.getKeteranganList(
+        int jumlahSelesai = reuniKeterangan.getKeteranganList(
                 KeteranganDbSchema.KeteranganTable.Kolom.STATUS + " = ? AND " +
                         KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? ", new String[]{"1", Integer.toString(id_alur)}
-        );
-        List<Keterangan> keteranganList_semua = reuniKeterangan.getKeteranganList(
+        ).size();
+        int jumlahSemua = reuniKeterangan.getKeteranganList(
                 KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? ", new String[]{Integer.toString(id_alur)}
-        );
-        int jumlahSelesai = keteranganList_selesai.size();
-        int jumlahSemua = keteranganList_semua.size();
+        ).size();
         if (jumlahSemua == 0 ){
             jumlahSemua = 1;
         }
+
+        float progress = (float) (jumlahSelesai * 100) / jumlahSemua;
         //ini nanti ditambahkan untuk progress dari berapa jumlah keterangan yang sudah diselesaikan
-        int progress = (int) Math.round((jumlahSelesai * 100)/ jumlahSemua);
         alur.setProgress(progress);
         return alur;
     }

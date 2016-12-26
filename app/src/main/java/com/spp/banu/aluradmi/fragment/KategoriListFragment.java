@@ -1,6 +1,7 @@
 package com.spp.banu.aluradmi.fragment;
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,15 +26,29 @@ import java.util.List;
  * A simple {@link Fragment} subclass.
  */
 public class KategoriListFragment extends Fragment {
-
-
     private RecyclerView kategoriRecyclerView;
     private KategoriAdapter kategoriAdapter;
+    private onKategoriListSelectListener listSelectListener;
 
     @Override
     public void onResume() {
         super.onResume();
         updateUI();
+    }
+    public interface onKategoriListSelectListener{
+         void onKategoriSelected(int id_kategori);
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof onKategoriListSelectListener){
+            listSelectListener = (onKategoriListSelectListener) context;
+        }else {
+            throw new RuntimeException(context.toString() +
+                "must implement onKategoriListSelectListener"
+            );
+        }
     }
 
     public KategoriListFragment() {
@@ -49,6 +64,9 @@ public class KategoriListFragment extends Fragment {
             kategori.setNama("Data Masih Kosong");
             kategoriList.add(kategori);
         }
+        kategoriAdapter = new KategoriAdapter(kategoriList);
+        kategoriRecyclerView.setAdapter(kategoriAdapter);
+        /*
         if (kategoriAdapter == null){
             kategoriAdapter = new KategoriAdapter(kategoriList);
             kategoriRecyclerView.setAdapter(kategoriAdapter);
@@ -56,7 +74,7 @@ public class KategoriListFragment extends Fragment {
             kategoriAdapter.setKategoris(kategoriList);
             kategoriAdapter.notifyDataSetChanged();
         }
-
+        */
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,13 +92,13 @@ public class KategoriListFragment extends Fragment {
         private TextView namaTextView;
         private Kategori kategori;
 
-        public KategoriHolder(View view) {
+        KategoriHolder(View view) {
             super(view);
             namaTextView = (TextView) view.findViewById(R.id.list_item_kategori_nama);
             view.setOnClickListener(this);
         }
 
-        public void bindKategori(Kategori kategori) {
+         void bindKategori(Kategori kategori) {
             this.kategori = kategori;
             namaTextView.setText(this.kategori.getNama());
 
@@ -88,9 +106,7 @@ public class KategoriListFragment extends Fragment {
 
         @Override
         public void onClick(View view) {
-            // Handle navigation view item clicks here.
-            Intent intent = AlurListActivity.newIntent(getActivity(), kategori.getId_kategori());
-            startActivity(intent);
+            listSelectListener.onKategoriSelected(kategori.getId_kategori());
         }
     }
     private class KategoriAdapter extends RecyclerView.Adapter<KategoriHolder> {

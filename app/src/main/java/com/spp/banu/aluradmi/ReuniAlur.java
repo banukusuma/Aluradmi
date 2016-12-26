@@ -45,11 +45,6 @@ public class ReuniAlur {
 
     }
     private AlurCursorWrapper queryAlur(String whereClause, String[] whereArgs){
-        Cursor cursor = cursorAlur(whereClause,whereArgs);
-        return new AlurCursorWrapper(cursor, this.context);
-    }
-
-    private Cursor cursorAlur(String whereClause, String[] whereArgs){
         Cursor cursor = db.query(
                 AlurDbSchema.AlurTable.TABLE_NAME,
                 null, // Columns - null selects all columns
@@ -59,6 +54,21 @@ public class ReuniAlur {
                 null, // having
                 AlurDbSchema.AlurTable.Kolom.URUT + " ASC" // orderBy
         );
-        return cursor;
+        return new AlurCursorWrapper(cursor, this.context);
+    }
+
+    public Alur getAlur(int id_alur){
+        Alur alur = new Alur();
+        AlurCursorWrapper cursorWrapper = queryAlur(
+                AlurDbSchema.AlurTable.Kolom.ID_ALUR + " = ? ",
+                new String[]{Integer.toString(id_alur)}
+        );
+        try {
+            cursorWrapper.moveToFirst();
+            alur = cursorWrapper.getAlur();
+        }finally {
+            cursorWrapper.close();
+        }
+        return alur;
     }
 }

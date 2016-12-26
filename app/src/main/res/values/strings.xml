@@ -17,4 +17,5 @@
     <string name="bantuan">Bantuan</string>
     <string name="alur">Alur</string>
     <string name="keterangan">Keterangan</string>
+    <string name="title_activity_maps">Map</string>
 </resources>

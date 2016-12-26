@@ -13,13 +13,14 @@ public class Alur {
     private String timestamp;
     private int id_kategori;
     private int id_jurusan;
-    private int progress;
+    private float progress;
 
-    public int getProgress() {
+
+    public float getProgress() {
         return progress;
     }
 
-    public void setProgress(int progress) {
+    public void setProgress(float progress) {
         this.progress = progress;
     }
 
