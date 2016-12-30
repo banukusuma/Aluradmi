@@ -23,12 +23,15 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.spp.banu.aluradmi.fragment.AlurListFragment;
 import com.spp.banu.aluradmi.fragment.JurusanDialogFragment;
 import com.spp.banu.aluradmi.fragment.JurusanListFragment;
 import com.spp.banu.aluradmi.fragment.KategoriListFragment;
 import com.spp.banu.aluradmi.fragment.KeteranganListFragment;
 import com.spp.banu.aluradmi.fragment.LokasiFragment;
+import com.spp.banu.aluradmi.model.Lokasi;
 
 
 public class MainActivity extends AppCompatActivity
@@ -45,9 +48,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitle = mDrawerTitle = getTitle();
-        if (googleServiceAvailable()){
-            Toast.makeText(this, "Start with Google Play Services", Toast.LENGTH_SHORT).show();
-        }
+
         FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
             if (fragment == null){
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity
         if (getSupportFragmentManager().getBackStackEntryCount() == 1){
             toggle.setDrawerIndicatorEnabled(true);
         }
-
+        Log.e("MainActivity", "backstakecount" + getSupportFragmentManager().getBackStackEntryCount());
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
@@ -154,6 +155,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
+        if (googleServiceAvailable()){
+            Toast.makeText(this, "Start with Google Play Services", Toast.LENGTH_SHORT).show();
+        }
         ReuniJurusan reuniJurusan = new ReuniJurusan(this);
         boolean isFirstRun = reuniJurusan.isSelectedJurusan();
         Log.i("" +this, "onResume: " + isFirstRun);
@@ -176,6 +180,7 @@ public class MainActivity extends AppCompatActivity
 
     private void replaceFragment (Fragment fragment){
         String backStateName =  fragment.getClass().getName();
+        Log.e("MainActivity", "backstateName: " + backStateName);
         String fragmentTag = backStateName;
         toggle.setDrawerIndicatorEnabled(false);
         FragmentManager manager = getSupportFragmentManager();
@@ -198,6 +203,8 @@ public class MainActivity extends AppCompatActivity
         fragment.setArguments(bundle);
         replaceFragment(fragment);
     }
+
+
 
     public void showUpButton(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
