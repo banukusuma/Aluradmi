@@ -4,11 +4,17 @@ package com.spp.banu.aluradmi.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -29,6 +35,30 @@ public class KategoriListFragment extends Fragment {
     private RecyclerView kategoriRecyclerView;
     private KategoriAdapter kategoriAdapter;
     private onKategoriListSelectListener listSelectListener;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.menu_jurusan){
+            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+            JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
+            dialogFragment.show(fragmentManager, "jurusanDialog");
+            dialogFragment.setCancelable(false);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onResume() {
@@ -64,9 +94,7 @@ public class KategoriListFragment extends Fragment {
             kategori.setNama("Data Masih Kosong");
             kategoriList.add(kategori);
         }
-        kategoriAdapter = new KategoriAdapter(kategoriList);
-        kategoriRecyclerView.setAdapter(kategoriAdapter);
-        /*
+
         if (kategoriAdapter == null){
             kategoriAdapter = new KategoriAdapter(kategoriList);
             kategoriRecyclerView.setAdapter(kategoriAdapter);
@@ -74,7 +102,7 @@ public class KategoriListFragment extends Fragment {
             kategoriAdapter.setKategoris(kategoriList);
             kategoriAdapter.notifyDataSetChanged();
         }
-        */
+
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

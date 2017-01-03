@@ -25,15 +25,16 @@ import java.util.List;
 
 public class DirectionFinder {
     private static final String DIRECTION_URL_API = "https://maps.googleapis.com/maps/api/directions/json?";
+    private static final String API_KEY = "AIzaSyDWem_5YPZUTxDjgxlGXg7tLDrZG6Xfu7o";
     private final static String TAG = "DirectionFinder";
     private DirectionFinderListener listener;
     private String origin;
     private String destination;
 
-    public DirectionFinder(DirectionFinderListener listener, String origin, Lokasi destination) {
+    public DirectionFinder(DirectionFinderListener listener, String origin,String destination) {
         this.listener = listener;
         this.origin = origin;
-        this.destination = destination.getLattitude() + "," + destination.getLongitude();
+        this.destination = destination;
     }
     public void execute()  throws UnsupportedEncodingException{
         listener.DirectionFinderStart();
@@ -44,7 +45,7 @@ public class DirectionFinder {
         String urlOrigin = URLEncoder.encode(origin, "utf-8");
         String urlDestination = URLEncoder.encode(destination, "utf-8");
 
-        return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + R.string.google_maps_key;
+        return DIRECTION_URL_API + "origin=" + urlOrigin + "&destination=" + urlDestination + "&key=" + API_KEY;
     }
 
     private class ParseRute extends AsyncTask<String, Void, String>{
@@ -54,6 +55,7 @@ public class DirectionFinder {
             String link = strings[0];
             HttpHandler httpHandler = new HttpHandler();
             String jsonString = httpHandler.makeServiceCall(link);
+            Log.e(TAG, "doInBackground: " + jsonString );
             if (jsonString != null){
                 return jsonString;
             }
@@ -64,7 +66,12 @@ public class DirectionFinder {
         @Override
         protected void onPostExecute(String s) {
             try {
-                parseJson(s);
+                if (s != null){
+                    parseJson(s);
+                } else {
+                    listener.DirectionFinderFailed();
+                }
+
             }catch (JSONException e){
                 e.printStackTrace();
             }

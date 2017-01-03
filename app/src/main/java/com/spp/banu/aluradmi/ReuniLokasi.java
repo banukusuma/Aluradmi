@@ -50,4 +50,16 @@ public class ReuniLokasi {
         );
         return cursor;
     }
+
+    public Lokasi searchLokasi(String name){
+        Lokasi lokasi = new Lokasi();
+        LokasiCursorWrapper cursorWrapper = queryLokasi("nama = ? ", new String[]{name});
+        try {
+            cursorWrapper.moveToFirst();
+            lokasi = cursorWrapper.getLokasi();
+        } finally {
+            cursorWrapper.close();
+        }
+        return lokasi;
+    }
 }

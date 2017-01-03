@@ -18,4 +18,5 @@
     <string name="alur">Alur</string>
     <string name="keterangan">Keterangan</string>
     <string name="title_activity_maps">Map</string>
+    <string name="btn_show_route">Tunjukkan Rute</string>
 </resources>

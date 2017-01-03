@@ -25,6 +25,7 @@ import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniJurusan;
 import com.spp.banu.aluradmi.ReuniKategori;
+import com.spp.banu.aluradmi.StorageId;
 import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
 import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
@@ -73,7 +74,9 @@ public class AlurListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         this.id_kategori = getArguments().getInt(ALUR_ARG_ID_KATEGORI);
+         //this.id_kategori = getActivity().getIntent().getIntExtra(AlurListActivity.EXTRA_ID_KATEGORI, 0);
+        id_kategori = StorageId.id_kategori;
+        Log.e("alurListFragment", "jumlah backstake: " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
         Log.i("alur fragment", "id_kategori : " + Integer.toString(id_kategori));
 
     }

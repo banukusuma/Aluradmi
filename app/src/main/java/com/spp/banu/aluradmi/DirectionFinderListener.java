@@ -11,5 +11,6 @@ import java.util.List;
 
 public interface DirectionFinderListener {
     void DirectionFinderStart();
+    void DirectionFinderFailed();
     void DirectionFinderSuccess(List<Rute> rutes);
 }

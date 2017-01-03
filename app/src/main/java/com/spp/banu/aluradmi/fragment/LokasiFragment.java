@@ -1,15 +1,29 @@
 package com.spp.banu.aluradmi.fragment;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -30,6 +44,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 import com.spp.banu.aluradmi.DirectionFinderListener;
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniLokasi;
+import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 import com.spp.banu.aluradmi.httpcall.DirectionFinder;
 import com.spp.banu.aluradmi.model.Lokasi;
 import com.spp.banu.aluradmi.model.Rute;
@@ -43,28 +58,55 @@ import java.util.List;
  */
 
 public class LokasiFragment extends SupportMapFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener, DialogInterface.OnClickListener
+
+
+{
     private static final String TAG = "LokasiFragment";
     GoogleMap map;
     Marker currentLocationMarker;
     GoogleApiClient apiClient;
-    Location currentLocation;
-    Double currentLat;
-    Double currentLng;
     LocationRequest locationRequest;
+    Location currentLocation;
+    android.support.v7.widget.SearchView searchView;
     ProgressDialog progressDialog;
     private List<Polyline> polylineList = new ArrayList<>();
+    Intent dialogSettingintent;
 
     @Override
     public void onCreate(Bundle bundle) {
         super.onCreate(bundle);
+        getActivity().setTitle(R.string.lokasi);
+        setHasOptionsMenu(true);
         getMapAsync(this);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.lokasi_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.lokasi_saya){
+            gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 15);
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        CheckNetwork network = new CheckNetwork(getActivity());
+        if (!network.isNetworkAvailable()) {
+            showDialog(getActivity(), "internet");
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
-
         apiClient = new GoogleApiClient.Builder(getActivity())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
@@ -73,16 +115,7 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
         apiClient.connect();
         ReuniLokasi reuniLokasi = new ReuniLokasi(getActivity());
         Lokasi lokasi = reuniLokasi.getLokasi(9);
-        currentLat = currentLocation.getLatitude();
-        currentLng = currentLocation.getLongitude();
-        String saatini = currentLat + "," + currentLng;
-        try {
-            new DirectionFinder(this, saatini, lokasi).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
-
+        placeMarker(lokasi.getNama(),lokasi.getLattitude(), lokasi.getLongitude());
     }
 
     private void gotoLocation(double lat, double lng) {
@@ -111,8 +144,8 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
     }
 
     @Override
@@ -127,23 +160,23 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
 
     @Override
     public void onLocationChanged(Location location) {
-        currentLocation = location;
-        Log.e(TAG, "onConnected: lattitude longitude" + currentLocation.getLatitude() + "," + currentLocation.getLongitude() );
-        MarkerOptions options = new MarkerOptions()
-                .title("Current Location")
-                .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-        if (currentLocation == null){
+        if (location == null) {
             Toast.makeText(getActivity(), "Can't get current location", Toast.LENGTH_LONG);
         } else {
-            if (currentLocationMarker != null){
+            if (currentLocationMarker != null) {
                 currentLocationMarker.remove();
             }
+            currentLocation = location;
+            Log.e(TAG, "onConnected: lattitude longitude" + currentLocation.getLatitude() + "," + currentLocation.getLongitude());
+            MarkerOptions options = new MarkerOptions()
+                    .title("Current Location")
+                    .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             currentLocationMarker = map.addMarker(options);
             gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 12);
         }
     }
 
-    public void placeMarker(String title, double lat, double lng){
+    public void placeMarker(String title, double lat, double lng) {
         MarkerOptions options = new MarkerOptions()
                 .title(title)
                 .position(new LatLng(lat, lng));
@@ -155,10 +188,16 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
         progressDialog = ProgressDialog.show(getActivity(), "Please wait.",
                 "Finding direction..!", true);
         if (polylineList != null) {
-            for (Polyline polyline:polylineList ) {
+            for (Polyline polyline : polylineList) {
                 polyline.remove();
             }
         }
+    }
+
+    @Override
+    public void DirectionFinderFailed() {
+        progressDialog.dismiss();
+        Toast.makeText(getActivity(), "Gagal Mengambil Data", Toast.LENGTH_LONG);
     }
 
     @Override
@@ -166,19 +205,48 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
         progressDialog.dismiss();
         polylineList = new ArrayList<>();
 
-        for (Rute rute : rutes){
-            gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 17);
-            placeMarker(rute.getEndAddress(), rute.getEndLocation().latitude,rute.getEndLocation().longitude);
+        for (Rute rute : rutes) {
+            gotoLocationZoom(currentLocationMarker.getPosition().latitude, currentLocationMarker.getPosition().longitude, 17);
+            placeMarker(rute.getEndAddress(), rute.getEndLocation().latitude, rute.getEndLocation().longitude);
 
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLUE).
                     width(10);
 
-            for (int i = 0; i < rute.getPoint().size(); i++)
+            for (int i = 0; i < rute.getPoint().size(); i++) {
                 polylineOptions.add(rute.getPoint().get(i));
+            }
+
 
             polylineList.add(map.addPolyline(polylineOptions));
         }
     }
+
+    public void showDialog(final Context ctx, String Mode) {
+        final Context context = ctx;
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        if (Mode == "internet") {
+            builder.setCancelable(true);
+            dialogSettingintent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
+            builder.setMessage("Untuk Menggunakan Fitur Lokasi Membutuhkan Koneksi internet");
+            builder.setTitle("Tidak Ada Koneksi Internet");
+            builder.setPositiveButton("Buka Setting", this);
+        } else {
+            builder.setCancelable(true);
+            dialogSettingintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+            builder.setMessage("Untuk Menjalankan Rute Lokasi Memerlukan GPS dalam keadaan menyala");
+            builder.setTitle("GPS tidak aktif");
+            builder.setPositiveButton("Buka Setting", this);
+        }
+
+        builder.show();
+    }
+
+    @Override
+    public void onClick(DialogInterface dialogInterface, int i) {
+        startActivity(dialogSettingintent);
+    }
+
+
 }

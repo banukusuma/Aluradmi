@@ -22,7 +22,6 @@
                 android:layout_weight="1">
                 <ImageView
                     android:layout_height="match_parent"
-                    android:src="@drawable/ic_number_keterangan"
                     android:id="@+id/image_urut_keterangan"
                     android:layout_alignParentLeft="true"
                     android:scaleType="fitXY"
@@ -34,7 +33,8 @@
                     android:text="1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:id="@+id/urut_keterangan_textview" />
+                    android:id="@+id/urut_keterangan_textview"
+                    android:textAppearance="@android:style/TextAppearance.Holo.Small" />
             </RelativeLayout>
 
 

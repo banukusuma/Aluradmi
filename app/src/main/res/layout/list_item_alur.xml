@@ -69,7 +69,7 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_margin="5dp"
-            android:background="@mipmap/ic_navigate_next_black_24dp"
+            android:src="@drawable/ic_chevron_right_black_24dp"
             android:id="@+id/next_image_alur"
             android:layout_height="match_parent"
             android:layout_weight="0.47"/>

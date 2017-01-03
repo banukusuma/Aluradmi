@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:title="Tampilkan Semua"
+        android:id="@+id/show_all_keterangan"
+        app:showAsAction="never" />
+    <item android:title="Tampilkan Data yang Sudah Selesai"
+        android:id="@+id/show_cek_keterangan"
+        app:showAsAction="never" />
+    <item android:title="Tampilkan Data yang Belum Selesai"
+        android:id="@+id/show_uncek_keterangan"
+        app:showAsAction="never" />
+</menu>

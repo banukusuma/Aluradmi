@@ -35,10 +35,12 @@ import com.spp.banu.aluradmi.model.Lokasi;
 
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener , KategoriListFragment.onKategoriListSelectListener,
-    AlurListFragment.onAlurListSelected   {
+        implements NavigationView.OnNavigationItemSelectedListener , KategoriListFragment.onKategoriListSelectListener{
     private CharSequence mDrawerTitle;
     private CharSequence mTitle;
+    private final static String TAG_kategori_fragment = "kategori_fragment";
+    private final static String TAG_bantuan_fragment = "bantuan_fragment";
+    private final static String TAG_tentang_fragment = "tentang_fragment";
     private ActionBarDrawerToggle toggle;
 
     @Override
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity
             if (fragment == null){
                 fragment = new KategoriListFragment();
                 fragmentManager.beginTransaction()
-                        .add(R.id.content_main, fragment)
+                        .add(R.id.content_main, fragment, "kategori_fragment")
                         .commit();
             }
 
@@ -85,40 +87,12 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        if (getSupportFragmentManager().getBackStackEntryCount() == 1){
-            toggle.setDrawerIndicatorEnabled(true);
-        }
         Log.e("MainActivity", "backstakecount" + getSupportFragmentManager().getBackStackEntryCount());
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-       if (id == R.id.menu_jurusan){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
-            dialogFragment.show(fragmentManager, "jurusanDialog");
-            dialogFragment.setCancelable(false);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @SuppressWarnings("StatementWithEmptyBody")
@@ -155,9 +129,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onResume() {
         super.onResume();
-        if (googleServiceAvailable()){
-            Toast.makeText(this, "Start with Google Play Services", Toast.LENGTH_SHORT).show();
-        }
+        googleServiceAvailable();
         ReuniJurusan reuniJurusan = new ReuniJurusan(this);
         boolean isFirstRun = reuniJurusan.isSelectedJurusan();
         Log.i("" +this, "onResume: " + isFirstRun);
@@ -171,18 +143,15 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onKategoriSelected(int id_kategori) {
-        AlurListFragment fragment = new AlurListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(fragment.ALUR_ARG_ID_KATEGORI, id_kategori);
-        fragment.setArguments(bundle);
-        replaceFragment(fragment);
+        new StorageId(id_kategori);
+        Intent intent = new Intent(this, AlurListActivity.class);
+        startActivity(intent);
     }
 
     private void replaceFragment (Fragment fragment){
         String backStateName =  fragment.getClass().getName();
         Log.e("MainActivity", "backstateName: " + backStateName);
         String fragmentTag = backStateName;
-        toggle.setDrawerIndicatorEnabled(false);
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
 
@@ -195,21 +164,4 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onSelectAlur(int id_alur) {
-        KeteranganListFragment fragment = new KeteranganListFragment();
-        Bundle bundle = new Bundle();
-        bundle.putInt(fragment.KETERANGAN_ARG_ID_ALUR, id_alur);
-        fragment.setArguments(bundle);
-        replaceFragment(fragment);
-    }
-
-
-
-    public void showUpButton(){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-    }
-    public void hideUpButton(){
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-    }
 }

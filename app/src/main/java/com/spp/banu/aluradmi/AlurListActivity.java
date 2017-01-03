@@ -16,7 +16,7 @@ import com.spp.banu.aluradmi.fragment.AlurListFragment;
  * Created by banu on 05/12/16.
  */
 
-public class AlurListActivity extends AppCompatActivity{
+public class AlurListActivity extends AppCompatActivity implements AlurListFragment.onAlurListSelected{
     public static final String EXTRA_ID_KATEGORI = "com.spp.aluradmi.alurIntent.id_kategori";
 
     @Override
@@ -40,5 +40,11 @@ public class AlurListActivity extends AppCompatActivity{
         Intent intent = new Intent(packageContext, AlurListActivity.class);
         intent.putExtra(EXTRA_ID_KATEGORI, id_kategori);
         return intent;
+    }
+
+    @Override
+    public void onSelectAlur(int id_alur) {
+        Intent intent = KeteranganListActivity.newIntent(this, id_alur);
+        startActivity(intent);
     }
 }
