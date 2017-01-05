@@ -104,9 +104,7 @@ public class AlurListFragment extends Fragment {
             alur.setNama("Data Tidak Ada");
             alurList.add(alur);
         }
-        alurAdapter = new AlurAdapter(alurList);
-        alurRecyclerView.setAdapter(alurAdapter);
-        /*
+
         if (alurAdapter == null){
             alurAdapter = new AlurAdapter(alurList);
             alurRecyclerView.setAdapter(alurAdapter);
@@ -114,7 +112,7 @@ public class AlurListFragment extends Fragment {
             alurAdapter.setAlurList(alurList);
             alurAdapter.notifyDataSetChanged();
         }
-        */
+
     }
     @Nullable
     @Override

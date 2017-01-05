@@ -43,7 +43,23 @@ public class ReuniKeterangan {
         }
         return keteranganList;
     }
-
+    public Keterangan getKeterangan(int id_keterangan){
+        Keterangan keterangan = new Keterangan();
+        KeteranganCursorWrapper cursorWrapper = queryKeterangan(
+                KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN + " = ? ",
+                new String[]{Integer.toString(id_keterangan)});
+        try {
+            if (cursorWrapper.getCount() == 0){
+                keterangan.setId_keterangan(0);
+            } else {
+                cursorWrapper.moveToFirst();
+                keterangan = cursorWrapper.getKeterangan();
+            }
+        }finally {
+            cursorWrapper.close();
+        }
+        return keterangan;
+    }
 
     private KeteranganCursorWrapper queryKeterangan(String whereClause, String[] whereArgs){
         Cursor cursor = cursorKeterangan(whereClause, whereArgs);

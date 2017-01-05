@@ -64,8 +64,13 @@ public class ReuniAlur {
                 new String[]{Integer.toString(id_alur)}
         );
         try {
-            cursorWrapper.moveToFirst();
-            alur = cursorWrapper.getAlur();
+            if (cursorWrapper.getCount() == 0){
+                alur.setId_alur(0);
+            } else {
+                cursorWrapper.moveToFirst();
+                alur = cursorWrapper.getAlur();
+            }
+
         }finally {
             cursorWrapper.close();
         }

@@ -103,6 +103,11 @@ public class ReuniJurusan {
     public Jurusan getSelectJurusan(){
         Cursor cursor = cursorJurusan(JurusanDbSchema.JurusanTable.Kolom.STATUS + " = ? ", new String[]{"1"});
         JurusanCursorWrapper cursorWrapper = new JurusanCursorWrapper(cursor);
+        if (cursor.getCount() == 0){
+            Jurusan jurusan = new Jurusan();
+            jurusan.setId_jurusan(0);
+            return jurusan;
+        }
         cursorWrapper.moveToFirst();
         return cursorWrapper.getJurusan();
     }

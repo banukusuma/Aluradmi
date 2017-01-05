@@ -54,7 +54,7 @@ public class KategoriListFragment extends Fragment {
             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
             JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
             dialogFragment.show(fragmentManager, "jurusanDialog");
-            dialogFragment.setCancelable(false);
+            dialogFragment.setCancelable(true);
         }
 
         return super.onOptionsItemSelected(item);

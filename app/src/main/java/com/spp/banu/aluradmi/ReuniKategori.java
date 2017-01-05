@@ -58,8 +58,12 @@ public class ReuniKategori {
                 new String[]{Integer.toString(id_kategori)}
         );
         try {
-             cursorWrapper.moveToFirst();
-            kategori = cursorWrapper.getKategori();
+            if (cursorWrapper.getCount() == 0){
+                kategori.setId_kategori(0);
+            } else {
+                cursorWrapper.moveToFirst();
+                kategori = cursorWrapper.getKategori();
+            }
         }finally {
             cursorWrapper.close();
         }

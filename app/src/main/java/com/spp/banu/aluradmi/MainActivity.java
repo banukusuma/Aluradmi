@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         mTitle = mDrawerTitle = getTitle();
-
         FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
             if (fragment == null){
@@ -98,23 +97,18 @@ public class MainActivity extends AppCompatActivity
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
         int id = item.getItemId();
         if (id == R.id.nav_kategori) {
-            fragment = new KategoriListFragment();
-
+            Fragment fragment = new KategoriListFragment();
+            replaceFragment(fragment, TAG_kategori_fragment);
         } else if (id == R.id.nav_lokasi) {
-            fragment = new LokasiFragment();
-
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
         }  else if (id == R.id.nav_bantuan) {
 
         } else if (id == R.id.nav_about) {
 
         }
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.content_main, fragment);
-        transaction.commit();
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
@@ -148,20 +142,13 @@ public class MainActivity extends AppCompatActivity
         startActivity(intent);
     }
 
-    private void replaceFragment (Fragment fragment){
-        String backStateName =  fragment.getClass().getName();
-        Log.e("MainActivity", "backstateName: " + backStateName);
-        String fragmentTag = backStateName;
-        FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate (backStateName, 0);
-
-        if (!fragmentPopped && manager.findFragmentByTag(fragmentTag) == null){ //fragment not in back stack, create it.
+    private void replaceFragment (Fragment fragment, String fragmentTag){
+            FragmentManager manager = getSupportFragmentManager();
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(R.id.content_main, fragment, fragmentTag);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
-            ft.addToBackStack(backStateName);
             ft.commit();
-        }
+
     }
 
 }

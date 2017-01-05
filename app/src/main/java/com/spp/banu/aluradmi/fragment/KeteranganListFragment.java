@@ -191,7 +191,7 @@ public class KeteranganListFragment extends Fragment {
             for (Berkas berkas: berkasList){
                 strings.add(berkas.getNama());
             }
-            kumpulanBerkas = TextUtils.join(",", strings).toString();
+            kumpulanBerkas = TextUtils.join("\n", strings).toString();
             isiBerkas.setText(kumpulanBerkas);
             isiLokasi.setText(lokasi.getNama());
             checkBox.setChecked(keterangan.isStatus());
