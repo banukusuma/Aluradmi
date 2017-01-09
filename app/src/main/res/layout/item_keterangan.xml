@@ -11,12 +11,12 @@
         android:layout_alignParentTop="true"
         style="@style/Base.TextAppearance.AppCompat.Headline"
         android:textAlignment="center"
-        />
+        android:layout_marginTop="15dp" />
 
     <TextView
         android:text="@string/detail"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/Keterangan_from_alur_label"
+        android:layout_below="@+id/keterangan_title"
         style="?android:listSeparatorTextViewStyle"
         android:id="@+id/label_keterangan"
         android:layout_marginTop="20dp" />

@@ -1,16 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <group android:checkableBehavior="single">
+    <group android:checkableBehavior="single"
+        android:id="@+id/group_nav_drawer_menu_1">
         <item
             android:id="@+id/nav_kategori"
-            android:icon="@drawable/ic_home_white_24px"
-            android:title="@string/kategori" />
+            android:title="@string/kategori"
+            android:icon="@drawable/ic_home_white_24px">
+        </item>
         <item
             android:id="@+id/nav_lokasi"
             android:icon="@drawable/ic_location_on_white_24px"
             android:title="@string/lokasi" />
-        <item>
+        <item
+            android:title="Info">
             <menu >
                 <group android:checkableBehavior="single">
                     <item
@@ -23,7 +25,6 @@
                         android:title="@string/about" />
                 </group>
             </menu>
-
         </item>
     </group>
 

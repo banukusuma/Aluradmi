@@ -36,7 +36,9 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     private ReuniKeterangan reuniKeterangan;
     private static final String ARG_KETERANGAN_ID = "id_keterangan";
     private static final String ARG_CAN_CHECKED = "can_checked_checkbox";
+    private static final String ARG_JML_DATA = "jumlah_data_keterangan_list";
     private int id_keterangan;
+    private int max_data;
     private Lokasi lokasi;
     private ReuniLokasi reuniLokasi;
     private ReuniBerkas reuniBerkas;
@@ -50,16 +52,18 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         reuniLokasi = new ReuniLokasi(getActivity());
         id_keterangan = getArguments().getInt(ARG_KETERANGAN_ID);
         canCheckedSelesai = getArguments().getBoolean(ARG_CAN_CHECKED);
+        max_data = getArguments().getInt(ARG_JML_DATA);
         keterangan = reuniKeterangan.getKeterangan(id_keterangan);
         lokasi = reuniLokasi.getLokasi(keterangan.getId_lokasi());
         reuniBerkas = new ReuniBerkas(getActivity());
         berkasList = reuniBerkas.getBerkasList(keterangan.getId_keterangan());
     }
 
-    public KeteranganFragment newInstance(int id_alur, boolean canCheckedSelesai){
+    public static KeteranganFragment newInstance(int id_keterangan, boolean canCheckedSelesai, int jml_data){
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_KETERANGAN_ID, id_alur);
+        bundle.putInt(ARG_KETERANGAN_ID, id_keterangan);
         bundle.putBoolean(ARG_CAN_CHECKED, canCheckedSelesai);
+        bundle.putInt(ARG_JML_DATA, jml_data);
         KeteranganFragment fragment = new KeteranganFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -74,11 +78,12 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         isiBerkas = (TextView) view.findViewById(R.id.isi_berkas);
         halaman = (TextView) view.findViewById(R.id.halaman_keterangan);
         btnLokasi = (Button) view.findViewById(R.id.btn_lokasi);
-        selesaiCheckBox = (CheckBox) view.findViewById(R.id.checkBox_keterangan);
+        selesaiCheckBox = (CheckBox) view.findViewById(R.id.checkbox_selesai);
         labelDetail = (TextView)view.findViewById(R.id.label_keterangan);
         labelberkas = (TextView)view.findViewById(R.id.label_berkas_keterangan);
         labellokasi = (TextView) view.findViewById(R.id.label_lokasi_keterangan);
         selesaiCheckBox.setOnCheckedChangeListener(this);
+        selesaiCheckBox.setChecked(keterangan.isStatus());
         updateUI();
         return view;
     }
@@ -89,6 +94,8 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             judulKeterangan.setText(keterangan.getUrut() + ". " + keterangan.getNama());
             isiKeterangan.setText(keterangan.getKeterangan());
             selesaiCheckBox.setVisibility(View.VISIBLE);
+            halaman.setVisibility(View.VISIBLE);
+            halaman.setText("Halaman " + keterangan.getUrut() + " dari " + max_data);
             bindLokasi();
             bindBerkas();
         } else {
@@ -96,6 +103,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             labelDetail.setVisibility(View.INVISIBLE);
             isiKeterangan.setVisibility(View.INVISIBLE);
             selesaiCheckBox.setVisibility(View.INVISIBLE);
+            halaman.setVisibility(View.INVISIBLE);
             bindLokasi();
             bindBerkas();
         }
@@ -103,8 +111,10 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         if (canCheckedSelesai){
             selesaiCheckBox.setEnabled(true);
         } else {
+            selesaiCheckBox.setVisibility(View.INVISIBLE);
             selesaiCheckBox.setEnabled(false);
         }
+
     }
     private void bindLokasi(){
         if (lokasi.getId_lokasi() != 0){
@@ -113,8 +123,8 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             btnLokasi.setEnabled(true);
             btnLokasi.setText(lokasi.getNama());
         } else {
-            labellokasi.setVisibility(View.INVISIBLE);
-            btnLokasi.setVisibility(View.INVISIBLE);
+            labellokasi.setVisibility(View.GONE);
+            btnLokasi.setVisibility(View.GONE);
             btnLokasi.setEnabled(false);
         }
     }
@@ -129,8 +139,8 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             }
             isiBerkas.setText(TextUtils.join("\n", strings).toString());
         } else {
-            labelberkas.setVisibility(View.INVISIBLE);
-            isiBerkas.setVisibility(View.INVISIBLE);
+            labelberkas.setVisibility(View.GONE);
+            isiBerkas.setVisibility(View.GONE);
         }
     }
 

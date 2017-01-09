@@ -33,5 +33,10 @@ dependencies {
     compile 'com.google.android.gms:play-services-gcm:9.8.0'
     compile 'com.google.android.gms:play-services-location:9.8.0'
     compile 'com.miguelcatalan:materialsearchview:1.4.0'
+    compile('com.mikepenz:materialdrawer:5.8.1@aar') {
+        transitive = true
+    }
+    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
     testCompile 'junit:junit:4.12'
 }

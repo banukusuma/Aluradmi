@@ -64,6 +64,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.spp.banu.aluradmi.MainActivity" />
         </activity>
+        <activity android:name=".KeteranganPagerActivity"
+            android:parentActivityName=".AlurListActivity"/>
     </application>
 
 </manifest>

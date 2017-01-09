@@ -39,25 +39,6 @@ public class KategoriListFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.main, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.menu_jurusan){
-            FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-            JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
-            dialogFragment.show(fragmentManager, "jurusanDialog");
-            dialogFragment.setCancelable(true);
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override

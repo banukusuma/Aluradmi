@@ -148,8 +148,7 @@ public class AlurListFragment extends Fragment {
         }
 
         @Override
-        public void onClick(View view) {
-            listSelectListener.onSelectAlur(alur.getId_alur());
+        public void onClick(View view) {listSelectListener.onSelectAlur(alur.getId_alur());
         }
     }
 
