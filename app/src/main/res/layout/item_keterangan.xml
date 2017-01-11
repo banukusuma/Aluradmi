@@ -1,90 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:id="@+id/scroll_pager">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:text="@string/detail"
+                android:layout_height="wrap_content"
+                style="?android:listSeparatorTextViewStyle"
+                android:id="@+id/label_keterangan"
+                android:layout_marginTop="20dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/isi_keterangan"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:text="@string/item_lokasi_keterangan"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_lokasi_keterangan"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_marginTop="5dp" />
+
+            <Button
+                android:text="Ruang Rf 5"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/btn_lokasi"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:text="@string/item_berkas_keterangan"
+                android:layout_height="wrap_content"
+                android:id="@+id/label_berkas_keterangan"
+                style="?android:listSeparatorTextViewStyle"
+                android:layout_marginTop="5dp" />
+
+            <TextView
+                android:text="TextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/isi_berkas"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="5dp" />
+
+            <CheckBox
+                android:text="@string/selesai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/checkbox_selesai"
+                android:layout_marginRight="16dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="20dp" />
+        </LinearLayout>
+    </ScrollView>
     <TextView
         android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/keterangan_title"
-        android:layout_alignParentTop="true"
-        style="@style/Base.TextAppearance.AppCompat.Headline"
-        android:textAlignment="center"
-        android:layout_marginTop="15dp" />
-
-    <TextView
-        android:text="@string/detail"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/keterangan_title"
-        style="?android:listSeparatorTextViewStyle"
-        android:id="@+id/label_keterangan"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/isi_keterangan"
-        android:layout_below="@+id/label_keterangan"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="5dp" />
-
-    <TextView
-        android:text="@string/item_lokasi_keterangan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_lokasi_keterangan"
-        android:layout_below="@id/isi_keterangan"
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_marginTop="5dp" />
-
-    <Button
-        android:text="Ruang Rf 5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/btn_lokasi"
-        android:layout_below="@id/label_lokasi_keterangan"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="5dp" />
-
-    <TextView
-        android:text="@string/item_berkas_keterangan"
-        android:layout_height="wrap_content"
-        android:id="@+id/label_berkas_keterangan"
-        android:layout_below="@+id/btn_lokasi"
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_marginTop="5dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/isi_berkas"
-        android:layout_below="@+id/label_berkas_keterangan"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:layout_marginTop="5dp" />
-
-    <CheckBox
-        android:text="@string/selesai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/checkbox_selesai"
-        android:layout_below="@+id/isi_berkas"
-        android:layout_marginRight="16dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_marginBottom="15dp"
         android:id="@+id/halaman_keterangan"
         android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
         android:textAlignment="center" />
-</RelativeLayout>
+</LinearLayout>

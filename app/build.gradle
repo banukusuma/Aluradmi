@@ -38,5 +38,7 @@ dependencies {
     }
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    compile 'com.astuetz:pagerslidingtabstrip:1.0.1'
+    compile 'com.bignerdranch.android:recyclerview-multiselect:0.2'
     testCompile 'junit:junit:4.12'
 }

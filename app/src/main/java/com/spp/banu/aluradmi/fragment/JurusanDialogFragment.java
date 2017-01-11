@@ -23,6 +23,11 @@ import java.util.List;
 public class JurusanDialogFragment extends DialogFragment {
     private String namaJurusan;
     private ReuniJurusan reuniJurusan;
+    private JurusanDialogInterfaceListener listener;
+    private final static String TAG_home_fragment = "home_fragment";
+    public interface JurusanDialogInterfaceListener{
+        void onSelectedJurusan(String nama_jurusan);
+    }
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -48,12 +53,17 @@ public class JurusanDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 namaJurusan = listItem[i].toString();
+                //listener.onSelectedJurusan(namaJurusan);
             }
         });
         builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 reuniJurusan.SelectJurusan(namaJurusan);
+                HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(TAG_home_fragment);
+                if (homeFragment != null && homeFragment.isVisible()){
+                    homeFragment.notifyTheAdapater();
+                }
                 Toast.makeText(getActivity(),namaJurusan + " telah di pilih", Toast.LENGTH_SHORT).show();
                 Log.i("Dialog Jurusan", "onClick: " + namaJurusan);
             }

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/primary_dark">
+
+    <TextView
+        android:text="@string/welcome"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView3"
+        android:textColor="@color/md_white_1000"
+        android:textSize="28sp"
+        android:gravity="center_horizontal"
+        android:textStyle="bold"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:paddingBottom="5dip"
+        android:paddingTop="5dip"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="10dp" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:srcCompat="@android:drawable/sym_def_app_icon"
+        android:id="@+id/imageView2" />
+
+    <TextView
+        android:text="@string/jurusan"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView4"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:paddingLeft="16dip"
+        android:textColor="@color/md_white_1000"
+        android:textStyle="normal|bold"
+        android:paddingTop="5dip"
+        android:paddingBottom="3dip" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/jurusan_home"
+        android:paddingLeft="22dip"
+        android:textColor="@color/md_white_1000"
+        android:textSize="16sp"
+        android:paddingTop="3dip"
+        android:paddingEnd="3dip" />
+</LinearLayout>

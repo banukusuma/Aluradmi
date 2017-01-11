@@ -66,6 +66,7 @@
         </activity>
         <activity android:name=".KeteranganPagerActivity"
             android:parentActivityName=".AlurListActivity"/>
+        <activity android:name=".JurusanListActivity" />
     </application>
 
 </manifest>

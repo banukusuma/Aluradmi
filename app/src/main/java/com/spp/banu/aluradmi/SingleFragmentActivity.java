@@ -19,7 +19,7 @@ public abstract class SingleFragmentActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fragment);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
         setSupportActionBar(toolbar);
         getActionBar().setDisplayHomeAsUpEnabled(true);
         FragmentManager fm = getSupportFragmentManager();

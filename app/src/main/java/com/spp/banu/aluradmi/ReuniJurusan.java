@@ -112,5 +112,18 @@ public class ReuniJurusan {
         return cursorWrapper.getJurusan();
     }
 
+    public List<String> getListNamaJurusan(){
+        List<String> stringList = new ArrayList<>();
+        JurusanCursorWrapper  cursorWrapper = queryJurusan(null,null);
+        try {
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast()){
+                stringList.add(cursorWrapper.getNamaJurusan());
+            }
+        } finally {
+            cursorWrapper.close();
+        }
+        return stringList;
+    }
 
 }

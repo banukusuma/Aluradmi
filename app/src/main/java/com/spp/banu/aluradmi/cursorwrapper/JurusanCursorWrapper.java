@@ -27,4 +27,9 @@ public class JurusanCursorWrapper extends CursorWrapper {
         jurusan.setTimestamp(timestamp);
         return jurusan;
     }
+
+    public String getNamaJurusan(){
+        String nama = getString(getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.NAMA));
+        return nama ;
+    }
 }

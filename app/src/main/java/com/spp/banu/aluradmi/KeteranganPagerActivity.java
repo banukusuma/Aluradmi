@@ -15,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 
+import com.astuetz.PagerSlidingTabStrip;
 import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
 import com.spp.banu.aluradmi.fragment.KeteranganFragment;
@@ -40,7 +41,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.keterangan_pager);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_pager);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         id_alur = getIntent().getIntExtra(EXTRA_ID_ALUR, 0);
@@ -62,12 +63,15 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         if (keteranganList.isEmpty()){
             Keterangan keterangan = new Keterangan();
             keterangan.setId_keterangan(0);
+            keterangan.setNama("Data Masih Kosong");
             keteranganList.add(keterangan);
         }
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = (ViewPager) findViewById(R.id.keterangan_view_pager);
         pagerAdapter = new ScreenSlidePagerAdapter(fragmentManager);
         viewPager.setAdapter(pagerAdapter);
+        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip)findViewById(R.id.tabs);
+        tabStrip.setViewPager(viewPager);
     }
 
     public static Intent newIntent(Context packagecontext, int id_alur){
@@ -105,6 +109,19 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         return false;
     }
 
+    @Override
+    public void onBackPressed() {
+        if (viewPager.getCurrentItem() == 0) {
+            // If the user is currently looking at the first step, allow the system to handle the
+            // Back button. This calls finish() on this activity and pops the back stack.
+            super.onBackPressed();
+        } else {
+            // Otherwise, select the previous step.
+            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+        }
+
+    }
+
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         public ScreenSlidePagerAdapter(FragmentManager fm) {
             super(fm);
@@ -123,8 +140,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
 
         @Override
         public CharSequence getPageTitle(int position) {
-            int posisi = position +1 ;
-            return "Halaman " + posisi;
+            return keteranganList.get(position).getNama();
         }
     }
 

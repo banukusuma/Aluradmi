@@ -73,7 +73,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_keterangan, container, false);
-        judulKeterangan = (TextView) view.findViewById(R.id.keterangan_title);
+        //judulKeterangan = (TextView) view.findViewById(R.id.keterangan_title);
         isiKeterangan = (TextView)view.findViewById(R.id.isi_keterangan);
         isiBerkas = (TextView) view.findViewById(R.id.isi_berkas);
         halaman = (TextView) view.findViewById(R.id.halaman_keterangan);
@@ -91,7 +91,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         if (keterangan.getId_keterangan() != 0 ){
             labelDetail.setVisibility(View.VISIBLE);
             isiKeterangan.setVisibility(View.VISIBLE);
-            judulKeterangan.setText(keterangan.getUrut() + ". " + keterangan.getNama());
+            //judulKeterangan.setText(keterangan.getUrut() + ". " + keterangan.getNama());
             isiKeterangan.setText(keterangan.getKeterangan());
             selesaiCheckBox.setVisibility(View.VISIBLE);
             halaman.setVisibility(View.VISIBLE);
@@ -99,7 +99,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             bindLokasi();
             bindBerkas();
         } else {
-            judulKeterangan.setText("Data masih kosong");
+            //judulKeterangan.setText("Data masih kosong");
             labelDetail.setVisibility(View.INVISIBLE);
             isiKeterangan.setVisibility(View.INVISIBLE);
             selesaiCheckBox.setVisibility(View.INVISIBLE);

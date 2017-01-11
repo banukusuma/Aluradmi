@@ -42,7 +42,10 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialize.util.UIUtils;
+import com.spp.banu.aluradmi.fragment.AboutFragment;
 import com.spp.banu.aluradmi.fragment.AlurListFragment;
+import com.spp.banu.aluradmi.fragment.BantuanFragment;
+import com.spp.banu.aluradmi.fragment.HomeFragment;
 import com.spp.banu.aluradmi.fragment.JurusanDialogFragment;
 import com.spp.banu.aluradmi.fragment.JurusanListFragment;
 import com.spp.banu.aluradmi.fragment.KategoriListFragment;
@@ -59,21 +62,30 @@ public class MainActivity extends AppCompatActivity
         implements KategoriListFragment.onKategoriListSelectListener, Drawer.OnDrawerItemClickListener {
     //NavigationView.OnNavigationItemSelectedListener ,
     private CharSequence mDrawerTitle;
+    private boolean isFirstRun;
     private CharSequence mTitle;
+    private final static String TAG_home_fragment = "home_fragment";
     private final static String TAG_kategori_fragment = "kategori_fragment";
     private final static String TAG_bantuan_fragment = "bantuan_fragment";
     private final static String TAG_tentang_fragment = "tentang_fragment";
     private ActionBarDrawerToggle toggle;
     Drawer result;
     AccountHeader resultHeader;
+    FragmentManager fragmentManager;
+    Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.new_activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
         setSupportActionBar(toolbar);
         mTitle = mDrawerTitle = getTitle();
+        fragmentManager = getSupportFragmentManager();
+        fragment = fragmentManager.findFragmentById(R.id.content_main);
+        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
+        isFirstRun = reuniJurusan.isSelectedJurusan();
+        /*
         FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
             if (fragment == null){
@@ -82,53 +94,62 @@ public class MainActivity extends AppCompatActivity
                         .add(R.id.content_main, fragment, "kategori_fragment")
                         .commit();
             }
+            */
+        //Pembuatan Account Header
         resultHeader = new AccountHeaderBuilder()
                 .withActivity(this)
                 .withHeaderBackground(R.color.primary)
                 .withSelectionListEnabledForSingleProfile(false)
+                .withProfileImagesClickable(false)
                 .addProfiles(new ProfileDrawerItem().withName("Aluradmi").withIcon(FontAwesome.Icon.faw_paper_plane_o))
                 .build();
-        PrimaryDrawerItem itemHome = new PrimaryDrawerItem().withIdentifier(1).withName("Home").withIcon(GoogleMaterial.Icon.gmd_home);
+        //Penambahan Kategori
         ReuniKategori reuniKategori = new ReuniKategori(this);
         List<Kategori> kategoriList = reuniKategori.getKategoris(null,null);
-        SecondaryDrawerItem itemAbout = new SecondaryDrawerItem().withIdentifier(2).withName("Tentang")
+        if (kategoriList.size() == 0){
+            Kategori kategori = new Kategori();
+            kategori.setId_kategori(0);
+            kategori.setNama("Data Masih Kosong");
+            kategoriList.add(kategori);
+        }
+        //membuat drawer item
+        PrimaryDrawerItem itemHome = new PrimaryDrawerItem().withIdentifier(1).withName(R.string.home)
+                .withIcon(GoogleMaterial.Icon.gmd_home);
+        ExpandableDrawerItem kategori_expand = new ExpandableDrawerItem().withName(R.string.kategori)
+                .withIcon(GoogleMaterial.Icon.gmd_receipt).withIdentifier(2).withSelectable(false);
+        PrimaryDrawerItem itemLokasi = new PrimaryDrawerItem().withIdentifier(3).withName(R.string.lokasi)
+                .withIcon(GoogleMaterial.Icon.gmd_my_location);
+        PrimaryDrawerItem itemAbout = new PrimaryDrawerItem().withIdentifier(5).withName(R.string.about)
                 .withIcon(GoogleMaterial.Icon.gmd_info_outline);
-        SectionDrawerItem itemKategori = new SectionDrawerItem().withName("Kategori").withSelectable(false);
+        PrimaryDrawerItem itemBantuan = new PrimaryDrawerItem().withIdentifier(4).withName(R.string.bantuan)
+                .withIcon(GoogleMaterial.Icon.gmd_help_outline);
+
+        List<IDrawerItem> kategori_item_list = new ArrayList<>();
+
+        //perulangan untuk memasukkan kategori ke dalam expand drawer
+        //belum dimasukkan apabila data kosong
+        for (Kategori kategori : kategoriList){
+            if (kategori.getId_kategori() != 0){
+                kategori_item_list.add(new SecondaryDrawerItem().withName(kategori.getNama()).withIdentifier(kategori.getId_kategori())
+                        .withIcon(GoogleMaterial.Icon.gmd_receipt));
+            }
+        }
+        kategori_expand.withSubItems(kategori_item_list);
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withAccountHeader(resultHeader)
-                .withDisplayBelowStatusBar(false)
                 .withOnDrawerItemClickListener(this)
                 .addDrawerItems(
                         itemHome,
-                        itemKategori
+                        kategori_expand,
+                        itemLokasi,
+                        new SectionDrawerItem().withSelectable(false).withName(R.string.info),
+                        itemBantuan,
+                        itemAbout
                 )
                 .build();
-        for (Kategori kategori : kategoriList){
-            result.addItem(new PrimaryDrawerItem().withName(kategori.getNama()).withIdentifier(kategori.getId_kategori())
-                    .withIcon(GoogleMaterial.Icon.gmd_receipt));
-        }
-        result.addItem(new SectionDrawerItem().withName("Info").withSelectable(false));
-        result.addItem(itemAbout);
-
-
-
-        /*
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-         toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.addDrawerListener(toggle);
-        toggle.syncState();
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-        Menu menu = navigationView.getMenu();
-        for (int i = 0 ; i < 3; i++){
-            menu.add(R.id.group_nav_drawer_menu_1, Menu.NONE, i, "menu " + i);
-        }
-        MenuItem itemKategori = menu.getItem(0);
-        itemKategori.setChecked(true);
-        */
+        //result.setSelection(1, true);
     }
 
     @Override
@@ -154,7 +175,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (result.isDrawerOpen()) {
+        if (result != null && result.isDrawerOpen()) {
             result.closeDrawer();
         } else {
             super.onBackPressed();
@@ -191,7 +212,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_jurusan){
-            menuJurusan();
+           menuJurusan();
             return true;
         }
 
@@ -202,15 +223,11 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         googleServiceAvailable();
-        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
-        boolean isFirstRun = reuniJurusan.isSelectedJurusan();
         Log.i("" +this, "onResume: " + isFirstRun);
         if (isFirstRun){
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
-            dialogFragment.show(fragmentManager, "jurusanDialog");
-            dialogFragment.setCancelable(false);
+            menuJurusan();
         }
+
     }
 
     @Override
@@ -221,28 +238,55 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void replaceFragment (Fragment fragment, String fragmentTag){
-            FragmentManager manager = getSupportFragmentManager();
-            FragmentTransaction ft = manager.beginTransaction();
+            FragmentTransaction ft = fragmentManager.beginTransaction();
             ft.replace(R.id.content_main, fragment, fragmentTag);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
-
+    }
+    private void addFragment(Fragment fragment, String fragmentTag){
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.content_main, fragment, fragmentTag);
+        transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
+        transaction.commit();
     }
 
     private void menuJurusan(){
         FragmentManager fragmentManager = getSupportFragmentManager();
         JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
         dialogFragment.show(fragmentManager, "jurusanDialog");
-        dialogFragment.setCancelable(true);
+        if (isFirstRun){
+            dialogFragment.setCancelable(false);
+        } else {
+            dialogFragment.setCancelable(true);
+        }
     }
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
         long id = drawerItem.getIdentifier();
         if (id == 1){
-
+            if (fragment == null){
+                fragment = new HomeFragment();
+                addFragment(fragment, TAG_home_fragment);
+                Toast.makeText(this,"Home menambah Fragment", Toast.LENGTH_SHORT).show();
+            } else {
+                fragment = new HomeFragment();
+                replaceFragment(fragment, TAG_home_fragment);
+                Toast.makeText(this,"Home Mengganti Fragment", Toast.LENGTH_SHORT).show();
+            }
         } else if (id == 2){
-
+            Toast.makeText(this,"Kategori di klik", Toast.LENGTH_SHORT).show();
+        }else if (id == 3){
+            Intent intent = new Intent(this, MapsActivity.class);
+            startActivity(intent);
+        }else if (id == 4){
+            fragment = new BantuanFragment();
+            replaceFragment(fragment, TAG_bantuan_fragment);
+            Toast.makeText(this,"Bantuan di klik", Toast.LENGTH_SHORT).show();
+        } else if (id == 5){
+            fragment = new AboutFragment();
+            replaceFragment(fragment, TAG_tentang_fragment);
+            Toast.makeText(this,"Tentang di klik", Toast.LENGTH_SHORT).show();
         } else {
             int id_kategori = (int) id;
             new StorageId(id_kategori);

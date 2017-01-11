@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_margin="5dp"
+    android:layout_marginTop="3dp"
     app:cardElevation="3dp"
     android:layout_height="wrap_content">
 
@@ -46,7 +46,6 @@
             <TextView
                 android:layout_weight="3"
                 android:layout_width="match_parent"
-                android:layout_margin="5dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/nama_alur_text_view"
                 android:textStyle="bold"
@@ -54,16 +53,18 @@
                 android:layout_gravity="start"
                 tools:text="@string/nama_alur"
                 android:textSize="16sp"
-                 />
+                android:paddingBottom="2dp"
+                android:paddingTop="2dp" />
 
             <TextView
                 android:text="TextView"
-                android:layout_margin="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/progress_text_view"
                 android:layout_weight="1"
-                android:textSize="12sp" />
+                android:textSize="12sp"
+                android:paddingTop="2dp"
+                android:paddingBottom="2dp" />
 
         </LinearLayout>
         <ImageView
