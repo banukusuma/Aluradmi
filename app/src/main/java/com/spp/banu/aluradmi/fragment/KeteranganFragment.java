@@ -4,21 +4,25 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniBerkas;
 import com.spp.banu.aluradmi.ReuniKeterangan;
 import com.spp.banu.aluradmi.ReuniLokasi;
+import com.spp.banu.aluradmi.ReuniRuang;
 import com.spp.banu.aluradmi.model.Berkas;
 import com.spp.banu.aluradmi.model.Keterangan;
 import com.spp.banu.aluradmi.model.Lokasi;
+import com.spp.banu.aluradmi.model.Ruang;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,17 +33,20 @@ import java.util.List;
 
 public class KeteranganFragment extends Fragment implements CompoundButton.OnCheckedChangeListener {
     private TextView judulKeterangan, isiKeterangan, isiBerkas, halaman, labelDetail,
-    labellokasi, labelberkas;
-    private Button btnLokasi;
+    labellokasi, labelberkas, gedungtext, lantaitext, ruangtext;
+    private ImageView denah;
+    private Button btnrute;
     private CheckBox selesaiCheckBox;
     private Keterangan keterangan;
     private ReuniKeterangan reuniKeterangan;
     private static final String ARG_KETERANGAN_ID = "id_keterangan";
     private static final String ARG_CAN_CHECKED = "can_checked_checkbox";
     private static final String ARG_JML_DATA = "jumlah_data_keterangan_list";
+    private static final String TAG = "keterangan";
     private int id_keterangan;
     private int max_data;
-    private Lokasi lokasi;
+    private Ruang ruang;
+    private ReuniRuang reuniRuang;
     private ReuniLokasi reuniLokasi;
     private ReuniBerkas reuniBerkas;
     private List<Berkas> berkasList;
@@ -49,14 +56,18 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         reuniKeterangan = new ReuniKeterangan(getActivity());
-        reuniLokasi = new ReuniLokasi(getActivity());
+        reuniRuang = new ReuniRuang(getActivity());
         id_keterangan = getArguments().getInt(ARG_KETERANGAN_ID);
         canCheckedSelesai = getArguments().getBoolean(ARG_CAN_CHECKED);
         max_data = getArguments().getInt(ARG_JML_DATA);
         keterangan = reuniKeterangan.getKeterangan(id_keterangan);
-        lokasi = reuniLokasi.getLokasi(keterangan.getId_lokasi());
+        ruang = reuniRuang.getRuang(keterangan.getId_ruang());
         reuniBerkas = new ReuniBerkas(getActivity());
         berkasList = reuniBerkas.getBerkasList(keterangan.getId_keterangan());
+        Log.e(TAG, "gedung " + ruang.getNama_gedung() );
+        Log.e(TAG, "lantai " + ruang.getLantai() );
+        Log.e(TAG, "ruang " + ruang.getNama() );
+        Log.e(TAG, "link" + ruang.getLink() );
     }
 
     public static KeteranganFragment newInstance(int id_keterangan, boolean canCheckedSelesai, int jml_data){
@@ -77,7 +88,11 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         isiKeterangan = (TextView)view.findViewById(R.id.isi_keterangan);
         isiBerkas = (TextView) view.findViewById(R.id.isi_berkas);
         halaman = (TextView) view.findViewById(R.id.halaman_keterangan);
-        btnLokasi = (Button) view.findViewById(R.id.btn_lokasi);
+        gedungtext = (TextView) view.findViewById(R.id.gedung_text_view);
+        lantaitext = (TextView) view.findViewById(R.id.lantai_text_view);
+        ruangtext = (TextView) view.findViewById(R.id.ruang_text_view);
+        denah = (ImageView) view.findViewById(R.id.thumbnail_denah);
+        btnrute = (Button) view.findViewById(R.id.show_rute_btn);
         selesaiCheckBox = (CheckBox) view.findViewById(R.id.checkbox_selesai);
         labelDetail = (TextView)view.findViewById(R.id.label_keterangan);
         labelberkas = (TextView)view.findViewById(R.id.label_berkas_keterangan);
@@ -96,7 +111,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             selesaiCheckBox.setVisibility(View.VISIBLE);
             halaman.setVisibility(View.VISIBLE);
             halaman.setText("Halaman " + keterangan.getUrut() + " dari " + max_data);
-            bindLokasi();
+            //bindLokasi();
             bindBerkas();
         } else {
             //judulKeterangan.setText("Data masih kosong");
@@ -117,18 +132,25 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
 
     }
     private void bindLokasi(){
-        if (lokasi.getId_lokasi() != 0){
+        if (ruang.getId_ruang() != 99){
             labellokasi.setVisibility(View.VISIBLE);
-            btnLokasi.setVisibility(View.VISIBLE);
-            btnLokasi.setEnabled(true);
-            btnLokasi.setText(lokasi.getNama());
-        } else {
+            gedungtext.setVisibility(View.VISIBLE);
+            gedungtext.setText(ruang.getNama_gedung());
+            lantaitext.setVisibility(View.VISIBLE);
+            lantaitext.setText(ruang.getLantai());
+            ruangtext.setVisibility(View.VISIBLE);
+            ruangtext.setText(ruang.getNama());
+            btnrute.setVisibility(View.VISIBLE);
+            btnrute.setEnabled(true);
+        }else{
             labellokasi.setVisibility(View.GONE);
-            btnLokasi.setVisibility(View.GONE);
-            btnLokasi.setEnabled(false);
+            gedungtext.setVisibility(View.GONE);
+            lantaitext.setVisibility(View.GONE);
+            ruangtext.setVisibility(View.GONE);
+            btnrute.setVisibility(View.GONE);
+            //btnrute.setEnabled(false);
         }
     }
-
     private void bindBerkas(){
         if (!berkasList.isEmpty()){
             labelberkas.setVisibility(View.VISIBLE);

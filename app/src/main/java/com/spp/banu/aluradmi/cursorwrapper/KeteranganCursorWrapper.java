@@ -28,7 +28,7 @@ public class KeteranganCursorWrapper extends CursorWrapper {
         String nama = getString(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.NAMA));
         String isi_keterangan = getString(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.KETERANGAN));
         int id_alur = getInt(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR));
-        int id_lokasi = getInt(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.ID_LOKASI));
+        int id_ruang = getInt(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.ID_RUANG));
         String timestamp = getString(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.TIMESTAMP));
         int urut = getInt(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.URUT));
         int status = getInt(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.STATUS));
@@ -41,7 +41,7 @@ public class KeteranganCursorWrapper extends CursorWrapper {
         keterangan.setUrut(urut);
         keterangan.setStatus(status != 0);
         keterangan.setKeterangan(isi_keterangan);
-        keterangan.setId_lokasi(id_lokasi);
+        keterangan.setId_ruang(id_ruang);
         return keterangan;
     }
 }

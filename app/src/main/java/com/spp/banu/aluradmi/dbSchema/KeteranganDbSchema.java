@@ -13,7 +13,7 @@ public class KeteranganDbSchema {
             public static final String NAMA = "nama";
             public static final String TIMESTAMP = "timestamp";
             public static final String ID_KETERANGAN = "id_keterangan";
-            public static final String ID_LOKASI = "id_lokasi";
+            public static final String ID_RUANG = "id_ruang";
             public static final String KETERANGAN ="keterangan";
             public static final String URUT = "urut";
             public static final String STATUS = "status";

@@ -1,16 +1,15 @@
 package com.spp.banu.aluradmi;
 
 import android.app.Dialog;
-import android.content.Context;
+
 import android.content.Intent;
-import android.content.SharedPreferences;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.design.widget.NavigationView;
+
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
+
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -18,41 +17,37 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.SubMenu;
+
 import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+
 import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-import com.mikepenz.materialize.util.UIUtils;
+
 import com.spp.banu.aluradmi.fragment.AboutFragment;
-import com.spp.banu.aluradmi.fragment.AlurListFragment;
+
 import com.spp.banu.aluradmi.fragment.BantuanFragment;
 import com.spp.banu.aluradmi.fragment.HomeFragment;
 import com.spp.banu.aluradmi.fragment.JurusanDialogFragment;
-import com.spp.banu.aluradmi.fragment.JurusanListFragment;
+
 import com.spp.banu.aluradmi.fragment.KategoriListFragment;
-import com.spp.banu.aluradmi.fragment.KeteranganListFragment;
-import com.spp.banu.aluradmi.fragment.LokasiFragment;
+
 import com.spp.banu.aluradmi.model.Kategori;
-import com.spp.banu.aluradmi.model.Lokasi;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,8 +78,7 @@ public class MainActivity extends AppCompatActivity
         mTitle = mDrawerTitle = getTitle();
         fragmentManager = getSupportFragmentManager();
         fragment = fragmentManager.findFragmentById(R.id.content_main);
-        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
-        isFirstRun = reuniJurusan.isSelectedJurusan();
+
         /*
         FragmentManager fragmentManager = getSupportFragmentManager();
             Fragment fragment = fragmentManager.findFragmentById(R.id.content_main);
@@ -149,7 +143,7 @@ public class MainActivity extends AppCompatActivity
                         itemAbout
                 )
                 .build();
-        //result.setSelection(1, true);
+        result.setSelection(1, true);
     }
 
     @Override
@@ -215,7 +209,6 @@ public class MainActivity extends AppCompatActivity
            menuJurusan();
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -224,6 +217,8 @@ public class MainActivity extends AppCompatActivity
         super.onResume();
         googleServiceAvailable();
         Log.i("" +this, "onResume: " + isFirstRun);
+        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
+        isFirstRun = reuniJurusan.isSelectedJurusan();
         if (isFirstRun){
             menuJurusan();
         }
@@ -268,14 +263,12 @@ public class MainActivity extends AppCompatActivity
             if (fragment == null){
                 fragment = new HomeFragment();
                 addFragment(fragment, TAG_home_fragment);
-                Toast.makeText(this,"Home menambah Fragment", Toast.LENGTH_SHORT).show();
             } else {
                 fragment = new HomeFragment();
                 replaceFragment(fragment, TAG_home_fragment);
-                Toast.makeText(this,"Home Mengganti Fragment", Toast.LENGTH_SHORT).show();
             }
         } else if (id == 2){
-            Toast.makeText(this,"Kategori di klik", Toast.LENGTH_SHORT).show();
+
         }else if (id == 3){
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);

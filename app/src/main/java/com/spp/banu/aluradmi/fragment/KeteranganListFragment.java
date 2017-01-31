@@ -174,7 +174,7 @@ public class KeteranganListFragment extends Fragment {
             isiKeterangan.setMovementMethod(LinkMovementMethod.getInstance());
             ReuniLokasi reuniLokasi = new ReuniLokasi(getActivity());
             ReuniBerkas reuniBerkas = new ReuniBerkas(getActivity());
-            Lokasi lokasi = reuniLokasi.getLokasi(this.keterangan.getId_lokasi());
+            Lokasi lokasi = reuniLokasi.getLokasi(this.keterangan.getId_ruang());
             List<Berkas> berkasList = reuniBerkas.getBerkasList(this.keterangan.getId_keterangan());
             if (berkasList.isEmpty()){
                 Berkas berkas = new Berkas();

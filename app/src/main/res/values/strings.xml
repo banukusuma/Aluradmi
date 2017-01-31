@@ -27,4 +27,8 @@
     <string name="welcome">Selamat Datang di Aluradmi</string>
     <string name="oke">Oke</string>
     <string name="cancel">Cancel</string>
+    <string name="tunjuk_rute">Tunjukkan Rute</string>
+    <string name="gedung">Gedung : </string>
+    <string name="lantai">Lantai </string>
+    <string name="ruang">Ruang </string>
 </resources>

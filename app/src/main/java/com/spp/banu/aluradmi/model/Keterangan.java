@@ -9,7 +9,7 @@ import java.util.List;
 public class Keterangan {
     private int id_keterangan;
     private String nama;
-    private int id_lokasi;
+    private int id_ruang;
     private int id_alur;
     private String keterangan;
     private String timestamp;
@@ -36,12 +36,12 @@ public class Keterangan {
     }
 
 
-    public int getId_lokasi() {
-        return id_lokasi;
+    public int getId_ruang() {
+        return id_ruang;
     }
 
-    public void setId_lokasi(int id_lokasi) {
-        this.id_lokasi = id_lokasi;
+    public void setId_ruang(int id_ruang) {
+        this.id_ruang = id_ruang;
     }
 
     public int getId_keterangan() {

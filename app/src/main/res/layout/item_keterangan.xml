@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -37,14 +38,51 @@
                 style="?android:listSeparatorTextViewStyle"
                 android:layout_marginTop="5dp" />
 
-            <Button
-                android:text="Ruang Rf 5"
+            <LinearLayout
+                android:orientation="horizontal"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btn_lokasi"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="16dp"
-                android:layout_marginTop="5dp" />
+                android:layout_height="wrap_content">
+
+                <ImageView
+                    android:layout_width="150px"
+                    android:layout_height="wrap_content"
+                    app:srcCompat="@android:drawable/sym_def_app_icon"
+                    android:id="@+id/thumbnail_denah"
+                    android:maxHeight="100px"
+                    android:maxWidth="150px" />
+
+                <LinearLayout
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/gedung_text_view" />
+
+                    <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/lantai_text_view" />
+
+                    <TextView
+                        android:text="TextView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/ruang_text_view" />
+
+                    <Button
+                        android:text="@string/tunjuk_rute"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/rute_keterangan_btn"
+                        style="@style/Widget.AppCompat.Button" />
+                </LinearLayout>
+
+            </LinearLayout>
 
             <TextView
                 android:text="@string/item_berkas_keterangan"
