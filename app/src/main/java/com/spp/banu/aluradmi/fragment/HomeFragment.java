@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.R;
@@ -22,6 +23,7 @@ public class HomeFragment extends Fragment {
     private RecyclerView homeRecyclerView;
     private HomeAdapter adapter;
     private ReuniJurusan reuniJurusan;
+    private ImageView imageView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -38,6 +40,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         homeRecyclerView = (RecyclerView) view.findViewById(R.id.home_recycler_view);
+        imageView = (ImageView) view.findViewById(R.id.imageView_home);
         homeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         updateUI();
         return view;

@@ -2,6 +2,7 @@ package com.spp.banu.aluradmi;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -17,7 +18,6 @@ import com.spp.banu.aluradmi.fragment.AlurListFragment;
 
 public class AlurListActivity extends AppCompatActivity implements AlurListFragment.onAlurListSelected{
     public static final String EXTRA_ID_KATEGORI = "com.spp.banu.aluradmi.alurIntent.id_kategori";
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +43,9 @@ public class AlurListActivity extends AppCompatActivity implements AlurListFragm
 
     @Override
     public void onSelectAlur(int id_alur) {
-        Intent intent = KeteranganPagerActivity.newIntent(this, id_alur);
-        startActivity(intent);
+        if (id_alur != 0 ){
+            Intent intent = KeteranganPagerActivity.newIntent(this, id_alur);
+            startActivity(intent);
+        }
     }
 }

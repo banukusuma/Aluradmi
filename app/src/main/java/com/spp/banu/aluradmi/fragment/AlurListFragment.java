@@ -1,33 +1,24 @@
 package com.spp.banu.aluradmi.fragment;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.spp.banu.aluradmi.AlurListActivity;
-import com.spp.banu.aluradmi.KeteranganListActivity;
-import com.spp.banu.aluradmi.MainActivity;
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniJurusan;
 import com.spp.banu.aluradmi.ReuniKategori;
-import com.spp.banu.aluradmi.StorageId;
+import com.spp.banu.aluradmi.SimpleDividerItemDecoration;
 import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
-import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
 import com.spp.banu.aluradmi.model.Jurusan;
 
@@ -43,7 +34,8 @@ public class AlurListFragment extends Fragment {
     private AlurAdapter alurAdapter;
     private onAlurListSelected listSelectListener;
     private int id_kategori;
-
+    private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
+    private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
     public AlurListFragment() {
     }
 
@@ -75,7 +67,8 @@ public class AlurListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
          //this.id_kategori = getActivity().getIntent().getIntExtra(AlurListActivity.EXTRA_ID_KATEGORI, 0);
-        id_kategori = StorageId.id_kategori;
+        SharedPreferences preferences = this.getActivity().getSharedPreferences(KEY_PREFERENCE, Context.MODE_PRIVATE);
+        id_kategori = preferences.getInt(KEY_ID_KATEGORI,0);
         Log.e("alurListFragment", "jumlah backstake: " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
         Log.i("alur fragment", "id_kategori : " + Integer.toString(id_kategori));
 
@@ -101,7 +94,7 @@ public class AlurListFragment extends Fragment {
         );
         if (alurList.isEmpty()){
             Alur alur = new Alur();
-            alur.setNama("Data Tidak Ada");
+            alur.setNama("Data Masih Kosong");
             alurList.add(alur);
         }
 
@@ -120,6 +113,7 @@ public class AlurListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_alur_list, container, false);
         alurRecyclerView = (RecyclerView) view.findViewById(R.id.alur_recycler_view);
         alurRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        alurRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
         updateUI();
         return view;
     }

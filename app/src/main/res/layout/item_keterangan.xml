@@ -2,13 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    >
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        android:id="@+id/scroll_pager">
+        android:id="@+id/scroll_pager"
+        android:layout_marginBottom="8dip">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,7 +21,9 @@
                 android:layout_height="wrap_content"
                 style="?android:listSeparatorTextViewStyle"
                 android:id="@+id/label_keterangan"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="8dip"
+                android:layout_marginEnd="8dip"
+                android:layout_marginStart="8dip" />
 
             <TextView
                 android:text="TextView"
@@ -28,7 +32,8 @@
                 android:id="@+id/isi_keterangan"
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:paddingBottom="5dip" />
 
             <TextView
                 android:text="@string/item_lokasi_keterangan"
@@ -36,51 +41,70 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/label_lokasi_keterangan"
                 style="?android:listSeparatorTextViewStyle"
-                android:layout_marginTop="5dp" />
+                android:layout_marginStart="8dip"
+                android:layout_marginEnd="8dip" />
 
             <LinearLayout
-                android:orientation="horizontal"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="150px"
-                    android:layout_height="wrap_content"
-                    app:srcCompat="@android:drawable/sym_def_app_icon"
-                    android:id="@+id/thumbnail_denah"
-                    android:maxHeight="100px"
-                    android:maxWidth="150px" />
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="5dip"
+                android:layout_marginEnd="16dp">
 
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:orientation="horizontal"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
 
-                    <TextView
-                        android:text="TextView"
-                        android:layout_width="match_parent"
+                    <ImageView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:id="@+id/gedung_text_view" />
+                        android:layout_gravity="center_vertical"
+                        android:clickable="true"
+                        android:background="?attr/selectableItemBackground"
+                        app:srcCompat="@android:drawable/sym_def_app_icon"
+                        android:id="@+id/thumbnail_denah"
+                        android:maxHeight="150px"
+                        android:maxWidth="150px" />
 
-                    <TextView
-                        android:text="TextView"
+                    <LinearLayout
+                        android:orientation="vertical"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/lantai_text_view" />
+                        android:layout_height="wrap_content">
 
-                    <TextView
-                        android:text="TextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/ruang_text_view" />
+                        <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/gedung_text_view"
+                            android:paddingLeft="5dp" />
 
-                    <Button
-                        android:text="@string/tunjuk_rute"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:id="@+id/rute_keterangan_btn"
-                        style="@style/Widget.AppCompat.Button" />
+                        <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/lantai_text_view"
+                            android:paddingLeft="5dp" />
+
+                        <TextView
+                            android:text="TextView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/ruang_text_view"
+                            android:paddingLeft="5dp" />
+
+                    </LinearLayout>
+
                 </LinearLayout>
+
+                <Button
+                    android:text="@string/tunjuk_rute"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/rute_keterangan_btn"
+                    style="@style/Widget.AppCompat.Button" />
 
             </LinearLayout>
 
@@ -89,7 +113,9 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/label_berkas_keterangan"
                 style="?android:listSeparatorTextViewStyle"
-                android:layout_marginTop="5dp" />
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="8dip"
+                android:layout_marginStart="8dip" />
 
             <TextView
                 android:text="TextView"
@@ -107,14 +133,16 @@
                 android:id="@+id/checkbox_selesai"
                 android:layout_marginRight="16dp"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp" />
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp" />
         </LinearLayout>
     </ScrollView>
+
     <TextView
         android:text="TextView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="15dp"
+        android:layout_marginBottom="5dip"
         android:id="@+id/halaman_keterangan"
         android:textAppearance="@style/TextAppearance.AppCompat.Light.SearchResult.Subtitle"
         android:textAlignment="center" />

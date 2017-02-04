@@ -43,10 +43,10 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.spp.banu.aluradmi.DirectionFinderListener;
 import com.spp.banu.aluradmi.R;
-import com.spp.banu.aluradmi.ReuniLokasi;
+
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 import com.spp.banu.aluradmi.httpcall.DirectionFinder;
-import com.spp.banu.aluradmi.model.Lokasi;
+
 import com.spp.banu.aluradmi.model.Rute;
 
 import java.io.UnsupportedEncodingException;
@@ -113,9 +113,8 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
                 .addOnConnectionFailedListener(this)
                 .build();
         apiClient.connect();
-        ReuniLokasi reuniLokasi = new ReuniLokasi(getActivity());
-        Lokasi lokasi = reuniLokasi.getLokasi(9);
-        placeMarker(lokasi.getNama(),lokasi.getLattitude(), lokasi.getLongitude());
+        //diganti gedung
+
     }
 
     private void gotoLocation(double lat, double lng) {

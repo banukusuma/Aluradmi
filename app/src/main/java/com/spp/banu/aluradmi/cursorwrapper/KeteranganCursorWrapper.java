@@ -4,8 +4,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.CursorWrapper;
 
-import com.spp.banu.aluradmi.ReuniBerkas;
-import com.spp.banu.aluradmi.ReuniLokasi;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
 
 import com.spp.banu.aluradmi.model.Keterangan;

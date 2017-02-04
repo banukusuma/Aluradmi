@@ -15,7 +15,6 @@ import com.spp.banu.aluradmi.dbSchema.JurusanDbSchema;
 import com.spp.banu.aluradmi.dbSchema.KategoriDbSchema;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
 import com.spp.banu.aluradmi.dbSchema.LantaiDbSchema;
-import com.spp.banu.aluradmi.dbSchema.LokasiDbSchema;
 import com.spp.banu.aluradmi.dbSchema.RuangDbSchema;
 
 import org.json.JSONArray;
@@ -42,12 +41,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "" +KategoriDbSchema.KategoriTable.Kolom.ID_KATEGORI+" INTEGER PRIMARY KEY NOT NULL, " +
             " " + KategoriDbSchema.KategoriTable.Kolom.NAMA+" TEXT NOT NULL, " + KategoriDbSchema.KategoriTable.Kolom.TIMESTAMP+
             " TEXT NOT NULL )";
-    private static final String TABLE_LOKASI = "CREATE TABLE "+ LokasiDbSchema.LokasiTable.TABLE_NAME+" (" +
-            ""+LokasiDbSchema.LokasiTable.Kolom.ID_LOKASI+" INTEGER PRIMARY KEY NOT NULL, " +
-            ""+LokasiDbSchema.LokasiTable.Kolom.NAMA+" TEXT NOT NULL, " +
-            ""+LokasiDbSchema.LokasiTable.Kolom.TIMESTAMP+" TEXT NOT NULL , " +
-            ""+LokasiDbSchema.LokasiTable.Kolom.LATTITUDE+" REAL, " +
-            ""+LokasiDbSchema.LokasiTable.Kolom.LONGITUDE+" REAL)";
     private static final String TABLE_ALUR = "CREATE TABLE "+ AlurDbSchema.AlurTable.TABLE_NAME+" (" +
             ""+AlurDbSchema.AlurTable.Kolom.ID_ALUR+" INTEGER NOT NULL PRIMARY KEY, " +
             ""+AlurDbSchema.AlurTable.Kolom.NAMA+" TEXT NOT NULL, " +
@@ -118,7 +111,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(TABLE_JURUSAN);
         sqLiteDatabase.execSQL(TABLE_KATEGORI);
-        //sqLiteDatabase.execSQL(TABLE_LOKASI);
         sqLiteDatabase.execSQL(TABLE_GEDUNG);
         sqLiteDatabase.execSQL(TABLE_LANTAI);
         sqLiteDatabase.execSQL(TABLE_RUANG);

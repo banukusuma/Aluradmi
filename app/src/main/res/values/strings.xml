@@ -31,4 +31,5 @@
     <string name="gedung">Gedung : </string>
     <string name="lantai">Lantai </string>
     <string name="ruang">Ruang </string>
+    <string name="unduh_denah">Sedang Mengunduh Denah</string>
 </resources>

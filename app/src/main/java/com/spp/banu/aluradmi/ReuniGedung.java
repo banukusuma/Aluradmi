@@ -54,4 +54,38 @@ public class ReuniGedung {
         }
         return gedungList;
     }
+
+    public Gedung getGedung(int id_gedung){
+        Gedung gedung = new Gedung();
+        GedungCursorWrapper cursorWrapper = queryGedung(GedungDbSchema.GedungTable.Kolom.ID_GEDUNG + " = ? ",
+                new String[]{Integer.toString(id_gedung)});
+        try {
+            if (cursorWrapper.getCount() == 0){
+                gedung.setId_gedung(99);
+            }else {
+                cursorWrapper.moveToFirst();
+                gedung = cursorWrapper.getGedung();
+            }
+        }finally {
+            cursorWrapper.close();
+        }
+        return gedung;
+    }
+
+    public Gedung searchGedung(String name){
+        Gedung gedung = new Gedung();
+        GedungCursorWrapper cursorWrapper = queryGedung(GedungDbSchema.GedungTable.Kolom.NAMA + " LIKE ? ",
+                new String[]{"%"+name+"%"});
+        try {
+            if (cursorWrapper.getCount() == 0){
+                gedung.setId_gedung(99);
+            }else {
+                cursorWrapper.moveToFirst();
+                gedung = cursorWrapper.getGedung();
+            }
+        }finally {
+            cursorWrapper.close();
+        }
+        return gedung;
+    }
 }

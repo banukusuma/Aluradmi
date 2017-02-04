@@ -2,6 +2,7 @@ package com.spp.banu.aluradmi;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,8 @@ public class KeteranganPagerActivity extends AppCompatActivity {
     private PagerAdapter pagerAdapter;
     private final String TAG = "keteranganPagerActivity";
     private int id_alur;
+    private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
+    private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
     private boolean canChecked;
     private static final String EXTRA_ID_ALUR = "com.spp.banu.aluradmi.keteranganIntent.id_alur";
 
@@ -47,6 +50,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         id_alur = getIntent().getIntExtra(EXTRA_ID_ALUR, 0);
         ReuniAlur reuniAlur = new ReuniAlur(this);
         Alur alur = reuniAlur.getAlur(id_alur);
+        getSupportActionBar().setTitle(alur.getNama());
         boolean progress = isBeforeAlurDone(alur);
         Log.e(TAG, "onCreate: boolean progress " + progress );
         if (progress || alur.getUrut() == 1){
@@ -72,6 +76,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
         PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip)findViewById(R.id.tabs);
         tabStrip.setViewPager(viewPager);
+
     }
 
     public static Intent newIntent(Context packagecontext, int id_alur){
@@ -82,12 +87,14 @@ public class KeteranganPagerActivity extends AppCompatActivity {
 
     private boolean isBeforeAlurDone(Alur alur){
         if (alur.getUrut() != 1){
+            SharedPreferences preferences = this.getSharedPreferences(KEY_PREFERENCE, Context.MODE_PRIVATE);
+            int id_kategori = preferences.getInt(KEY_ID_KATEGORI,0);
             ReuniAlur reuniAlur = new ReuniAlur(this);
             ReuniJurusan reuniJurusan = new ReuniJurusan(this);
             List<Alur> alurList = reuniAlur.getAlurs(
                     AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
                             AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
-                    new String[]{Integer.toString(StorageId.id_kategori),
+                    new String[]{Integer.toString(id_kategori),
                     Integer.toString(reuniJurusan.getSelectJurusan().getId_jurusan())}
             );
             Alur alurBefore = new Alur();

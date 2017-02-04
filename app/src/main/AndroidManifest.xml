@@ -39,9 +39,7 @@
         <activity
             android:name=".AlurListActivity"
             android:parentActivityName=".MainActivity" />
-        <activity
-            android:name=".KeteranganListActivity"
-            android:parentActivityName=".AlurListActivity" />
+        <activity android:name=".DenahActivity" />
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -66,7 +64,6 @@
         </activity>
         <activity android:name=".KeteranganPagerActivity"
             android:parentActivityName=".AlurListActivity"/>
-        <activity android:name=".JurusanListActivity" />
     </application>
 
 </manifest>

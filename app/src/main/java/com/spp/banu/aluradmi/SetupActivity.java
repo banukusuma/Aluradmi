@@ -22,7 +22,7 @@ public class SetupActivity extends AppCompatActivity {
     private TextView textView;
     private Button button;
     static final String KEY_FIRST_TIME = "com.spp.aluradmi.first_time";
-    static final String KEY = "com.spp.aluradmi";
+    static final String KEY = "com.spp.aluradmi.first";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

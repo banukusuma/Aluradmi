@@ -42,9 +42,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.miguelcatalan.materialsearchview.MaterialSearchView;
+import com.spp.banu.aluradmi.dbSchema.GedungDbSchema;
 import com.spp.banu.aluradmi.httpcall.DirectionFinder;
-import com.spp.banu.aluradmi.model.Lokasi;
+import com.spp.banu.aluradmi.model.Gedung;
 import com.spp.banu.aluradmi.model.Rute;
 
 import java.io.UnsupportedEncodingException;
@@ -52,20 +52,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener, DialogInterface.OnClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener, MaterialSearchView.OnQueryTextListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener, DialogInterface.OnClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener{
 
     private static final String TAG = "LokasiFragment";
     GoogleMap map;
     Marker currentLocationMarker;
+    private ReuniGedung reuniGedung;
     GoogleApiClient apiClient;
     LocationRequest locationRequest;
     Location currentLocation;
     Marker getCurrentClickMarker;
-    MaterialSearchView searchView;
     ProgressDialog progressDialog;
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
-    String [] nama_lokasi;
     private CoordinatorLayout coordinatorLayout;
 
     @Override
@@ -79,33 +78,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        ReuniLokasi reuniLokasi = new ReuniLokasi(this);
+        reuniGedung = new ReuniGedung(this);
+        /*
         List<Lokasi> lokasiList = reuniLokasi.getLokasiList("id_lokasi != ? ", new String[]{"0"});
         nama_lokasi = new String[lokasiList.size()];
         for(int i = 0; i < lokasiList.size();i++){
             Lokasi lokasi = lokasiList.get(i);
             nama_lokasi[i] = lokasi.getNama();
         }
+        */
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.lokasi_menu, menu);
-        MenuItem item = menu.findItem(R.id.action_search);
-         searchView = (MaterialSearchView) findViewById(R.id.search_map);
-        searchView.setMenuItem(item);
-        searchView.setOnQueryTextListener(this);
-        searchView.setSuggestions(nama_lokasi);
         return true;
     }
 
     @Override
     public void onBackPressed() {
-        if (searchView.isSearchOpen()) {
-            searchView.closeSearch();
-        } else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
+
     }
 
     @Override
@@ -128,7 +121,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        map = googleMap;
+        if (map == null){
+            map = googleMap;
+        }
         if (map != null){
             map.setInfoWindowAdapter(this);
             map.setOnInfoWindowClickListener(this);
@@ -139,9 +134,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnConnectionFailedListener(this)
                 .build();
         apiClient.connect();
-        ReuniLokasi reuniLokasi = new ReuniLokasi(this);
-        Lokasi lokasi = reuniLokasi.getLokasi(9);
-        placeMarker(lokasi.getNama(),lokasi.getLattitude(), lokasi.getLongitude());
+
+        //placeMarker(lokasi.getNama(),lokasi.getLattitude(), lokasi.getLongitude());
     }
 
     private void gotoLocation(double lat, double lng) {
@@ -300,23 +294,5 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public boolean onQueryTextSubmit(String query) {
-        ReuniLokasi reuniLokasi = new ReuniLokasi(this);
-        Lokasi lokasi = reuniLokasi.searchLokasi(query);
-        if (lokasi.getId_lokasi() == 0){
-            Toast.makeText(this, "Lokasi Tidak Ditemukan", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            gotoLocationZoom(lokasi.getLattitude(), lokasi.getLongitude(), 12);
-        }
-        return false;
-    }
-
-    @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
     }
 }
