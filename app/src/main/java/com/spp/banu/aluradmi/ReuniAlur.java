@@ -76,4 +76,23 @@ public class ReuniAlur {
         }
         return alur;
     }
+
+    public List<Alur> searchAlur(String name){
+        ReuniJurusan reuniJurusan = new ReuniJurusan(context);
+        List<Alur> alurList = new ArrayList<>();
+        AlurCursorWrapper cursorWrapper = queryAlur(AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? AND " +
+                AlurDbSchema.AlurTable.Kolom.NAMA + " LIKE ?", new String[]{Integer.toString(
+                reuniJurusan.getSelectJurusan().getId_jurusan())
+                , "%"+name+"%"});
+        try {
+            cursorWrapper.moveToFirst();
+            while (!cursorWrapper.isAfterLast()) {
+                alurList.add(cursorWrapper.getAlur());
+                cursorWrapper.moveToNext();
+            }
+        } finally {
+            cursorWrapper.close();
+        }
+        return alurList;
+    }
 }

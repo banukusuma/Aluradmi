@@ -2,6 +2,9 @@ package com.spp.banu.aluradmi;
 
 import android.app.Dialog;
 
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -12,7 +15,9 @@ import android.support.v4.app.FragmentManager;
 
 import android.support.v4.app.FragmentTransaction;
 
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -141,6 +146,15 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
+        MenuItem searchitem = menu.findItem(R.id.menu_search_main);
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchitem);
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(
+                new ComponentName(this, AlurSearchActivity.class)));
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+
         return true;
     }
 
@@ -179,6 +193,11 @@ public class MainActivity extends AppCompatActivity
            menuJurusan();
             return true;
         }
+        /*
+        else if(id == R.id.menu_search_main){
+            onSearchRequested();
+        }
+        */
         return super.onOptionsItemSelected(item);
     }
 

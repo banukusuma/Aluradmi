@@ -5,5 +5,5 @@ package com.spp.banu.aluradmi;
  */
 
 public interface AsyncBooleanListener {
-    public void getResult(boolean result);
+    void getResult(boolean result);
 }

@@ -9,7 +9,7 @@ import android.util.Log;
 import com.spp.banu.aluradmi.cursorwrapper.KeteranganCursorWrapper;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
 import com.spp.banu.aluradmi.model.Keterangan;
-import com.spp.banu.aluradmi.model.Lokasi;
+
 
 import java.util.ArrayList;
 import java.util.List;

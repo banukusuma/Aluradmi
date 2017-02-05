@@ -6,4 +6,11 @@
         android:title="@string/action_pilih_jurusan"
         android:icon="@drawable/ic_account_balance_white_24px"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_search_main"
+        app:showAsAction="ifRoom|collapseActionView"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        android:icon="@drawable/ic_search_white_24px"
+        android:title="Search"
+        />
 </menu>

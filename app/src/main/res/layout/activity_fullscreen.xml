@@ -23,6 +23,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:id="@+id/progressBarDenah" />
+
         <TextView
             android:text="@string/unduh_denah"
             android:layout_width="wrap_content"
@@ -30,6 +31,7 @@
             android:layout_below="@+id/progressBarDenah"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="11dp"
-            android:id="@+id/download_denah_textview" />
+            android:id="@+id/download_denah_textview"
+            android:textSize="14sp" />
     </RelativeLayout>
 </android.support.design.widget.CoordinatorLayout>

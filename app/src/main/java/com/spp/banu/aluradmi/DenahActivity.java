@@ -54,7 +54,7 @@ public class DenahActivity extends AppCompatActivity {
 
             @Override
             public void onError() {
-                progressBar.setVisibility(View.GONE);
+                progressBar.setVisibility(View.INVISIBLE);
                 textView_Denah.setText("Gagal Mengunduh Denah");
             }
         };

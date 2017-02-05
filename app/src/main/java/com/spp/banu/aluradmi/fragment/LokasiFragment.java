@@ -228,13 +228,13 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
         if (Mode == "internet") {
             builder.setCancelable(true);
             dialogSettingintent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-            builder.setMessage("Untuk Menggunakan Fitur Lokasi Membutuhkan Koneksi internet");
+            builder.setMessage("Untuk Menggunakan Fitur Peta Membutuhkan Koneksi internet");
             builder.setTitle("Tidak Ada Koneksi Internet");
             builder.setPositiveButton("Buka Setting", this);
         } else {
             builder.setCancelable(true);
             dialogSettingintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            builder.setMessage("Untuk Menjalankan Rute Lokasi Memerlukan GPS dalam keadaan menyala");
+            builder.setMessage("Untuk Menjalankan Rute Peta Memerlukan GPS dalam keadaan menyala");
             builder.setTitle("GPS tidak aktif");
             builder.setPositiveButton("Buka Setting", this);
         }

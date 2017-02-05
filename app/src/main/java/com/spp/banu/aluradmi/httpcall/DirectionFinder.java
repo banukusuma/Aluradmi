@@ -1,13 +1,11 @@
 package com.spp.banu.aluradmi.httpcall;
 
-import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.spp.banu.aluradmi.DirectionFinderListener;
-import com.spp.banu.aluradmi.R;
-import com.spp.banu.aluradmi.model.Lokasi;
+
 import com.spp.banu.aluradmi.model.Rute;
 
 import org.json.JSONArray;
