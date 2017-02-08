@@ -33,7 +33,7 @@ public class SetupActivity extends AppCompatActivity {
 
         button = (Button) findViewById(R.id.buttonRetry);
 
-        button.setText("Retry");
+        button.setText("Ulangi");
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,6 +48,12 @@ public class SetupActivity extends AppCompatActivity {
         builder.setCancelable(false);
         builder.setMessage("Setup Aplikasi Membutuhkan Koneksi Internet");
         builder.setTitle("Tidak Ada Koneksi Internet");
+        builder.setNegativeButton("Tutup", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
         builder.setPositiveButton("Buka Setting", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

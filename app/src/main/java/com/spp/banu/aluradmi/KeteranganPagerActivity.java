@@ -108,7 +108,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
             }
             int progress = Math.round(alurBefore.getProgress());
             Log.e(TAG, "alur before " + alurBefore.getNama());
-            Log.e(TAG, "progress alur before" + alurBefore.getProgress());
+            Log.e(TAG, "progress alur before " + alurBefore.getProgress());
             if (progress == 100){
                 return true;
             }

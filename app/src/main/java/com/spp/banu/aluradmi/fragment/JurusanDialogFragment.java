@@ -39,7 +39,7 @@ public class JurusanDialogFragment extends DialogFragment {
         } else {
             selectedItem = reuniJurusan.getPositionSelectedJurusan(null,null);
         }
-
+        boolean isFirstRun = reuniJurusan.isSelectedJurusan();
         List<String> strings = new ArrayList<>();
         for (Jurusan jurusan : jurusanList){
             strings.add(jurusan.getNama());
@@ -68,7 +68,14 @@ public class JurusanDialogFragment extends DialogFragment {
                 Log.i("Dialog Jurusan", "onClick: " + namaJurusan);
             }
         });
-
+        if (!isFirstRun){
+            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int i) {
+                    dialogInterface.dismiss();
+                }
+            });
+        }
         return  builder.create();
     }
 

@@ -11,12 +11,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniJurusan;
 import com.spp.banu.aluradmi.ReuniKategori;
+import com.spp.banu.aluradmi.ReuniKeterangan;
 import com.spp.banu.aluradmi.SimpleDividerItemDecoration;
 import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
@@ -34,6 +36,9 @@ public class AlurListFragment extends Fragment {
     private AlurAdapter alurAdapter;
     private onAlurListSelected listSelectListener;
     private int id_kategori;
+    private ReuniJurusan reuniJurusan;
+    private ReuniAlur reuniAlur;
+    private final static String TAG = "alurListFragment";
     private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
     private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
     public AlurListFragment() {
@@ -58,8 +63,8 @@ public class AlurListFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        restart_progress_jika_perlu();
         updateUI();
-        Log.i("Alur List Fragment", "onResume: ");
     }
 
 
@@ -69,7 +74,6 @@ public class AlurListFragment extends Fragment {
          //this.id_kategori = getActivity().getIntent().getIntExtra(AlurListActivity.EXTRA_ID_KATEGORI, 0);
         SharedPreferences preferences = this.getActivity().getSharedPreferences(KEY_PREFERENCE, Context.MODE_PRIVATE);
         id_kategori = preferences.getInt(KEY_ID_KATEGORI,0);
-        Log.e("alurListFragment", "jumlah backstake: " + getActivity().getSupportFragmentManager().getBackStackEntryCount());
         Log.i("alur fragment", "id_kategori : " + Integer.toString(id_kategori));
 
     }
@@ -84,8 +88,8 @@ public class AlurListFragment extends Fragment {
             getActivity().setTitle("Alur");
         }
 
-        ReuniAlur reuniAlur = new ReuniAlur(getActivity());
-        ReuniJurusan reuniJurusan = new ReuniJurusan(getActivity());
+        reuniAlur = new ReuniAlur(getActivity());
+         reuniJurusan = new ReuniJurusan(getActivity());
         Jurusan jurusan = reuniJurusan.getSelectJurusan();
         List<Alur> alurList = reuniAlur.getAlurs(
                 AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
@@ -94,7 +98,7 @@ public class AlurListFragment extends Fragment {
         );
         if (alurList.isEmpty()){
             Alur alur = new Alur();
-            alur.setNama("Data Masih Kosong");
+            alur.setId_alur(0);
             alurList.add(alur);
         }
 
@@ -106,6 +110,41 @@ public class AlurListFragment extends Fragment {
             alurAdapter.notifyDataSetChanged();
         }
 
+    }
+
+    private void restart_progress_jika_perlu(){
+        Jurusan jurusan = reuniJurusan.getSelectJurusan();
+        List<Alur> alurList = reuniAlur.getAlurs(
+                AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                        AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
+                new String[]{Integer.toString(id_kategori), Integer.toString(jurusan.getId_jurusan())}
+        );
+        for(int i = 0; i < alurList.size(); i++){
+            int h = i - 1;
+            if (i != 0){
+                int progress1 = Math.round(alurList.get(h).getProgress());
+                int progress2 = Math.round(alurList.get(i).getProgress());
+                Log.e(TAG, "progress 1 :" + progress1 );
+                Log.e(TAG, "progress 2 :" + progress2 );
+                if ((progress1 != 100 && progress1 <= progress2) || (progress1 != 100 && progress1 >= progress2)){
+                    restart_progress(alurList.get(i).getId_kategori(), alurList.get(i).getUrut());
+                    break;
+                }
+            }
+
+        }
+    }
+
+    private void restart_progress(int id_Kategori, int urut){
+        ReuniKeterangan reuniKeterangan = new ReuniKeterangan(getActivity());
+        List<Alur> alurList_restart_progress = reuniAlur.getAlurs(
+                AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                        AlurDbSchema.AlurTable.Kolom.URUT + " >= ? ",
+                new String[]{Integer.toString(id_Kategori), Integer.toString(urut)}
+        );
+        for (Alur alur : alurList_restart_progress){
+            reuniKeterangan.restartProgress(alur.getId_alur());
+        }
     }
     @Nullable
     @Override
@@ -123,22 +162,34 @@ public class AlurListFragment extends Fragment {
 
         private TextView namaAlur, progress_text, urut_Alur;
         private Alur alur;
+        private RelativeLayout layout_urut;
 
         public AlurHolder(View itemView) {
             super(itemView);
             namaAlur = (TextView) itemView.findViewById(R.id.nama_alur_text_view);
             progress_text = (TextView) itemView.findViewById(R.id.progress_text_view);
             urut_Alur = (TextView)itemView.findViewById(R.id.urut_alur_text_view);
+            layout_urut = (RelativeLayout) itemView.findViewById(R.id.relative_layout_urut_Alur);
             itemView.setOnClickListener(this);
             //progressBar = (ProgressBar) itemView.findViewById(R.id.progress_alur_progress_bar);
         }
 
         public void bindAlur(Alur alur){
             this.alur = alur;
-            int urut = this.alur.getUrut();
-            urut_Alur.setText(Integer.toString(urut));
-            namaAlur.setText(this.alur.getNama());
-            progress_text.setText("Progress : " + this.alur.getProgress() + "%");
+            if (this.alur.getId_alur() != 0 ){
+                int urut = this.alur.getUrut();
+                namaAlur.setVisibility(View.VISIBLE);
+                progress_text.setVisibility(View.VISIBLE);
+                layout_urut.setVisibility(View.VISIBLE);
+                urut_Alur.setText(Integer.toString(urut));
+                namaAlur.setText(this.alur.getNama());
+                progress_text.setText("Progress : " + this.alur.getProgress() + "%");
+            } else {
+                namaAlur.setText("Data Masih Kosong");
+                layout_urut.setVisibility(View.GONE);
+                progress_text.setVisibility(View.GONE);
+            }
+
         }
 
         @Override

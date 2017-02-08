@@ -71,13 +71,20 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     private void doSearch(String query){
         ReuniAlur reuniAlur = new ReuniAlur(this);
         List<Alur> alurList = reuniAlur.searchAlur(query);
+        if (alurList.size() == 0 ){
+            Alur alur = new Alur();
+            alur.setId_alur(0);
+            alurList.add(alur);
+        }
         SearchAdapter adapter = new SearchAdapter(this, alurList, this);
         listView.setAdapter(adapter);
     }
 
     @Override
     public void onSearchItemSelected(int id_alur) {
-        Intent intent = KeteranganPagerActivity.newIntent(this, id_alur);
-        startActivity(intent);
+        if (id_alur != 0 ){
+            Intent intent = KeteranganPagerActivity.newIntent(this, id_alur);
+            startActivity(intent);
+        }
     }
 }

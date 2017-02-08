@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -80,6 +81,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.item_keterangan, container, false);
         isiKeterangan = (TextView)view.findViewById(R.id.isi_keterangan);
+        isiKeterangan.setMovementMethod(LinkMovementMethod.getInstance());
         isiBerkas = (TextView) view.findViewById(R.id.isi_berkas);
         halaman = (TextView) view.findViewById(R.id.halaman_keterangan);
         gedungtext = (TextView) view.findViewById(R.id.gedung_text_view);

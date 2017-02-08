@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.model.Alur;
@@ -68,20 +69,29 @@ public class SearchAdapter extends BaseAdapter {
     private class ViewHolder implements View.OnClickListener {
         private TextView nama_alur , kategori, urut_alur;
         private Alur alur;
+        private RelativeLayout layout_urut_alur;
         public ViewHolder(View view) {
             nama_alur = (TextView) view.findViewById(R.id.nama_alur_text_view);
             kategori = (TextView) view.findViewById(R.id.progress_text_view);
-            urut_alur = (TextView) view.findViewById(R.id.urut_alur_text_view);
+            //urut_alur = (TextView) view.findViewById(R.id.urut_alur_text_view);
+            layout_urut_alur = (RelativeLayout) view.findViewById(R.id.relative_layout_urut_Alur);
+            layout_urut_alur.setVisibility(View.GONE);
             view.setOnClickListener(this);
         }
 
         public void bindAlur(Alur alur2){
             alur = alur2;
-            ReuniKategori reuniKategori = new ReuniKategori(context);
-            String nama_kategori = reuniKategori.getKategori(alur.getId_kategori()).getNama();
-            nama_alur.setText(alur.getNama());
-            kategori.setText("Kategori : " + nama_kategori);
-            urut_alur.setText(Integer.toString(alur.getUrut()));
+            if (alur.getId_alur() == 0){
+                nama_alur.setText("Data Tidak Ditemukan");
+                kategori.setVisibility(View.GONE);
+            }else {
+                ReuniKategori reuniKategori = new ReuniKategori(context);
+                String nama_kategori = reuniKategori.getKategori(alur.getId_kategori()).getNama();
+                nama_alur.setText(alur.getNama());
+                kategori.setText("Kategori : " + nama_kategori);
+            }
+
+            //urut_alur.setText(Integer.toString(alur.getUrut()));
         }
 
         @Override

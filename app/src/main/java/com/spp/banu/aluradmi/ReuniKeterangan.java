@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.spp.banu.aluradmi.cursorwrapper.KeteranganCursorWrapper;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
+import com.spp.banu.aluradmi.model.Alur;
 import com.spp.banu.aluradmi.model.Keterangan;
 
 
@@ -93,5 +94,19 @@ public class ReuniKeterangan {
                 KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN + " = ? ",
                 new String[]{Integer.toString(id_keterangan)}
         );
+    }
+
+    public void restartProgress(int id_alur){
+        ContentValues values = new ContentValues();
+        values.put(KeteranganDbSchema.KeteranganTable.Kolom.STATUS, 0);
+        List<Keterangan> keteranganList = getKeteranganList(KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? "
+                , new String[]{Integer.toString(id_alur)});
+        for (Keterangan keterangan : keteranganList){
+            database.update(KeteranganDbSchema.KeteranganTable.TABLE_NAME,
+                    values, KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN+ " = ? AND "
+                            + KeteranganDbSchema.KeteranganTable.Kolom.URUT + " = ? ",
+                    new String[]{Integer.toString(keterangan.getId_keterangan()), Integer.toString(keterangan.getUrut())});
+        }
+
     }
 }

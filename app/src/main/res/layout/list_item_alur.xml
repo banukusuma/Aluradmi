@@ -15,6 +15,7 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:id="@+id/relative_layout_urut_Alur"
             android:layout_weight="1">
             <ImageView
                 android:layout_height="match_parent"

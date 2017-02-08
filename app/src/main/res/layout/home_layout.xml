@@ -24,7 +24,7 @@
         android:paddingEnd="5dip" />
 
     <ImageView
-        android:layout_height="140dp"
+        android:layout_height="162dp"
         app:srcCompat="@drawable/logo_uny"
         android:id="@+id/imageView_home"
         android:layout_width="match_parent" />
