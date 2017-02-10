@@ -44,11 +44,14 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.spp.banu.aluradmi.dbSchema.GedungDbSchema;
 import com.spp.banu.aluradmi.httpcall.DirectionFinder;
+import com.spp.banu.aluradmi.model.Edge;
 import com.spp.banu.aluradmi.model.Gedung;
 import com.spp.banu.aluradmi.model.Rute;
+import com.spp.banu.aluradmi.model.Vertex;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
@@ -62,7 +65,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     LocationRequest locationRequest;
     Location currentLocation;
     Marker getCurrentClickMarker;
+    private List<Vertex> nodes;
+    private List<Edge> edges;
     ProgressDialog progressDialog;
+    private LinkedList<Polyline> routeList = new LinkedList<>();
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
     private CoordinatorLayout coordinatorLayout;
@@ -128,7 +134,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .build();
         apiClient.connect();
 
-        //placeMarker(lokasi.getNama(),lokasi.getLattitude(), lokasi.getLongitude());
     }
 
     private void gotoLocation(double lat, double lng) {
@@ -287,5 +292,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    private void addLane(String laneId, int sourceLocNo, int destLocNo) {
+        Edge lane = new Edge(laneId,nodes.get(sourceLocNo), nodes.get(destLocNo) );
+        edges.add(lane);
     }
 }
