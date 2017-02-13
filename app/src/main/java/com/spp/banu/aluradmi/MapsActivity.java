@@ -46,6 +46,7 @@ import com.spp.banu.aluradmi.dbSchema.GedungDbSchema;
 import com.spp.banu.aluradmi.httpcall.DirectionFinder;
 import com.spp.banu.aluradmi.model.Edge;
 import com.spp.banu.aluradmi.model.Gedung;
+import com.spp.banu.aluradmi.model.Graph;
 import com.spp.banu.aluradmi.model.Rute;
 import com.spp.banu.aluradmi.model.Vertex;
 
@@ -80,6 +81,124 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        nodes = new ArrayList<>();
+
+        //menggambar titik persimpangan node
+        nodes.add(new Vertex("1", "node 1", new LatLng(-7.769449329031687,110.38801185786724 )));
+        nodes.add(new Vertex("2", "node 2", new LatLng(-7.7695613213732395,110.3878864645958 )));
+        nodes.add(new Vertex("3", "node 3", new LatLng(-7.769425784475547,110.38769602775574 )));
+        nodes.add(new Vertex("4", "node 4", new LatLng(-7.769096243600631,110.38781940937042 )));
+        nodes.add(new Vertex("5", "node 5", new LatLng(-7.769223807840961,110.38768798112869 )));
+        nodes.add(new Vertex("6", "node 6", new LatLng(-7.76904574941147,110.38764238357544 )));
+        nodes.add(new Vertex("7", "node 7", new LatLng(-7.769322138583081,110.387382209301 )));
+        nodes.add(new Vertex("8", "node 8", new LatLng(-7.768671029186398,110.38774967193604 )));
+        nodes.add(new Vertex("9", "node 9", new LatLng(-7.769641048939684,110.38733124732971 )));
+        nodes.add(new Vertex("10", "node 10", new LatLng(-7.769901492217901,110.38780063390732 )));
+        nodes.add(new Vertex("11", "node 11", new LatLng(-7.7702602658570425,110.38768798112869 )));
+        nodes.add(new Vertex("12", "node 12", new LatLng(-7.770297471994675,110.3877604007721 )));
+        nodes.add(new Vertex("13", "node 13", new LatLng(-7.770980469792488,110.38755655288696 )));
+        nodes.add(new Vertex("14", "node 14", new LatLng(-7.77137910612597,110.38744390010834 )));
+        nodes.add(new Vertex("15", "node 15", new LatLng(-7.7714535181996265,110.38761287927628 )));
+        nodes.add(new Vertex("16", "node 16", new LatLng(-7.771724590642157,110.3872936964035 )));
+        nodes.add(new Vertex("17", "node 17", new LatLng(-7.77154919084639,110.38722395896912 )));
+        nodes.add(new Vertex("18", "node 18", new LatLng(-7.771302036464343,110.38710862398148 )));
+        nodes.add(new Vertex("19", "node 19", new LatLng(-7.771674096769067,110.38699865341187 )));
+        nodes.add(new Vertex("20", "node 20", new LatLng(-7.771429600034542,110.38692891597748 )));
+        nodes.add(new Vertex("21", "node 21", new LatLng(-7.771655493761666,110.38685113191605 )));
+        nodes.add(new Vertex("22", "node 22", new LatLng(-7.77185746922651,110.38686722517014 )));
+        nodes.add(new Vertex("23", "node 23", new LatLng(-7.771472121215996,110.38705229759216 )));
+        nodes.add(new Vertex("24", "node 24", new LatLng(-7.771631575608071,110.38757801055908 )));
+        nodes.add(new Vertex("25", "node 25", new LatLng(-7.771820263227128,110.38767457008362 )));
+        nodes.add(new Vertex("26", "node 26", new LatLng(-7.769385920673774,110.38762360811234 )));
+        nodes.add(new Vertex("27", "node 27", new LatLng(-7.769731406830022,110.38785696029663 )));
+        nodes.add(new Vertex("28", "node 28", new LatLng(-7.769789873689877,110.3874546289444 )));
+        nodes.add(new Vertex("29", "node 29", new LatLng(-7.770063604789108,110.38774967193604 )));
+        nodes.add(new Vertex("30", "node 30", new LatLng(-7.770632327084954,110.38766384124756 )));
+
+        //menghubungkan node tersebut dikurangi 1
+        edges = new ArrayList<>();
+        addLane("1",0,1 );
+        addLane("2",1, 0);
+        addLane("3", 1, 2);
+        addLane("4", 1, 26);
+        addLane("5", 2, 3);
+        addLane("6", 2, 1);
+        addLane("7", 2, 4);
+        addLane("8", 2, 25);
+        addLane("9", 3, 2);
+        addLane("10",3 ,4 );
+        addLane("11",3 ,5 );
+        addLane("12",4 ,2 );
+        addLane("13",4 ,3 );
+        addLane("14",4, 5);
+        addLane("15",4 , 25);
+        addLane("16", 4, 6);
+        addLane("17",5 ,4 );
+        addLane("18", 5, 3);
+        addLane("19", 5, 7);
+        addLane("20", 6, 25);
+        addLane("21", 6, 4);
+        addLane("22", 6, 8);
+        addLane("23", 7, 5);
+        addLane("24", 8, 6);
+        addLane("25", 8, 27);
+        addLane("26", 9, 26);
+        addLane("27", 9, 28);
+        addLane("28", 10, 28);
+        addLane("29", 10, 11);
+        addLane("30", 11, 10);
+        addLane("31", 11, 29);
+        addLane("32", 12, 29);
+        addLane("33", 12, 13);
+        addLane("34", 13, 12);
+        addLane("35", 13, 14);
+        addLane("36", 13, 15);
+        addLane("37", 13, 17);
+        addLane("38", 13, 16);
+        addLane("39", 14, 13);
+        addLane("40", 14, 23);
+        addLane("41", 15, 13);
+        addLane("42", 15, 16);
+        addLane("43", 15, 18);
+        addLane("44", 16, 15 );
+        addLane("45", 16, 13 );
+        addLane("46", 16, 18);
+        addLane("47", 16, 22);
+        addLane("48", 16, 17);
+        addLane("49", 17, 22);
+        addLane("50", 17, 13);
+        addLane("51", 17, 22);
+        addLane("52", 17, 16);
+        addLane("53", 18, 22);
+        addLane("54", 18, 15);
+        addLane("55", 18, 16);
+        addLane("56", 18, 20);
+        addLane("57", 18, 21);
+        addLane("58", 19, 22);
+        addLane("59", 19, 20);
+        addLane("60", 20, 19 );
+        addLane("61", 20, 18);
+        addLane("62", 20, 21);
+        addLane("63", 21, 20);
+        addLane("64", 21, 18);
+        addLane("65", 22, 17);
+        addLane("66", 22, 16);
+        addLane("67", 22, 19);
+        addLane("68", 22, 18);
+        addLane("69", 23, 14);
+        addLane("70", 23, 24);
+        addLane("71", 24, 23);
+        addLane("72", 25, 2);
+        addLane("73", 25, 4);
+        addLane("74", 25, 6);
+        addLane("75", 26, 1);
+        addLane("76", 26, 9);
+        addLane("77", 27, 8);
+        addLane("78", 28, 9);
+        addLane("79", 28, 10);
+        addLane("80", 29, 11);
+        addLane("81", 29, 12);
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -133,7 +252,18 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnConnectionFailedListener(this)
                 .build();
         apiClient.connect();
-
+        gotoLocation(-7.769901492217901,110.38780063390732 );
+        Graph graph = new Graph(nodes, edges);
+        DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
+        dijkstra.execute(nodes.get(5));
+        LinkedList<Vertex> path = dijkstra.getPath(nodes.get(18));
+        PolylineOptions polylineOptions = new PolylineOptions();
+        for (Vertex vertex : path){
+            polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
+                    width(5);
+            Log.e("mapsActivity", "Vertex: " + vertex.getId());
+        }
+        map.addPolyline(polylineOptions);
     }
 
     private void gotoLocation(double lat, double lng) {
