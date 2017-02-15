@@ -17,6 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.spp.banu.aluradmi.DenahActivity;
+import com.spp.banu.aluradmi.MapsActivity;
 import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniBerkas;
 import com.spp.banu.aluradmi.ReuniKeterangan;
@@ -41,6 +42,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     private ImageView denah;
     private Button btnrute;
     private CheckBox selesaiCheckBox;
+    private static final String EXTRA_ID_GEDUNG = "com.spp.banu.aluradmi.mapsIntent.id.gedung";
     private Keterangan keterangan;
     private ReuniKeterangan reuniKeterangan;
     private static final String ARG_KETERANGAN_ID = "id_keterangan";
@@ -180,6 +182,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
 
     @Override
     public void onClick(View view) {
-
+        Intent intent = MapsActivity.newIntent(getActivity(),ruang.getId_gedung());
+        startActivity(intent);
     }
 }

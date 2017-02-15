@@ -103,6 +103,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
                     if (alurList.get(i).getId_alur() == alur.getId_alur()){
                         int j = i - 1;
                         alurBefore = alurList.get(j);
+                        break;
                     }
                 }
             }

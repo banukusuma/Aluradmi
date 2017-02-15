@@ -37,7 +37,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -60,19 +63,28 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     private static final String TAG = "LokasiFragment";
     GoogleMap map;
+    public static final double R_bumi = 6372.8; // In kilometers
+    private Circle northCircle;
+    private Circle southCircle;
+    private Circle midleCircle;
     Marker currentLocationMarker;
     private ReuniGedung reuniGedung;
     GoogleApiClient apiClient;
+    private int id_gedung;
     LocationRequest locationRequest;
     Location currentLocation;
     Marker getCurrentClickMarker;
     private List<Vertex> nodes;
     private List<Edge> edges;
     ProgressDialog progressDialog;
+    private static int STATUS_POSISI;
     private LinkedList<Polyline> routeList = new LinkedList<>();
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
-    private CoordinatorLayout coordinatorLayout;
+    private final static LatLng southpoint = new LatLng(-7.7721066414384365, 110.38692757487297);
+    private final static LatLng northpoint = new LatLng(-7.768903792602624, 110.3882696852088);
+    List<Gedung> gedungList;
+    private static final String EXTRA_ID_GEDUNG = "com.spp.banu.aluradmi.mapsIntent.id.gedung";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +94,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         nodes = new ArrayList<>();
+        reuniGedung = new ReuniGedung(this);
+        gedungList = reuniGedung.getGedungList(GedungDbSchema.GedungTable.Kolom.ID_GEDUNG + " != ? ",
+                new String[]{"99"});
 
         //menggambar titik persimpangan node
         nodes.add(new Vertex("1", "node 1", new LatLng(-7.769449329031687,110.38801185786724 )));
@@ -203,8 +218,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-        reuniGedung = new ReuniGedung(this);
 
+
+    }
+
+    public static Intent newIntent(Context packagecontext, int id_gedung){
+        Intent intent = new Intent(packagecontext, MapsActivity.class);
+        intent.putExtra(EXTRA_ID_GEDUNG, id_gedung);
+        return intent;
     }
 
     @Override
@@ -223,7 +244,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.lokasi_saya){
-            gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 12);
+            gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 14);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -252,6 +273,29 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .addOnConnectionFailedListener(this)
                 .build();
         apiClient.connect();
+        for (Gedung gedung : gedungList){
+            placeMarker(gedung.getNama(), gedung.getLatitude(), gedung.getLongitude());
+        }
+        northCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.769193170842021, 110.38809886202216))
+                .radius(98)
+                .strokeWidth(5)
+                .strokeColor(Color.GREEN)
+                .fillColor(Color.argb(128, 255, 0, 0))
+        );
+        midleCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.769959319637975, 110.38760885596275))
+                .radius(76)
+                .strokeWidth(5)
+                .strokeColor(Color.RED)
+                .fillColor(Color.argb(0, 255, 100, 0))
+        );
+        southCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.7712030666905685, 110.38731381297112))
+                .radius(76)
+                .strokeWidth(5)
+                .strokeColor(Color.BLUE)
+                .fillColor(Color.argb(128, 255, 100, 0))
+        );
+        //
+        /*
         gotoLocation(-7.769901492217901,110.38780063390732 );
         Graph graph = new Graph(nodes, edges);
         DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
@@ -264,6 +308,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e("mapsActivity", "Vertex: " + vertex.getId());
         }
         map.addPolyline(polylineOptions);
+        */
     }
 
     private void gotoLocation(double lat, double lng) {
@@ -280,8 +325,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -293,7 +336,44 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
+        if (currentLocation == null){
+            locationRequest = LocationRequest.create();
+            locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY)
+                            .setInterval(1200000)
+                            .setFastestInterval(720000);
+            LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
+        }
+        placeMarker("Lokasi Anda", currentLocation.getLatitude(), currentLocation.getLongitude());
+        checkPosition();
+        Intent intent = getIntent();
+        if (intent.hasExtra(EXTRA_ID_GEDUNG)){
+            id_gedung = intent.getIntExtra(EXTRA_ID_GEDUNG, 99);
+            doRoute(id_gedung);
+            //doRoute(intent.getIntExtra(EXTRA_ID_GEDUNG,99));
+            Log.e(TAG, "id_gedung intent: " + intent.getIntExtra(EXTRA_ID_GEDUNG, 99) );
+            //doRoute(id_gedung);
+        }
+        Vertex tes = new Vertex("tes", "tes_vertex",new LatLng(-7.771746673437247, 110.38686387240887) );
+        Vertex terdekat_dari_Tes = getNearestVertex(tes);
+        Log.e(TAG, "onConnected: vertex terdekat dari tes" + terdekat_dari_Tes.getName() );
+    }
+
+    private void checkPosition() {
+        double distance1 = haversine(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                northCircle.getCenter().latitude, northCircle.getCenter().longitude);
+        double distance2 = haversine(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                midleCircle.getCenter().latitude, midleCircle.getCenter().longitude);
+        double distance3 = haversine(currentLocation.getLatitude(), currentLocation.getLongitude(),
+                southCircle.getCenter().latitude, southCircle.getCenter().longitude);
+        if( distance1 > northCircle.getRadius() || distance2> midleCircle.getRadius() || distance3 > southCircle.getRadius()  ){
+            STATUS_POSISI = 2;
+            gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
+            Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
+        } else {
+            STATUS_POSISI = 1;
+            gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 18);
+            Toast.makeText(this, "Di dalam FT", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -308,6 +388,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onLocationChanged(Location location) {
+
+        currentLocation = location;
+        /*
         if (location == null) {
             Toast.makeText(this, "Can't get current location", Toast.LENGTH_LONG).show();
         } else {
@@ -322,6 +405,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             currentLocationMarker = map.addMarker(options);
             gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 12);
         }
+        */
     }
 
     public void placeMarker(String title, double lat, double lng) {
@@ -333,7 +417,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void DirectionFinderStart() {
-        progressDialog = ProgressDialog.show(this, "Please wait.",
+        progressDialog = ProgressDialog.show(this, "Harap Tunggu.",
                 "Sedang mencari rute..", true);
         if (polylineList != null) {
             for (Polyline polyline : polylineList) {
@@ -354,9 +438,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         polylineList = new ArrayList<>();
 
         for (Rute rute : rutes) {
-            gotoLocationZoom(currentLocationMarker.getPosition().latitude, currentLocationMarker.getPosition().longitude, 12);
-            placeMarker(rute.getEndAddress(), rute.getEndLocation().latitude, rute.getEndLocation().longitude);
-
+            Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getStartLocation() );
+            Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getEndLocation() );
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLUE).
@@ -365,10 +448,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 0; i < rute.getPoint().size(); i++) {
                 polylineOptions.add(rute.getPoint().get(i));
             }
-
-
             polylineList.add(map.addPolyline(polylineOptions));
         }
+
     }
 
     public void showDialog(final Context ctx, String Mode) {
@@ -415,6 +497,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
+        for (Gedung gedung : gedungList){
+            if (gedung.getLatitude() == marker.getPosition().latitude && gedung.getLongitude() == marker.getPosition().longitude){
+                doRoute(gedung.getId_gedung());
+                break;
+            }
+        }
+        /*
         String destination = marker.getPosition().latitude + "," + marker.getPosition().longitude;
         String origin = currentLocation.getLatitude() + "," + currentLocation.getLongitude();
         try {
@@ -422,10 +511,75 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        */
     }
 
     private void addLane(String laneId, int sourceLocNo, int destLocNo) {
         Edge lane = new Edge(laneId,nodes.get(sourceLocNo), nodes.get(destLocNo) );
         edges.add(lane);
     }
+
+    private void doRoute(int id_gedung){
+        Gedung destinationGedung = new Gedung();
+        for (Gedung gedung : gedungList){
+            if (gedung.getId_gedung() == id_gedung){
+                    destinationGedung = gedung;
+                Log.e(TAG, "doRoute: destination gedung " + destinationGedung.getNama() );
+                break;
+            }
+        }
+        if (STATUS_POSISI == 2){
+            String origin = currentLocation.getLatitude() + "," + currentLocation.getLongitude();
+            String destination = destinationGedung.getLatitude() + "," + destinationGedung.getLongitude();
+            try {
+                new DirectionFinder(this, origin, destination).execute();
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+        }else if (STATUS_POSISI == 1){
+
+        }
+
+    }
+    private static double haversine(double lat1, double lon1, double lat2, double lon2) {
+        double dLat = Math.toRadians(lat2 - lat1);
+        double dLon = Math.toRadians(lon2 - lon1);
+        lat1 = Math.toRadians(lat1);
+        lat2 = Math.toRadians(lat2);
+
+        double a = Math.pow(Math.sin(dLat / 2),2) + Math.pow(Math.sin(dLon / 2),2) * Math.cos(lat1) * Math.cos(lat2);
+        double c = 2 * Math.asin(Math.sqrt(a));
+        return (R_bumi * c) * 1000;
+    }
+
+    private Vertex getNearestVertex(Vertex location){
+        List<Vertex> inLocationRadiusVertex = new ArrayList<>();
+        Circle radiusLocation = map.addCircle(new CircleOptions().center(location.getLocation()).radius(30)
+                .strokeWidth(5)
+                .strokeColor(Color.GRAY));
+        if (nodes.size() != 0){
+            for (Vertex vertex : nodes){
+                double jarak_node_ke_lokasi = haversine(vertex.getLocation().latitude, vertex.getLocation().longitude,
+                        location.getLocation().latitude, location.getLocation().longitude);
+                if (jarak_node_ke_lokasi < radiusLocation.getRadius()){
+                    inLocationRadiusVertex.add(vertex);
+                }
+            }
+
+            if (inLocationRadiusVertex.size() != 0 ){
+                Vertex terdekat = location;
+                double jarak_terdekat = Double.MAX_VALUE;
+                for (Vertex vertex : inLocationRadiusVertex){
+                    double jarak_node_ke_lokasi = haversine(vertex.getLocation().latitude, vertex.getLocation().longitude,
+                            location.getLocation().latitude,location.getLocation().longitude);
+                    if (jarak_node_ke_lokasi < jarak_terdekat){
+                        terdekat = vertex;
+                    }
+                }
+                return terdekat;
+            }
+        }
+        return null;
+    }
+
 }
