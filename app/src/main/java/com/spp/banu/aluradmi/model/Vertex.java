@@ -7,9 +7,9 @@ import com.google.android.gms.maps.model.LatLng;
  */
 
 public class Vertex {
-    final private String id;
-    final private String name;
-    final private LatLng location;
+     private String id;
+     private String name;
+     private LatLng location;
 
 
     public Vertex(String id, String name, LatLng location) {

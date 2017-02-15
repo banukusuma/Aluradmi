@@ -1,5 +1,7 @@
 package com.spp.banu.aluradmi;
 
+import android.util.Log;
+
 import com.spp.banu.aluradmi.model.Edge;
 import com.spp.banu.aluradmi.model.Graph;
 import com.spp.banu.aluradmi.model.Vertex;
@@ -18,6 +20,7 @@ import java.util.Set;
  */
 
 public class DijkstraAlgorithm {
+    private  static String TAG = "djikstra";
     private final List<Vertex> nodes;
     private final List<Edge> edges;
     private Set<Vertex> settledNodes;
@@ -40,6 +43,7 @@ public class DijkstraAlgorithm {
         unSettledNodes.add(source);
         while (unSettledNodes.size() > 0) {
             Vertex node = getMinimum(unSettledNodes);
+
             settledNodes.add(node);
             unSettledNodes.remove(node);
             findMinimalDistances(node);

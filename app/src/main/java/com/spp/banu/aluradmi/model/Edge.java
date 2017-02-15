@@ -6,10 +6,10 @@ package com.spp.banu.aluradmi.model;
 
 public class Edge {
     public static final double R = 6372.8; // In kilometers
-    private final String id;
-    private final Vertex source;
-    private final Vertex destination;
-    private final double weight;
+    private  String id;
+    private  Vertex source;
+    private  Vertex destination;
+    private  double weight;
 
     public Edge(String id, Vertex source, Vertex destination) {
         this.id = id;

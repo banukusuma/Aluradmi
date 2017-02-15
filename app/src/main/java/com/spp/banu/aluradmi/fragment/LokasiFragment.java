@@ -47,6 +47,7 @@ import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 import com.spp.banu.aluradmi.httpcall.DirectionFinder;
 
+import com.spp.banu.aluradmi.model.Gedung;
 import com.spp.banu.aluradmi.model.Rute;
 
 import java.io.UnsupportedEncodingException;
@@ -200,27 +201,10 @@ public class LokasiFragment extends SupportMapFragment implements OnMapReadyCall
     }
 
     @Override
-    public void DirectionFinderSuccess(List<Rute> rutes) {
-        progressDialog.dismiss();
-        polylineList = new ArrayList<>();
+    public void DirectionFinderSuccess(List<Rute> rutes, Gedung destination_gedung) {
 
-        for (Rute rute : rutes) {
-            gotoLocationZoom(currentLocationMarker.getPosition().latitude, currentLocationMarker.getPosition().longitude, 17);
-            placeMarker(rute.getEndAddress(), rute.getEndLocation().latitude, rute.getEndLocation().longitude);
-
-            PolylineOptions polylineOptions = new PolylineOptions().
-                    geodesic(true).
-                    color(Color.BLUE).
-                    width(10);
-
-            for (int i = 0; i < rute.getPoint().size(); i++) {
-                polylineOptions.add(rute.getPoint().get(i));
-            }
-
-
-            polylineList.add(map.addPolyline(polylineOptions));
-        }
     }
+
 
     public void showDialog(final Context ctx, String Mode) {
         final Context context = ctx;

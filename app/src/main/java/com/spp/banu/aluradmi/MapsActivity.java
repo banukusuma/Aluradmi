@@ -81,8 +81,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private LinkedList<Polyline> routeList = new LinkedList<>();
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
-    private final static LatLng southpoint = new LatLng(-7.7721066414384365, 110.38692757487297);
+    private final static LatLng southpoint = new LatLng(-7.77186626415878, 110.38690410554409);
     private final static LatLng northpoint = new LatLng(-7.768903792602624, 110.3882696852088);
+    private final static LatLng midlepoint = new LatLng(-7.769945766027917, 110.3877255320549);
     List<Gedung> gedungList;
     private static final String EXTRA_ID_GEDUNG = "com.spp.banu.aluradmi.mapsIntent.id.gedung";
 
@@ -213,7 +214,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addLane("79", 28, 10);
         addLane("80", 29, 11);
         addLane("81", 29, 12);
-
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -353,9 +353,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, "id_gedung intent: " + intent.getIntExtra(EXTRA_ID_GEDUNG, 99) );
             //doRoute(id_gedung);
         }
-        Vertex tes = new Vertex("tes", "tes_vertex",new LatLng(-7.771746673437247, 110.38686387240887) );
-        Vertex terdekat_dari_Tes = getNearestVertex(tes);
-        Log.e(TAG, "onConnected: vertex terdekat dari tes" + terdekat_dari_Tes.getName() );
+
     }
 
     private void checkPosition() {
@@ -433,13 +431,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void DirectionFinderSuccess(List<Rute> rutes) {
-        progressDialog.dismiss();
+    public void DirectionFinderSuccess(List<Rute> rutes , Gedung destination_gedung) {
+
         polylineList = new ArrayList<>();
 
         for (Rute rute : rutes) {
-            Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getStartLocation() );
-            Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getEndLocation() );
+            Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getStartLocation());
+            Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getEndLocation());
             PolylineOptions polylineOptions = new PolylineOptions().
                     geodesic(true).
                     color(Color.BLUE).
@@ -448,9 +446,118 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             for (int i = 0; i < rute.getPoint().size(); i++) {
                 polylineOptions.add(rute.getPoint().get(i));
             }
-            polylineList.add(map.addPolyline(polylineOptions));
+            //rute manual
+            int jml_nodes = nodes.size();
+            int id_current_location_node = jml_nodes + 1;
+            int id_tujuan_location_node = jml_nodes + 2;
+            int no_current_dalam_edges = id_current_location_node - 1;
+            int no_tujuan_dalam_edges = id_tujuan_location_node - 1;
+            int jml_edges = edges.size();
+            int id_current_edge = jml_edges + 1;
+            int id_tujuan_edge = jml_edges + 2;
+            Log.e(TAG, "jml_nodes " + jml_nodes);
+            Log.e(TAG, "current source " + no_current_dalam_edges);
+            Log.e(TAG, "tujuan source " + no_tujuan_dalam_edges);
+
+            Vertex node_current = null;
+            if (currentLocation.getLatitude() >= midlepoint.latitude) {
+                node_current = new Vertex(Integer.toString(id_current_location_node), "node " + id_current_location_node,
+                        new LatLng(northpoint.latitude, northpoint.longitude));
+            } else if (currentLocation.getLatitude() < midlepoint.latitude) {
+                node_current = new Vertex(Integer.toString(id_current_location_node), "node " + id_current_location_node,
+                        new LatLng(southpoint.latitude, southpoint.longitude));
+            }
+            Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node), "node " + id_tujuan_location_node,
+                    new LatLng(destination_gedung.getLatitude(), destination_gedung.getLongitude()));
+            Vertex terdekat_dari_current = getNearestVertex(node_current);
+            Vertex terdekat_dari_tujuan = getNearestVertex(node_tujuan);
+            nodes.add(node_current);
+            nodes.add(node_tujuan);
+
+            if (terdekat_dari_current != null || terdekat_dari_tujuan != null) {
+                int current_Destination_lane = Integer.parseInt(terdekat_dari_current.getId()) - 1;
+                int tujuan_destination_lane = Integer.parseInt(terdekat_dari_tujuan.getId()) - 1;
+                addLane(Integer.toString(id_current_edge), no_current_dalam_edges, current_Destination_lane);
+                addLane(Integer.toString(id_tujuan_edge), no_tujuan_dalam_edges, tujuan_destination_lane);
+                addLane(Integer.toString((id_current_edge + 1)), current_Destination_lane, no_current_dalam_edges);
+                addLane(Integer.toString((id_tujuan_edge + 1)), tujuan_destination_lane, no_tujuan_dalam_edges);
+
+
+                Graph graph = new Graph(nodes, edges);
+                DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
+                dijkstra.execute(nodes.get(no_current_dalam_edges));
+                LinkedList<Vertex> path = dijkstra.getPath(nodes.get(no_tujuan_dalam_edges));
+                //PolylineOptions polylineOptions = new PolylineOptions();
+                for (Vertex vertex : path) {
+                    polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
+                            width(10);
+                    Log.e("mapsActivity", "Vertex: " + vertex.getId());
+                }
+
+
+                //berakhir disini
+                polylineList.add(map.addPolyline(polylineOptions));
+            }
+        }
+         /*
+        int jml_nodes = nodes.size();
+        int id_current_location_node = jml_nodes + 1;
+        int id_tujuan_location_node = jml_nodes + 2;
+        int no_current_dalam_edges = id_current_location_node  - 1;
+        int no_tujuan_dalam_edges = id_tujuan_location_node - 1;
+        int jml_edges = edges.size();
+        int id_current_edge = jml_edges + 1;
+        int id_tujuan_edge = jml_edges + 2;
+        Log.e(TAG, "jml_nodes " + jml_nodes );
+        Log.e(TAG, "current source " +no_current_dalam_edges );
+        Log.e(TAG, "tujuan source "  + no_tujuan_dalam_edges);
+
+        Vertex node_current = null;
+        if (currentLocation.getLatitude() >= midlepoint.latitude){
+            node_current = new Vertex(Integer.toString(id_current_location_node ), "node " + id_current_location_node ,
+                    new LatLng(northpoint.latitude, northpoint.longitude));
+        }else if (currentLocation.getLatitude() < midlepoint.latitude){
+            node_current = new Vertex(Integer.toString(id_current_location_node ), "node " + id_current_location_node ,
+                    new LatLng(southpoint.latitude, southpoint.longitude));
+        }
+        Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node), "node " + id_tujuan_location_node,
+                new LatLng(destination_gedung.getLatitude(), destination_gedung.getLongitude()));
+        Vertex terdekat_dari_current = getNearestVertex(node_current);
+        Vertex terdekat_dari_tujuan = getNearestVertex(node_tujuan);
+        nodes.add(node_current);
+        nodes.add(node_tujuan);
+
+        if (terdekat_dari_current != null || terdekat_dari_tujuan != null){
+            int current_Destination_lane = Integer.parseInt(terdekat_dari_current.getId()) - 1 ;
+            int tujuan_destination_lane = Integer.parseInt(terdekat_dari_tujuan.getId()) - 1;
+            addLane(Integer.toString(id_current_edge),no_current_dalam_edges,current_Destination_lane);
+            addLane(Integer.toString(id_tujuan_edge), no_tujuan_dalam_edges, tujuan_destination_lane);
+            addLane(Integer.toString((id_current_edge + 1)), current_Destination_lane, no_current_dalam_edges);
+            addLane(Integer.toString((id_tujuan_edge + 1)), tujuan_destination_lane, no_tujuan_dalam_edges);
+
+
+            Graph graph = new Graph(nodes, edges);
+            DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
+            dijkstra.execute(nodes.get(no_current_dalam_edges));
+            LinkedList<Vertex> path = dijkstra.getPath(nodes.get(no_tujuan_dalam_edges));
+            PolylineOptions polylineOptions = new PolylineOptions();
+            for (Vertex vertex : path){
+                    polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
+                            width(10);
+                    Log.e("mapsActivity", "Vertex: " + vertex.getId());
+            }
+            map.addPolyline(polylineOptions);
+
         }
 
+        nodes.remove(no_tujuan_dalam_edges);
+        nodes.remove(no_current_dalam_edges);
+        edges.remove((id_tujuan_edge + 1));
+        edges.remove((id_current_edge + 1));
+        edges.remove((id_tujuan_edge - 1));
+        edges.remove((id_current_edge - 1));
+        */
+        progressDialog.dismiss();
     }
 
     public void showDialog(final Context ctx, String Mode) {
@@ -530,14 +637,60 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (STATUS_POSISI == 2){
             String origin = currentLocation.getLatitude() + "," + currentLocation.getLongitude();
-            String destination = destinationGedung.getLatitude() + "," + destinationGedung.getLongitude();
+            String destination = null;
+            if (currentLocation.getLatitude() >= midlepoint.latitude){
+                 destination = northpoint.latitude + "," + northpoint.longitude;
+            }else if (currentLocation.getLatitude() < midlepoint.latitude){
+                 destination = southpoint.latitude + "," + southpoint.longitude;
+            }
+
             try {
-                new DirectionFinder(this, origin, destination).execute();
+                new DirectionFinder(this, origin, destination, destinationGedung).execute();
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
         }else if (STATUS_POSISI == 1){
-
+            int jml_nodes = nodes.size();
+            int no_current_location = jml_nodes + 1;
+            int no_tujuan_location = jml_nodes + 2;
+            int no_current_dalam_edges = no_current_location - 1;
+            int no_tujuan_dalam_edges = no_tujuan_location - 1;
+            int jml_edges = edges.size();
+            int id_current_edge = jml_edges + 1;
+            int id_tujuan_edge = jml_edges + 2;
+            Vertex node_current = new Vertex(Integer.toString(no_current_location), "node " + no_current_location,
+                    new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+            Vertex node_tujuan = new Vertex(Integer.toString(no_tujuan_location), "node " + no_tujuan_location,
+                    new LatLng(destinationGedung.getLatitude(), destinationGedung.getLongitude()));
+            nodes.add(node_current);
+            nodes.add(node_tujuan);
+            Vertex terdekat_dari_current = getNearestVertex(node_current);
+            Vertex terdekat_dari_tujuan = getNearestVertex(node_tujuan);
+            if (terdekat_dari_current != null || terdekat_dari_tujuan != null){
+                int current_Destination_lane = Integer.parseInt(terdekat_dari_current.getId()) - 1 ;
+                int tujuan_destination_lane = Integer.parseInt(terdekat_dari_tujuan.getId()) - 1;
+                addLane(Integer.toString(id_current_edge), no_current_dalam_edges,current_Destination_lane);
+                addLane(Integer.toString(id_tujuan_edge), no_tujuan_dalam_edges, tujuan_destination_lane);
+                addLane(Integer.toString((id_current_edge + 1)), current_Destination_lane, no_current_dalam_edges);
+                addLane(Integer.toString((id_tujuan_edge + 1)), tujuan_destination_lane, no_tujuan_dalam_edges);
+                Graph graph = new Graph(nodes, edges);
+                DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
+                dijkstra.execute(nodes.get(no_current_dalam_edges));
+                LinkedList<Vertex> path = dijkstra.getPath(nodes.get(no_tujuan_dalam_edges));
+                PolylineOptions polylineOptions = new PolylineOptions();
+                for (Vertex vertex : path){
+                    polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
+                            width(10);
+                    Log.e("mapsActivity", "Vertex: " + vertex.getId());
+                }
+                map.addPolyline(polylineOptions);
+            }
+            /*
+            nodes.remove(current_source_lane);
+            nodes.remove(tujuan_source_lane);
+            edges.remove((id_current_edge - 1));
+            edges.remove((id_tujuan_edge - 1));
+            */
         }
 
     }
@@ -553,30 +706,33 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     private Vertex getNearestVertex(Vertex location){
-        List<Vertex> inLocationRadiusVertex = new ArrayList<>();
-        Circle radiusLocation = map.addCircle(new CircleOptions().center(location.getLocation()).radius(30)
-                .strokeWidth(5)
-                .strokeColor(Color.GRAY));
-        if (nodes.size() != 0){
-            for (Vertex vertex : nodes){
-                double jarak_node_ke_lokasi = haversine(vertex.getLocation().latitude, vertex.getLocation().longitude,
-                        location.getLocation().latitude, location.getLocation().longitude);
-                if (jarak_node_ke_lokasi < radiusLocation.getRadius()){
-                    inLocationRadiusVertex.add(vertex);
-                }
-            }
-
-            if (inLocationRadiusVertex.size() != 0 ){
-                Vertex terdekat = location;
-                double jarak_terdekat = Double.MAX_VALUE;
-                for (Vertex vertex : inLocationRadiusVertex){
+        if (location != null){
+            List<Vertex> inLocationRadiusVertex = new ArrayList<>();
+            Circle radiusLocation = map.addCircle(new CircleOptions().center(location.getLocation()).radius(50)
+                    .strokeWidth(5)
+                    .strokeColor(Color.GRAY));
+            if (nodes.size() != 0){
+                for (Vertex vertex : nodes){
                     double jarak_node_ke_lokasi = haversine(vertex.getLocation().latitude, vertex.getLocation().longitude,
-                            location.getLocation().latitude,location.getLocation().longitude);
-                    if (jarak_node_ke_lokasi < jarak_terdekat){
-                        terdekat = vertex;
+                            location.getLocation().latitude, location.getLocation().longitude);
+                    if (jarak_node_ke_lokasi < radiusLocation.getRadius()){
+                        inLocationRadiusVertex.add(vertex);
                     }
                 }
-                return terdekat;
+
+                if (inLocationRadiusVertex.size() != 0 ){
+                    Vertex terdekat = null;
+                    double jarak_terdekat = Double.MAX_VALUE;
+                    for (Vertex vertex : inLocationRadiusVertex){
+                        double jarak_node_ke_lokasi = haversine(vertex.getLocation().latitude, vertex.getLocation().longitude,
+                                location.getLocation().latitude,location.getLocation().longitude);
+                        if (jarak_node_ke_lokasi < jarak_terdekat){
+                            terdekat = vertex;
+                            jarak_terdekat = jarak_node_ke_lokasi;
+                        }
+                    }
+                    return terdekat;
+                }
             }
         }
         return null;

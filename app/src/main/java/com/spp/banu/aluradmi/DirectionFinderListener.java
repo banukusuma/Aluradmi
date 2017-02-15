@@ -1,6 +1,7 @@
 package com.spp.banu.aluradmi;
 
 
+import com.spp.banu.aluradmi.model.Gedung;
 import com.spp.banu.aluradmi.model.Rute;
 
 import java.util.List;
@@ -12,5 +13,5 @@ import java.util.List;
 public interface DirectionFinderListener {
     void DirectionFinderStart();
     void DirectionFinderFailed();
-    void DirectionFinderSuccess(List<Rute> rutes);
+    void DirectionFinderSuccess(List<Rute> rutes, Gedung destination_gedung);
 }

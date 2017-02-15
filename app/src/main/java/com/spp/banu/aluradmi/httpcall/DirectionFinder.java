@@ -6,6 +6,7 @@ import android.util.Log;
 import com.google.android.gms.maps.model.LatLng;
 import com.spp.banu.aluradmi.DirectionFinderListener;
 
+import com.spp.banu.aluradmi.model.Gedung;
 import com.spp.banu.aluradmi.model.Rute;
 
 import org.json.JSONArray;
@@ -26,13 +27,15 @@ public class DirectionFinder {
     private static final String API_KEY = "AIzaSyDWem_5YPZUTxDjgxlGXg7tLDrZG6Xfu7o";
     private final static String TAG = "DirectionFinder";
     private DirectionFinderListener listener;
+    Gedung gedungTujuan;
     private String origin;
     private String destination;
 
-    public DirectionFinder(DirectionFinderListener listener, String origin,String destination) {
+    public DirectionFinder(DirectionFinderListener listener, String origin,String destination, Gedung lokasi_tujuan) {
         this.listener = listener;
         this.origin = origin;
         this.destination = destination;
+        gedungTujuan = lokasi_tujuan;
     }
     public void execute()  throws UnsupportedEncodingException{
         listener.DirectionFinderStart();
@@ -99,7 +102,7 @@ public class DirectionFinder {
             rute.setPoint(decodePolyLine(overview_polylineJson.getString("points")));
             ruteList.add(rute);
         }
-        listener.DirectionFinderSuccess(ruteList);
+        listener.DirectionFinderSuccess(ruteList, gedungTujuan);
     }
 
     private List<LatLng> decodePolyLine(final String poly) {
