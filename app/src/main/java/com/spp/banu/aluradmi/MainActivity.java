@@ -211,7 +211,7 @@ public class MainActivity extends AppCompatActivity
         if (isFirstRun){
             menuJurusan();
         }
-        result.setSelection(choose_fragment);
+        result.setSelection(choose_fragment, false);
     }
 
 
