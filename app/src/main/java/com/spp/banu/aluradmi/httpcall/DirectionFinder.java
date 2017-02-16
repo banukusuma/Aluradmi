@@ -27,7 +27,7 @@ public class DirectionFinder {
     private static final String API_KEY = "AIzaSyDWem_5YPZUTxDjgxlGXg7tLDrZG6Xfu7o";
     private final static String TAG = "DirectionFinder";
     private DirectionFinderListener listener;
-    Gedung gedungTujuan;
+    private Gedung gedungTujuan;
     private String origin;
     private String destination;
 

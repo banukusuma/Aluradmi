@@ -11,6 +11,7 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,6 +54,18 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                doSearch(newText);
+                return true;
+            }
+        });
         return true;
     }
 
@@ -69,6 +82,7 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     }
 
     private void doSearch(String query){
+        Log.e("alursearch", "doSearch: query " +query );
         ReuniAlur reuniAlur = new ReuniAlur(this);
         List<Alur> alurList = reuniAlur.searchAlur(query);
         if (alurList.size() == 0 ){

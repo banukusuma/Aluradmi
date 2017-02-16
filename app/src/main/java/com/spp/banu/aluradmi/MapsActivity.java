@@ -12,10 +12,7 @@ import android.location.Location;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -40,7 +37,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
@@ -68,17 +64,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private Circle southCircle;
     private Circle midleCircle;
     Marker currentLocationMarker;
-    private ReuniGedung reuniGedung;
     GoogleApiClient apiClient;
-    private int id_gedung;
     LocationRequest locationRequest;
     Location currentLocation;
-    Marker getCurrentClickMarker;
     private List<Vertex> nodes;
     private List<Edge> edges;
     ProgressDialog progressDialog;
     private static int STATUS_POSISI;
-    private LinkedList<Polyline> routeList = new LinkedList<>();
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
     private final static LatLng southpoint = new LatLng(-7.77186626415878, 110.38690410554409);
@@ -96,7 +88,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         nodes = new ArrayList<>();
-        reuniGedung = new ReuniGedung(this);
+        ReuniGedung reuniGedung = new ReuniGedung(this);
         gedungList = reuniGedung.getGedungList(GedungDbSchema.GedungTable.Kolom.ID_GEDUNG + " != ? ",
                 new String[]{"99"});
         apiClient = new GoogleApiClient.Builder(this)
@@ -365,7 +357,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         Intent intent = getIntent();
         if (intent.hasExtra(EXTRA_ID_GEDUNG)) {
-            id_gedung = intent.getIntExtra(EXTRA_ID_GEDUNG, 99);
+            int id_gedung = intent.getIntExtra(EXTRA_ID_GEDUNG, 99);
             doRoute(id_gedung);
             Log.e(TAG, "id_gedung intent: " + intent.getIntExtra(EXTRA_ID_GEDUNG, 99));
         }
@@ -496,7 +488,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 LatLng destination_latlng = new LatLng(destination_gedung.getLatitude(), destination_gedung.getLongitude());
                 LinkedList<Vertex> path = getPathInFT(current_latlng, destination_latlng);
-                if (path.size() != 0 ){
+                if (path != null && path.size() != 0) {
                     for (Vertex vertex : path) {
                         polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
                                 width(10);
@@ -505,67 +497,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
             polylineList.add(map.addPolyline(polylineOptions));
-            /*
-            //rute manual
-            int jml_nodes = nodes.size();
-            int id_current_location_node = jml_nodes + 1;
-            int id_tujuan_location_node = jml_nodes + 2;
-            int no_current_dalam_edges = id_current_location_node - 1;
-            int no_tujuan_dalam_edges = id_tujuan_location_node - 1;
-            int jml_edges = edges.size();
-            int id_current_edge = jml_edges + 1;
-            int id_tujuan_edge = jml_edges + 2;
-            Log.e(TAG, "jml_nodes " + jml_nodes);
-            Log.e(TAG, "jml_edge " + jml_edges);
-
-            Vertex node_current = null;
-            if (currentLocation.getLatitude() >= midlepoint.latitude) {
-                node_current = new Vertex(Integer.toString(id_current_location_node), "node " + id_current_location_node,
-                        new LatLng(northpoint.latitude, northpoint.longitude));
-            } else if (currentLocation.getLatitude() < midlepoint.latitude) {
-                node_current = new Vertex(Integer.toString(id_current_location_node), "node " + id_current_location_node,
-                        new LatLng(southpoint.latitude, southpoint.longitude));
-            }
-            Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node), "node " + id_tujuan_location_node,
-                    new LatLng(destination_gedung.getLatitude(), destination_gedung.getLongitude()));
-            Vertex terdekat_dari_current = getNearestVertex(node_current);
-            Vertex terdekat_dari_tujuan = getNearestVertex(node_tujuan);
-            nodes.add(node_current);
-            nodes.add(node_tujuan);
-
-            if (terdekat_dari_current != null || terdekat_dari_tujuan != null) {
-                int current_Destination_lane = Integer.parseInt(terdekat_dari_current.getId()) - 1;
-                int tujuan_destination_lane = Integer.parseInt(terdekat_dari_tujuan.getId()) - 1;
-                addLane(Integer.toString(id_current_edge), no_current_dalam_edges, current_Destination_lane);
-                addLane(Integer.toString(id_tujuan_edge), no_tujuan_dalam_edges, tujuan_destination_lane);
-                addLane(Integer.toString((id_current_edge + 1)), current_Destination_lane, no_current_dalam_edges);
-                addLane(Integer.toString((id_tujuan_edge + 1)), tujuan_destination_lane, no_tujuan_dalam_edges);
-
-
-                Graph graph = new Graph(nodes, edges);
-                DijkstraAlgorithm dijkstra = new DijkstraAlgorithm(graph);
-                dijkstra.execute(nodes.get(no_current_dalam_edges));
-                LinkedList<Vertex> path = dijkstra.getPath(nodes.get(no_tujuan_dalam_edges));
-                //PolylineOptions polylineOptions = new PolylineOptions();
-                for (Vertex vertex : path) {
-                    polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
-                            width(10);
-                    Log.e("mapsActivity", "Vertex: " + vertex.getId());
-                }
-
-
-                //berakhir disini
-                polylineList.add(map.addPolyline(polylineOptions));
-                edges.remove((id_tujuan_edge ));
-                edges.remove((id_current_edge));
-                edges.remove((id_tujuan_edge - 1));
-                edges.remove((id_current_edge - 1));
-                nodes.remove(no_tujuan_dalam_edges);
-                nodes.remove(no_current_dalam_edges);
-                Log.e(TAG, "jml_nodes setelah diremove " + jml_nodes);
-                Log.e(TAG, "jml_edge setelah diremove " + jml_edges);
-            }
-            */
         }
 
         progressDialog.dismiss();
@@ -585,7 +516,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.e(TAG, "tujuan source "  + no_tujuan_dalam_edges);
 
         Vertex node_current = new Vertex(Integer.toString(id_current_location_node ), "node " + id_current_location_node ,
-                new LatLng(current.latitude, current.longitude));;
+                new LatLng(current.latitude, current.longitude));
         Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node), "node " + id_tujuan_location_node,
                 new LatLng(destination.latitude, destination.longitude));
         Vertex terdekat_dari_current = getNearestVertex(node_current);
@@ -658,9 +589,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         View view = getLayoutInflater().inflate(R.layout.info_window, null);
         TextView textView = (TextView) view.findViewById(R.id.nama_lokasi_text_view);
         Button button = (Button) view.findViewById(R.id.show_rute_btn);
-        getCurrentClickMarker = marker;
         textView.setText(marker.getTitle());
-        button.setText("Tunjukkan Rute");
+        button.setText(R.string.btn_show_route);
         return view;
     }
 
@@ -701,13 +631,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }else if (destinationGedung.getLatitude() < midlepoint.latitude){
                     destination = southpoint.latitude + "," + southpoint.longitude;
                 }
-                /*
-                if (currentLocation.getLatitude() >= midlepoint.latitude){
-                    destination = northpoint.latitude + "," + northpoint.longitude;
-                }else if (currentLocation.getLatitude() < midlepoint.latitude){
-                    destination = southpoint.latitude + "," + southpoint.longitude;
-                }
-                */
             }else {
                 destination = destinationGedung.getLatitude() + "," +destinationGedung.getLongitude();
             }
@@ -733,8 +656,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     geodesic(true).
                     color(Color.BLUE).
                     width(10);
-            if (path.size() != 0){
-                for (Vertex vertex : path){
+            if (path != null && path.size() != 0) {
+                for (Vertex vertex : path) {
                     polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
                             width(10);
                     Log.e("mapsActivity", "Vertex: " + vertex.getId());
