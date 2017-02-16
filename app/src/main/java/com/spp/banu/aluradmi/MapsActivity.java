@@ -130,6 +130,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nodes.add(new Vertex("28", "node 28", new LatLng(-7.769789873689877,110.3874546289444 )));
         nodes.add(new Vertex("29", "node 29", new LatLng(-7.770063604789108,110.38774967193604 )));
         nodes.add(new Vertex("30", "node 30", new LatLng(-7.770632327084954,110.38766384124756 )));
+        nodes.add(new Vertex("31", "node 31", new LatLng(-7.769086435469498,110.38814328610897 )));
+        nodes.add(new Vertex("32", "node 32", new LatLng(-7.769300803147504,110.38807002827525)));
 
         //menghubungkan node tersebut dikurangi 1
         edges = new ArrayList<>();
@@ -214,6 +216,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addLane("79", 28, 10);
         addLane("80", 29, 11);
         addLane("81", 29, 12);
+        //tambahan
+        addLane("82", 30, 31);
+        addLane("83", 31, 0);
+        addLane("84", 0, 31);
+        addLane("85", 31, 30);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -456,8 +463,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             int id_current_edge = jml_edges + 1;
             int id_tujuan_edge = jml_edges + 2;
             Log.e(TAG, "jml_nodes " + jml_nodes);
-            Log.e(TAG, "current source " + no_current_dalam_edges);
-            Log.e(TAG, "tujuan source " + no_tujuan_dalam_edges);
+            Log.e(TAG, "jml_edge " + jml_edges);
 
             Vertex node_current = null;
             if (currentLocation.getLatitude() >= midlepoint.latitude) {
@@ -497,6 +503,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
                 //berakhir disini
                 polylineList.add(map.addPolyline(polylineOptions));
+                edges.remove((id_tujuan_edge ));
+                edges.remove((id_current_edge));
+                edges.remove((id_tujuan_edge - 1));
+                edges.remove((id_current_edge - 1));
+                nodes.remove(no_tujuan_dalam_edges);
+                nodes.remove(no_current_dalam_edges);
+                Log.e(TAG, "jml_nodes setelah diremove " + jml_nodes);
+                Log.e(TAG, "jml_edge setelah diremove " + jml_edges);
             }
         }
          /*
@@ -550,13 +564,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
         }
 
-        nodes.remove(no_tujuan_dalam_edges);
-        nodes.remove(no_current_dalam_edges);
-        edges.remove((id_tujuan_edge + 1));
-        edges.remove((id_current_edge + 1));
-        edges.remove((id_tujuan_edge - 1));
-        edges.remove((id_current_edge - 1));
         */
+
+
         progressDialog.dismiss();
     }
 
@@ -610,15 +620,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             }
         }
-        /*
-        String destination = marker.getPosition().latitude + "," + marker.getPosition().longitude;
-        String origin = currentLocation.getLatitude() + "," + currentLocation.getLongitude();
-        try {
-            new DirectionFinder(this, origin, destination).execute();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        */
     }
 
     private void addLane(String laneId, int sourceLocNo, int destLocNo) {
@@ -635,6 +636,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 break;
             }
         }
+
         if (STATUS_POSISI == 2){
             String origin = currentLocation.getLatitude() + "," + currentLocation.getLongitude();
             String destination = null;
@@ -650,22 +652,31 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 e.printStackTrace();
             }
         }else if (STATUS_POSISI == 1){
+
+            progressDialog = ProgressDialog.show(this, "Harap Tunggu.",
+                    "Sedang mencari rute..", true);
+            if (polylineList != null) {
+                for (Polyline polyline : polylineList) {
+                    polyline.remove();
+                }
+            }
             int jml_nodes = nodes.size();
-            int no_current_location = jml_nodes + 1;
-            int no_tujuan_location = jml_nodes + 2;
-            int no_current_dalam_edges = no_current_location - 1;
-            int no_tujuan_dalam_edges = no_tujuan_location - 1;
+            int id_current_location_node = jml_nodes + 1;
+            int id_tujuan_location_node = jml_nodes + 2;
+            int no_current_dalam_edges = id_current_location_node - 1;
+            int no_tujuan_dalam_edges = id_tujuan_location_node  - 1;
             int jml_edges = edges.size();
             int id_current_edge = jml_edges + 1;
             int id_tujuan_edge = jml_edges + 2;
-            Vertex node_current = new Vertex(Integer.toString(no_current_location), "node " + no_current_location,
-                    new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-            Vertex node_tujuan = new Vertex(Integer.toString(no_tujuan_location), "node " + no_tujuan_location,
+
+           Vertex node_current = new Vertex(Integer.toString(id_current_location_node), "node " + id_current_location_node,
+                 new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+            Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node ), "node " + id_tujuan_location_node ,
                     new LatLng(destinationGedung.getLatitude(), destinationGedung.getLongitude()));
-            nodes.add(node_current);
-            nodes.add(node_tujuan);
             Vertex terdekat_dari_current = getNearestVertex(node_current);
             Vertex terdekat_dari_tujuan = getNearestVertex(node_tujuan);
+            nodes.add(node_current);
+            nodes.add(node_tujuan);
             if (terdekat_dari_current != null || terdekat_dari_tujuan != null){
                 int current_Destination_lane = Integer.parseInt(terdekat_dari_current.getId()) - 1 ;
                 int tujuan_destination_lane = Integer.parseInt(terdekat_dari_tujuan.getId()) - 1;
@@ -683,14 +694,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             width(10);
                     Log.e("mapsActivity", "Vertex: " + vertex.getId());
                 }
-                map.addPolyline(polylineOptions);
+                polylineList.add(map.addPolyline(polylineOptions));
             }
-            /*
-            nodes.remove(current_source_lane);
-            nodes.remove(tujuan_source_lane);
-            edges.remove((id_current_edge - 1));
-            edges.remove((id_tujuan_edge - 1));
-            */
+                edges.remove((id_tujuan_edge ));
+                edges.remove((id_current_edge));
+                edges.remove((id_tujuan_edge - 1));
+                edges.remove((id_current_edge - 1));
+                nodes.remove(no_tujuan_dalam_edges);
+                nodes.remove(no_current_dalam_edges);
+                progressDialog.dismiss();
         }
 
     }
@@ -719,6 +731,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                         inLocationRadiusVertex.add(vertex);
                     }
                 }
+                radiusLocation.remove();
 
                 if (inLocationRadiusVertex.size() != 0 ){
                     Vertex terdekat = null;
