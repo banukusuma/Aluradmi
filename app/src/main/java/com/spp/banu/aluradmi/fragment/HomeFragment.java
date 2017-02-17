@@ -29,6 +29,7 @@ public class HomeFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         reuniJurusan = new ReuniJurusan(getActivity());
+        getActivity().setTitle(R.string.home);
     }
 
     public void notifyTheAdapater(){

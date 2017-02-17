@@ -153,7 +153,8 @@ public class MainActivity extends AppCompatActivity
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(
                 new ComponentName(this, AlurSearchActivity.class)));
-        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+        searchView.setIconifiedByDefault(true);
+        // Do not iconify the widget; expand it by default
 
         return true;
     }

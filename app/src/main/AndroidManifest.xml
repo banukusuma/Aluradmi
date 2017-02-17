@@ -25,7 +25,7 @@
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme.NoActionBar" >
+            android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.app.default_searchable"
                 android:value=".AlurSearchActivity" />
@@ -60,6 +60,7 @@
             android:value="@integer/google_play_services_version" />
         <activity
             android:name=".MapsActivity"
+            android:theme="@style/AppTheme"
             android:label="@string/lokasi">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

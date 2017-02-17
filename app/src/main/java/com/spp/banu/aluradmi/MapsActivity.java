@@ -10,8 +10,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -60,9 +58,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static final String TAG = "LokasiFragment";
     GoogleMap map;
     public static final double R_bumi = 6372.8; // In kilometers
-    private Circle northCircle;
-    private Circle southCircle;
-    private Circle midleCircle;
+    private Circle northCircle, southCircle,  midleCircle;
+
     Marker currentLocationMarker;
     GoogleApiClient apiClient;
     LocationRequest locationRequest;
@@ -73,12 +70,21 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static int STATUS_POSISI;
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
+    private ArrayList<LatLng> pointToUseInRoute;
+    //titik pembatas di area ft
     private final static LatLng southpoint = new LatLng(-7.77186626415878, 110.38690410554409);
     private final static LatLng northpoint = new LatLng(-7.768903792602624, 110.3882696852088);
     private final static LatLng midlepoint = new LatLng(-7.769945766027917, 110.3877255320549);
     List<Gedung> gedungList;
+
+    private int id_gedung;
+    private boolean isUsingRoute;
+    //extra id gedung intent
     private static final String EXTRA_ID_GEDUNG = "com.spp.banu.aluradmi.mapsIntent.id.gedung";
 
+    //key untuk disimpan di bundle
+    protected final static String ROUTE_KEY = "route-gedung-aluradmi-ft";
+    protected final static String ID_ROUTE_LIST_KEY = "route-list-gedung-aluradmi-ft";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -86,16 +92,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar3);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        isUsingRoute = false;
         nodes = new ArrayList<>();
         ReuniGedung reuniGedung = new ReuniGedung(this);
         gedungList = reuniGedung.getGedungList(GedungDbSchema.GedungTable.Kolom.ID_GEDUNG + " != ? ",
                 new String[]{"99"});
-        apiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
+        pointToUseInRoute = new ArrayList<>();
         //menggambar titik persimpangan node
         nodes.add(new Vertex("1", "node 1", new LatLng(-7.769449329031687, 110.38801185786724)));
         nodes.add(new Vertex("2", "node 2", new LatLng(-7.7695613213732395, 110.3878864645958)));
@@ -218,12 +220,36 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         addLane("83", 31, 0);
         addLane("84", 0, 31);
         addLane("85", 31, 30);
+
+        if (savedInstanceState != null){
+            if (savedInstanceState.keySet().contains(ROUTE_KEY)){
+                isUsingRoute = savedInstanceState.getBoolean(ROUTE_KEY);
+            }
+            if (savedInstanceState.keySet().contains(ID_ROUTE_LIST_KEY)){
+               pointToUseInRoute = savedInstanceState.getParcelableArrayList(ID_ROUTE_LIST_KEY);
+            }
+        }
+        buildApiClient();
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
 
+    }
+
+    protected void buildApiClient() {
+        apiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        createLocationRequest();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
     }
 
     public static Intent newIntent(Context packagecontext, int id_gedung) {
@@ -238,10 +264,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return true;
     }
 
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-
     }
 
     @Override
@@ -294,7 +320,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 .strokeColor(Color.BLUE)
                 .fillColor(Color.argb(128, 255, 100, 0))
         );
-        Log.e(TAG, "onCreate: check lokasi " + checkPosition(new LatLng(-7.770981292012742, 110.38724474608898)));
     }
 
     private void gotoLocation(double lat, double lng) {
@@ -316,21 +341,34 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
     protected void onPause() {
         // Disconnecting the client invalidates it.
-        LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, this);
-
-        // only stop if it's connected, otherwise we crash
-        if (apiClient != null) {
-            apiClient.disconnect();
+        if (apiClient != null && apiClient.isConnected()){
+            Log.e(TAG, "onPause: disconnet location update" );
+            LocationServices.FusedLocationApi.removeLocationUpdates(apiClient, this);
         }
         super.onPause();
 
     }
 
     @Override
-    public void onConnected(@Nullable Bundle bundle) {
-        startLocationUpdated();
+    protected void onStop() {
+        // only stop if it's connected, otherwise we crash
+        if (apiClient != null && apiClient.isConnected()) {
+            apiClient.disconnect();
+        }
+        super.onStop();
+    }
+
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -341,8 +379,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+        if (currentLocation == null){
+            currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
+        }
 
+        MarkerOptions options = new MarkerOptions()
+                .title("Lokasi Anda")
+                .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+        currentLocationMarker = map.addMarker(options);
         boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
         if (isInFT) {
             STATUS_POSISI = 1;
@@ -354,21 +398,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
             Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
         }
-
-        Intent intent = getIntent();
-        if (intent.hasExtra(EXTRA_ID_GEDUNG)) {
-            int id_gedung = intent.getIntExtra(EXTRA_ID_GEDUNG, 99);
-            doRoute(id_gedung);
-            Log.e(TAG, "id_gedung intent: " + intent.getIntExtra(EXTRA_ID_GEDUNG, 99));
-        }
-
-    }
-
-    private void startLocationUpdated() {
-        locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        locationRequest.setInterval(3600000);
-        locationRequest.setFastestInterval(300000);
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -380,7 +409,42 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
+        Intent intent = getIntent();
+        PolylineOptions polylineOptions = new PolylineOptions().
+                geodesic(true).
+                color(Color.BLUE).
+                width(10);
+        if (intent.hasExtra(EXTRA_ID_GEDUNG)) {
+            int id_gedung = intent.getIntExtra(EXTRA_ID_GEDUNG, 99);
+            if (!isUsingRoute){
+                doRoute(id_gedung);
+            }else {
+                for (LatLng latLng : pointToUseInRoute){
+                    polylineOptions.add(latLng);
+                }
+                polylineList.add(map.addPolyline(polylineOptions));
+            }
+
+            Log.e(TAG, "id_gedung intent: " + intent.getIntExtra(EXTRA_ID_GEDUNG, 99));
+        }else {
+            if (isUsingRoute){
+                for (LatLng latLng : pointToUseInRoute){
+                    polylineOptions.add(latLng);
+                }
+                polylineList.add(map.addPolyline(polylineOptions));
+            }
+        }
+
     }
+    private void createLocationRequest(){
+        locationRequest = LocationRequest.create();
+        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest.setInterval(3600000);
+        locationRequest.setFastestInterval(300000);
+    }
+
+
+
     private boolean checkPosition(LatLng location){
         double distance1 = haversine(location.latitude, location.longitude,
                 northCircle.getCenter().latitude, northCircle.getCenter().longitude);
@@ -413,7 +477,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
 
     @Override
-    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+    public void onConnectionFailed(ConnectionResult connectionResult) {
 
     }
 
@@ -452,6 +516,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 polyline.remove();
             }
         }
+        pointToUseInRoute.clear();
     }
 
     @Override
@@ -462,9 +527,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void DirectionFinderSuccess(List<Rute> rutes , Gedung destination_gedung) {
-
         polylineList = new ArrayList<>();
-
         for (Rute rute : rutes) {
             Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getStartLocation());
             Log.e(TAG, "DirectionFinderSuccess: rute " + rute.getEndLocation());
@@ -475,6 +538,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             for (int i = 0; i < rute.getPoint().size(); i++) {
                 polylineOptions.add(rute.getPoint().get(i));
+                pointToUseInRoute.add(rute.getPoint().get(i));
             }
             boolean isGedunginFT = checkPosition(new LatLng(destination_gedung.getLatitude(), destination_gedung.getLongitude()));
             if (isGedunginFT){
@@ -492,6 +556,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     for (Vertex vertex : path) {
                         polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
                                 width(10);
+                        pointToUseInRoute.add(vertex.getLocation());
                         Log.e("mapsActivity", "Vertex: " + vertex.getId());
                     }
                 }
@@ -614,7 +679,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Gedung destinationGedung = new Gedung();
         for (Gedung gedung : gedungList){
             if (gedung.getId_gedung() == id_gedung){
-                    destinationGedung = gedung;
+                destinationGedung = gedung;
                 Log.e(TAG, "doRoute: destination gedung " + destinationGedung.getNama() );
                 break;
             }
@@ -667,7 +732,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
             progressDialog.dismiss();
         }
-
+        isUsingRoute = true;
     }
     private static double haversine(double lat1, double lon1, double lat2, double lon2) {
         double dLat = Math.toRadians(lat2 - lat1);
@@ -714,4 +779,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return null;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(ROUTE_KEY, isUsingRoute);
+        outState.putParcelableArrayList(ID_ROUTE_LIST_KEY, pointToUseInRoute);
+        super.onSaveInstanceState(outState);
+    }
 }
