@@ -10,6 +10,7 @@ import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -64,14 +65,15 @@ public class MainActivity extends AppCompatActivity
     private boolean isFirstRun;
 
     private final static String TAG_home_fragment = "home_fragment";
-    private final static String TAG_kategori_fragment = "kategori_fragment";
     private final static String TAG_bantuan_fragment = "bantuan_fragment";
     private final static String TAG_tentang_fragment = "tentang_fragment";
     private static long choose_fragment;
     private static final String KEY_CHOOSE_FRAGMENT = "com.spp.banu.aluradmi.key.choose.fragment";
+    private static final String KEY_IS_DIALOG_SHOW= "com.spp.banu.aluradmi.key.dialog.jurusan";
     private static final String TAG = "MainActivity";
     Drawer result;
     AccountHeader resultHeader;
+    private boolean isJurusanDialogShown;
     FragmentManager fragmentManager;
     Fragment fragment;
     private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         fragmentManager = getSupportFragmentManager();
         fragment = fragmentManager.findFragmentById(R.id.content_main);
-
+        isJurusanDialogShown = false;
         //Pembuatan Account Header
         resultHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -146,6 +148,10 @@ public class MainActivity extends AppCompatActivity
             if (savedInstanceState.keySet().contains(KEY_CHOOSE_FRAGMENT)){
                 choose_fragment = savedInstanceState.getLong(KEY_CHOOSE_FRAGMENT);
             }
+
+            if (savedInstanceState.keySet().contains(KEY_IS_DIALOG_SHOW)){
+                isJurusanDialogShown = savedInstanceState.getBoolean(KEY_IS_DIALOG_SHOW);
+            }
         }
     }
 
@@ -198,7 +204,11 @@ public class MainActivity extends AppCompatActivity
         ReuniJurusan reuniJurusan = new ReuniJurusan(this);
         isFirstRun = reuniJurusan.isSelectedJurusan();
         if (isFirstRun){
-            menuJurusan();
+            if (!isJurusanDialogShown){
+                Log.e(TAG, "memunculkan dialog jurusan pada first run: " );
+                menuJurusan();
+            }
+
         }
         result.setSelection(choose_fragment, true);
     }
@@ -231,6 +241,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void menuJurusan(){
+        isJurusanDialogShown = true;
         FragmentManager fragmentManager = getSupportFragmentManager();
         JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
         dialogFragment.show(fragmentManager, "jurusanDialog");
@@ -283,6 +294,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putLong(KEY_CHOOSE_FRAGMENT, choose_fragment);
+        outState.putBoolean(KEY_IS_DIALOG_SHOW, isJurusanDialogShown);
         super.onSaveInstanceState(outState);
     }
 }
