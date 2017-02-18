@@ -3,7 +3,7 @@ package com.spp.banu.aluradmi;
 import android.app.Dialog;
 
 import android.app.SearchManager;
-import android.app.SearchableInfo;
+
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -68,6 +68,8 @@ public class MainActivity extends AppCompatActivity
     private final static String TAG_bantuan_fragment = "bantuan_fragment";
     private final static String TAG_tentang_fragment = "tentang_fragment";
     private static long choose_fragment;
+    private static final String KEY_CHOOSE_FRAGMENT = "com.spp.banu.aluradmi.key.choose.fragment";
+    private static final String TAG = "MainActivity";
     Drawer result;
     AccountHeader resultHeader;
     FragmentManager fragmentManager;
@@ -140,6 +142,11 @@ public class MainActivity extends AppCompatActivity
                 .build();
         result.setSelection(100000, true);
         choose_fragment = 100000;
+        if (savedInstanceState != null){
+            if (savedInstanceState.keySet().contains(KEY_CHOOSE_FRAGMENT)){
+                choose_fragment = savedInstanceState.getLong(KEY_CHOOSE_FRAGMENT);
+            }
+        }
     }
 
     @Override
@@ -181,11 +188,21 @@ public class MainActivity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-    @Override
-    protected void onStart() {
-        super.onStart();
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        googleServiceAvailable();
+        Log.i("" +this, "onResume: " + isFirstRun);
+        Log.e(TAG, "onResume: " );
+        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
+        isFirstRun = reuniJurusan.isSelectedJurusan();
+        if (isFirstRun){
+            menuJurusan();
+        }
+        result.setSelection(choose_fragment, true);
     }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -194,26 +211,10 @@ public class MainActivity extends AppCompatActivity
            menuJurusan();
             return true;
         }
-        /*
-        else if(id == R.id.menu_search_main){
-            onSearchRequested();
-        }
-        */
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        googleServiceAvailable();
-        Log.i("" +this, "onResume: " + isFirstRun);
-        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
-        isFirstRun = reuniJurusan.isSelectedJurusan();
-        if (isFirstRun){
-            menuJurusan();
-        }
-        result.setSelection(choose_fragment, false);
-    }
+
 
 
     private void replaceFragment (Fragment fragment, String fragmentTag){
@@ -235,7 +236,7 @@ public class MainActivity extends AppCompatActivity
         dialogFragment.show(fragmentManager, "jurusanDialog");
         if (isFirstRun){
             dialogFragment.setCancelable(false);
-        } else {
+        }else {
             dialogFragment.setCancelable(true);
         }
     }
@@ -279,4 +280,9 @@ public class MainActivity extends AppCompatActivity
         return false;
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putLong(KEY_CHOOSE_FRAGMENT, choose_fragment);
+        super.onSaveInstanceState(outState);
+    }
 }
