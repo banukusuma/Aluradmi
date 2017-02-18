@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_marginTop="3dp"
     android:clickable="true"
     android:background="?attr/selectableItemBackground"
     android:layout_height="wrap_content">
@@ -11,7 +10,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginBottom="3dp"
+        android:layout_marginTop="3dp">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -55,8 +56,7 @@
                 android:layout_gravity="start"
                 tools:text="@string/nama_alur"
                 android:textSize="16sp"
-                android:paddingBottom="2dp"
-                android:paddingTop="2dp" />
+                android:paddingBottom="2dp" />
 
             <TextView
                 android:text="TextView"
@@ -65,8 +65,7 @@
                 android:id="@+id/progress_text_view"
                 android:layout_weight="1"
                 android:textSize="12sp"
-                android:paddingTop="2dp"
-                android:paddingBottom="2dp" />
+                android:paddingTop="2dp" />
 
         </LinearLayout>
         <ImageView

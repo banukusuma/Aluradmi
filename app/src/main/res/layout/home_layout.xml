@@ -38,42 +38,45 @@
     </LinearLayout>
 
 
+    <android.support.v7.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_marginTop="5dip"
-            android:clickable="true"
-            android:background="?attr/selectableItemBackground"
-            android:id="@+id/layout_ganti_jurusan"
-            android:layout_height="match_parent">
-
-            <TextView
-                android:text="@string/jurusan"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/textView4"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:paddingLeft="16dip"
-                android:textColor="@color/md_white_1000"
-                android:background="@color/primary"
-                android:textStyle="normal|bold"
-                android:paddingTop="5dip"
-                android:paddingBottom="3dip" />
+                android:layout_marginTop="5dip"
+                android:clickable="true"
+                android:background="?attr/selectableItemBackground"
+                android:id="@+id/layout_ganti_jurusan"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:text="TextView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/jurusan_home"
-                android:paddingLeft="22dip"
+                <TextView
+                    android:text="@string/jurusan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView4"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:paddingLeft="16dip"
+                    android:textColor="@color/md_white_1000"
+                    android:background="@color/primary"
+                    android:textStyle="normal|bold"
+                    android:paddingTop="5dip"
+                    android:paddingBottom="3dip" />
 
-                android:textSize="16sp"
-                android:paddingTop="3dip"
-                android:paddingEnd="3dip"
-                android:layout_marginBottom="12dip" />
-        </LinearLayout>
+                <TextView
+                    android:text="TextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/jurusan_home"
+                    android:paddingLeft="22dip"
 
+                    android:textSize="16sp"
+                    android:paddingTop="3dip"
+                    android:paddingEnd="3dip"
+                    android:layout_marginBottom="12dip" />
+            </LinearLayout>
+    </android.support.v7.widget.CardView>
 
 
 </LinearLayout>

@@ -25,6 +25,7 @@ public class JurusanDialogFragment extends DialogFragment {
     private ReuniJurusan reuniJurusan;
     private JurusanDialogInterfaceListener listener;
     private final static String TAG_home_fragment = "home_fragment";
+    private static final String ALUR_FRAGMENT_TAG = "alur_list_fragment";
     public interface JurusanDialogInterfaceListener{
         void onSelectedJurusan(String nama_jurusan);
     }
@@ -60,12 +61,21 @@ public class JurusanDialogFragment extends DialogFragment {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 reuniJurusan.SelectJurusan(namaJurusan);
+                Toast.makeText(getActivity(),namaJurusan + " telah di pilih", Toast.LENGTH_SHORT).show();
+                Log.i("Dialog Jurusan", "onClick: " + namaJurusan);
                 HomeFragment homeFragment = (HomeFragment) getActivity().getSupportFragmentManager().findFragmentByTag(TAG_home_fragment);
                 if (homeFragment != null && homeFragment.isVisible()){
                     homeFragment.notifyTheAdapater();
+                    Log.e("DialogJurusan", "homefragment " );
                 }
-                Toast.makeText(getActivity(),namaJurusan + " telah di pilih", Toast.LENGTH_SHORT).show();
-                Log.i("Dialog Jurusan", "onClick: " + namaJurusan);
+
+                AlurListFragment alurListFragment = (AlurListFragment) getActivity().getSupportFragmentManager()
+                        .findFragmentByTag(ALUR_FRAGMENT_TAG);
+                if (alurListFragment != null && alurListFragment.isVisible()){
+                    alurListFragment.updateUI();
+                    Log.e("DialogJurusan", "alurfragment " );
+                }
+
             }
         });
         if (!isFirstRun){
