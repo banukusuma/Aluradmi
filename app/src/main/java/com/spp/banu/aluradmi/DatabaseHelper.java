@@ -159,13 +159,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 try {
                     JSONObject jsonObject = jsonArray.getJSONObject(i);
                     String id = jsonObject.getString("id_"+table);
+                    String field = "id_" + table;
+                    Log.e(TAG, "insertData: id " + id );
+                    Log.e(TAG, "insertData: field " + field );
+                    ContentValues values = contentValues(jsonObject);
                     boolean exist = this.isDataExist(table,id);
                     if (!exist){
-                        ContentValues values = contentValues(jsonObject);
                         db.insert(table, null, values);
                     }
                     else{
-                        Log.i(TAG, "insertData: data " + table + " " + id + " sudah ada");
+                        Log.e(TAG, "insertData: data " + table + " " + id + " object " + jsonObject);
+                        updateData(table,field, id, jsonObject);
+
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -175,12 +180,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void updateData(String table, String field, String field_id, JSONObject jsonObject){
-        JSONObject object = null;
-        try {
-            object = jsonObject.getJSONObject(table);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        JSONObject object = jsonObject;
         ContentValues values = contentValues(object);
         SQLiteDatabase db = getWritableDatabase();
         db.update(table, values, field + " = ?", new String[] {field_id});
@@ -230,7 +230,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         try {
             while (cursor.moveToNext()){
                 Integer id = cursor.getInt(0);
-                Log.e(TAG, "getListIdFromTable: id" + id );
                  listID.add(id);
             }
         }finally {

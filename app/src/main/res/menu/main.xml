@@ -11,6 +11,10 @@
         app:showAsAction="ifRoom|collapseActionView"
         app:actionViewClass="android.support.v7.widget.SearchView"
         android:icon="@drawable/ic_search_white_24px"
-        android:title="Search"
+        android:title="@string/search_hint"
         />
+    <item android:title="@string/sync"
+        app:showAsAction="always"
+        android:id="@+id/menu_sync"
+        android:icon="@drawable/ic_sync_white_24dp"/>
 </menu>

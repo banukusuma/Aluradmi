@@ -9,8 +9,10 @@ import android.widget.Toast;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.spp.banu.aluradmi.httpcall.AluradmiRestClient;
+import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 
 import org.joda.time.DateTime;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,45 +37,53 @@ public class SinkronisasiService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         db = DatabaseHelper.getInstance(this,true);
         Log.e(TAG, "onHandleIntent: memulai sinkronisasi intentService"  );
-        AluradmiRestClient.get("cekData", null, new JsonHttpResponseHandler(){
-            @Override
-            public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
-                super.onFailure(statusCode, headers, responseString, throwable);
-                Log.e(TAG, "onFailure: awal " + statusCode );
-            }
+        CheckNetwork network = new CheckNetwork(this);
+        if (network.isNetworkAvailable()){
+            AluradmiRestClient.get("cekData", null, new JsonHttpResponseHandler(){
+                @Override
+                public void onFailure(int statusCode, Header[] headers, String responseString, Throwable throwable) {
+                    super.onFailure(statusCode, headers, responseString, throwable);
+                    Log.e(TAG, "onFailure: awal " + statusCode );
+                }
 
-            @Override
-            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
-                super.onSuccess(statusCode, headers, response);
-                JSONObject jsonObject = response;
-                Log.e(TAG, "onSuccess: respon " + response );
-                Iterator<String> keys = jsonObject.keys();
-                while (keys.hasNext()){
-                    String table = keys.next();
-                    Log.e(TAG, "onSuccess: key table awal " + table );
-                    try {
-                        JSONObject jml_dan_timestamp = jsonObject.getJSONObject(table);
-                        boolean isHasNewData = isHasNewData(table, jml_dan_timestamp);
-                        Log.e(TAG, "onSuccess: apakah data nya sama " + isHasNewData );
+                @Override
+                public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                    super.onSuccess(statusCode, headers, response);
+                    JSONObject jsonObject = response;
+                    Log.e(TAG, "onSuccess: respon " + response );
+                    Iterator<String> keys = jsonObject.keys();
+                    while (keys.hasNext()){
+                        String table = keys.next();
+                        Log.e(TAG, "onSuccess: key table awal " + table );
+                        try {
+                            JSONObject jml_dan_timestamp = jsonObject.getJSONObject(table);
+                            boolean isHasNewData = isHasNewData(table, jml_dan_timestamp);
+                            Log.e(TAG, "onSuccess: apakah ada data baru di  " + table +" " + isHasNewData );
                         /*
-                        if (!isHasNewData){
-                            memulaiSinkronisasi(table);
-                        }else {
-                            Log.e(TAG, "onSuccess: data table " + table + " tidak ada perubahan" );
-                        }
+                        sementara di buat true untuk mengetes data baru
                         */
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                            if (isHasNewData){
+                                memulaiSinkronisasi(table);
+                            }else {
+                                Log.e(TAG, "onSuccess: data table " + table + " tidak ada perubahan" );
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
-            }
-        });
+            });
+        }else {
+
+        }
+
     }
 
     private void memulaiSinkronisasi(String table) {
-        table_class = table;
+        //table_class = table;
         List<Integer> listID = db.getListIdFromTable(table);
-        for (final Integer id : listID){
+        for (Integer id : listID){
             RequestParams params = new RequestParams();
             params.put("table", table);
             params.put("id", id);
@@ -89,12 +99,15 @@ public class SinkronisasiService extends IntentService {
                     super.onSuccess(statusCode, headers, response);
                     JSONObject hasil = response;
                     try {
-                        boolean ada = hasil.getBoolean("ada");
+                        JSONObject data = hasil.getJSONObject("data");
+                        String table = data.getString("table");
+                        String id = data.getString("id");
+                        boolean ada = data.getBoolean("ada");
                         if (!ada){
-                            Log.e(TAG, "onSuccess: check data exits table " + table_class + " id " + id + " "+ ada );
-                            //db.deleteData(table_class, "id_" +table_class, id.toString());
+                            Log.e(TAG, "onSuccess: check data exits table " + table + " id " + id + " "+ ada );
+                            db.deleteData(table, "id_" +table, id);
                         }else {
-                            Log.e(TAG, "onSuccess: check data exits table " + table_class + " id " + id + " "+ ada );
+                            Log.e(TAG, "onSuccess: check data exits table " + table + " id " + id + " "+ ada );
                         }
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -102,6 +115,31 @@ public class SinkronisasiService extends IntentService {
                 }
             });
         }
+        String timestamp = db.getMaxTimestamp(table);
+        RequestParams params = new RequestParams();
+        params.put("table", table);
+        params.put("timestamp", timestamp);
+        AluradmiRestClient.get("getNewData", params, new JsonHttpResponseHandler(){
+            @Override
+            public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
+                super.onSuccess(statusCode, headers, response);
+                Log.e(TAG, "onSuccess: memulai sinkronisasi memasukkan data atau mengupdate object " + response );
+                Iterator<?> keys = response.keys();
+                while (keys.hasNext()){
+                    String table = (String) keys.next();
+                    JSONArray jsonArray = null;
+                    try {
+                        jsonArray = response.getJSONArray(table);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (jsonArray.length() > 0){
+                        Log.e(TAG, "onSuccess: memulai sinkronisasi memasukkan data atau mengupdate " + jsonArray );
+                        db.insertData(table,jsonArray);
+                    }
+                }
+            }
+        });
     }
 
     private boolean isHasNewData(String table, JSONObject object){

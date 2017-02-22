@@ -15,6 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 
 
+import com.loopj.android.http.JsonHttpResponseHandler;
+import com.loopj.android.http.RequestParams;
+import com.spp.banu.aluradmi.httpcall.AluradmiRestClient;
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 
 import com.spp.banu.aluradmi.httpcall.GetAllData;
@@ -22,6 +25,7 @@ import com.spp.banu.aluradmi.httpcall.GetAllData;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 import org.joda.time.LocalDate;
+import org.json.JSONObject;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -33,6 +37,8 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import cz.msebera.android.httpclient.Header;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -50,25 +56,25 @@ public class SplashActivity extends AppCompatActivity {
             }
         }
         long millies = preferences.getLong(SetupActivity.KEY_DATE_SYNC, new Date().getTime());
-        Date date = new Date(millies);
-        Log.e(TAG, "onCreate: date in date " + date);
-        String lala = new SimpleDateFormat("dd-mm-yyyy").format(date);
-        Log.e(TAG, "onCreate: date after format" + lala);
+        DateTime last_date_sync = new DateTime(millies);
+
+        Log.e(TAG, "onCreate: beda hari with joda " +
+                Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays());
+        int beda_hari =  Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays();
         boolean isFirstRun = checkFirstRun();
         if (isFirstRun) {
             Intent intent = new Intent(SplashActivity.this, SetupActivity.class);
             startActivity(intent);
             finish();
         } else {
-            Intent intent = new Intent(this, SinkronisasiService.class);
-            startService(intent);
+            if (beda_hari > 0){
+                Intent intent = new Intent(this, SinkronisasiService.class);
+                startService(intent);
+            }
             startMainActivity();
         }
-        LocalDate localDate = new LocalDate(2016,11,10);
-        DateTime dateTime1 = new DateTime(millies);
-        Log.e(TAG, "onCreate: date in datetime joda " + localDate);
-        Log.e(TAG, "onCreate: beda hari with joda " +
-                Days.daysBetween(dateTime1.toLocalDate(), new DateTime().toLocalDate()).getDays());
+
+
     }
 
     public void startMainActivity(){
@@ -77,9 +83,7 @@ public class SplashActivity extends AppCompatActivity {
         finish();
     }
     public boolean checkFirstRun(){
-
         boolean isFirstRun = preferences.getBoolean(SetupActivity.KEY_FIRST_TIME, true);
-
         return isFirstRun;
     }
 

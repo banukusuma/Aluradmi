@@ -20,11 +20,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -173,7 +177,6 @@ public class MainActivity extends AppCompatActivity
                 new ComponentName(this, AlurSearchActivity.class)));
         searchView.setIconifiedByDefault(true);
         // Do not iconify the widget; expand it by default
-
         return true;
     }
 
@@ -225,6 +228,10 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.menu_jurusan){
            menuJurusan();
             return true;
+        }else if (id == R.id.menu_sync){
+            Toast.makeText(this, "Memulai Perbaharuan Data", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(this, SinkronisasiService.class);
+            startService(intent);
         }
         return super.onOptionsItemSelected(item);
     }

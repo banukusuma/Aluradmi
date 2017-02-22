@@ -20,4 +20,10 @@ public class AluradmiRestClient {
     public static void get(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
         client.get(getAbsoluteUrl(url), params, responseHandler);
     }
+
+    private static AsyncHttpClient client_async = new AsyncHttpClient();
+
+    public static void get_Async(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
+        client_async.get(getAbsoluteUrl(url), params, responseHandler);
+    }
 }
