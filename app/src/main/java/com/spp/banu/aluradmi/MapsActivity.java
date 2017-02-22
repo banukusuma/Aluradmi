@@ -49,6 +49,7 @@ import com.spp.banu.aluradmi.model.Vertex;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.EventListener;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -68,6 +69,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private List<Edge> edges;
     ProgressDialog progressDialog;
     private static int STATUS_POSISI;
+    private static boolean MODE_DI_DALAM_FT;
     private List<Polyline> polylineList = new ArrayList<>();
     Intent dialogSettingintent;
     private ArrayList<LatLng> pointToUseInRoute;
@@ -93,6 +95,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         isUsingRoute = false;
+        MODE_DI_DALAM_FT = true;
         nodes = new ArrayList<>();
         ReuniGedung reuniGedung = new ReuniGedung(this);
         gedungList = reuniGedung.getGedungList(GedungDbSchema.GedungTable.Kolom.ID_GEDUNG + " != ? ",
@@ -299,22 +302,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             placeMarker(gedung.getNama(), gedung.getLatitude(), gedung.getLongitude());
         }
         northCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.769193170842021, 110.38809886202216))
-                .radius(98)
-                .strokeWidth(5)
-                .strokeColor(Color.GREEN)
-                .fillColor(Color.argb(128, 255, 0, 0))
+                .radius(98).visible(false)
         );
         midleCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.769959319637975, 110.38760885596275))
-                .radius(76)
-                .strokeWidth(5)
-                .strokeColor(Color.RED)
-                .fillColor(Color.argb(0, 255, 100, 0))
+                .radius(76).visible(false)
         );
         southCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.7712030666905685, 110.38731381297112))
-                .radius(76)
-                .strokeWidth(5)
-                .strokeColor(Color.BLUE)
-                .fillColor(Color.argb(128, 255, 100, 0))
+                .radius(76).visible(false)
         );
     }
 
@@ -528,11 +522,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             if (isGedunginFT){
                 LatLng current_latlng = null;
                 //tes di ganti posisi gedung di sebelah mana
-                if (destination_gedung.getLatitude() >= midlepoint.latitude) {
-                    current_latlng = northpoint;
-                } else if (destination_gedung.getLatitude() < midlepoint.latitude) {
-                    current_latlng = southpoint;
+                if (MODE_DI_DALAM_FT){
+                    if (destination_gedung.getLatitude() >= midlepoint.latitude) {
+                        current_latlng = northpoint;
+                    } else if (destination_gedung.getLatitude() < midlepoint.latitude) {
+                        current_latlng = southpoint;
+                    }
+                }else {
+                    current_latlng = rute.getEndLocation();
                 }
+
 
                 LatLng destination_latlng = new LatLng(destination_gedung.getLatitude(), destination_gedung.getLongitude());
                 LinkedList<Vertex> path = getPathInFT(current_latlng, destination_latlng);
@@ -690,31 +689,54 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 e.printStackTrace();
             }
         }else if (STATUS_POSISI == 1){
-
-            progressDialog = ProgressDialog.show(this, "Harap Tunggu.",
-                    "Sedang mencari rute..", true);
             if (polylineList != null) {
                 for (Polyline polyline : polylineList) {
                     polyline.remove();
                 }
             }
-            LatLng current_latlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            LatLng destination_latlng = new LatLng(destinationGedung.getLatitude(),destinationGedung.getLongitude());
-            LinkedList<Vertex> path = getPathInFT(current_latlng, destination_latlng);
-            PolylineOptions polylineOptions = new PolylineOptions().
-                    geodesic(true).
-                    color(Color.BLUE).
-                    width(10);
-            if (path != null && path.size() != 0) {
-                for (Vertex vertex : path) {
-                    polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
-                            width(10);
-                    Log.e("mapsActivity", "Vertex: " + vertex.getId());
+            boolean isGedungInFT = checkPosition(new LatLng(destinationGedung.getLatitude(), destinationGedung.getLongitude()));
+            if (isGedungInFT){
+
+                progressDialog = ProgressDialog.show(this, "Harap Tunggu.",
+                        "Sedang mencari rute..", true);
+                LatLng current_latlng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                LatLng destination_latlng = new LatLng(destinationGedung.getLatitude(),destinationGedung.getLongitude());
+                LinkedList<Vertex> path = getPathInFT(current_latlng, destination_latlng);
+                PolylineOptions polylineOptions = new PolylineOptions().
+                        geodesic(true).
+                        color(Color.BLUE).
+                        width(10);
+                if (path != null && path.size() != 0) {
+                    for (Vertex vertex : path) {
+                        polylineOptions.add(vertex.getLocation()).color(Color.BLUE).
+                                width(10);
+                        Log.e("mapsActivity", "Vertex: " + vertex.getId());
+                    }
+                }
+                polylineList.add(map.addPolyline(polylineOptions));
+
+                progressDialog.dismiss();
+            }else {
+                MODE_DI_DALAM_FT = false;
+                Gedung posisi_berdiri = new Gedung();
+                posisi_berdiri.setLatitude(currentLocation.getLatitude());
+                posisi_berdiri.setLongitude(currentLocation.getLongitude());
+                String destination = null;
+                    if (destinationGedung.getLatitude() >= midlepoint.latitude){
+                        destination = northpoint.latitude + "," + northpoint.longitude;
+                    }else if (destinationGedung.getLatitude() < midlepoint.latitude){
+                        destination = southpoint.latitude + "," + southpoint.longitude;
+                    }
+
+                String  origin = destinationGedung.getLatitude() + "," +destinationGedung.getLongitude();
+
+                try {
+                    new DirectionFinder(this, origin, destination, posisi_berdiri).execute();
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
                 }
             }
-            polylineList.add(map.addPolyline(polylineOptions));
 
-            progressDialog.dismiss();
         }
         isUsingRoute = true;
     }

@@ -101,8 +101,11 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         denah.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = DenahActivity.newIntent(getActivity(),ruang.getLink());
-                startActivity(intent);
+                if (!ruang.getLink().equals("http://aluradmi.pe.hu/denah/no-thumbnail.png")){
+                    Intent intent = DenahActivity.newIntent(getActivity(),ruang.getLink());
+                    startActivity(intent);
+                }
+
             }
         });
         btnrute.setOnClickListener(this);
@@ -112,9 +115,16 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     private void updateUI(){
         if (keterangan.getId_keterangan() != 0 ){
             labelDetail.setVisibility(View.VISIBLE);
-            isiKeterangan.setVisibility(View.VISIBLE);
+            if (keterangan.getKeterangan().isEmpty()){
+                labelDetail.setVisibility(View.GONE);
+                isiKeterangan.setVisibility(View.GONE);
+            }else {
+                labelDetail.setVisibility(View.VISIBLE);
+                isiKeterangan.setVisibility(View.VISIBLE);
+                isiKeterangan.setText(keterangan.getKeterangan());
+            }
             //judulKeterangan.setText(keterangan.getUrut() + ". " + keterangan.getNama());
-            isiKeterangan.setText(keterangan.getKeterangan());
+
             selesaiCheckBox.setVisibility(View.VISIBLE);
             halaman.setVisibility(View.VISIBLE);
             halaman.setText("Halaman " + keterangan.getUrut() + " dari " + max_data);

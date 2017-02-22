@@ -1,8 +1,11 @@
 package com.spp.banu.aluradmi;
 
 import android.app.IntentService;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -17,6 +20,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
@@ -28,7 +32,12 @@ import cz.msebera.android.httpclient.Header;
 
 public class SinkronisasiService extends IntentService {
     private DatabaseHelper db;
+    public static final String TAG_INTENT_SINKRONISASI = "com.spp.banu.aluradmi.sinkronisasi.pesan.broadcast";
     private static final String TAG = "SinkronisasiService";
+    public static final String KEY_INTERNET_CONNECTION = "com.spp.banu.aluradmi.koneksi.internet";
+    public static final String KEY_IS_NEW_DATA = "com.spp.banu.aluradmi.is.new.data";
+    public static final String KEY_IS_SUCCESS_UPDATE = "com.spp.banu.aluradmi.is.success.update";
+    private Intent broadcast_intent = new Intent(TAG_INTENT_SINKRONISASI);
     public SinkronisasiService() {
         super("SinkronisasiService");
     }
@@ -52,10 +61,13 @@ public class SinkronisasiService extends IntentService {
                     JSONObject jsonObject = response;
                     Log.e(TAG, "onSuccess: respon " + response );
                     Iterator<String> keys = jsonObject.keys();
+                    boolean[] cek_ke_broadcast = new boolean[8];
+                    int i = 0;
                     while (keys.hasNext()){
                         String table = keys.next();
                         Log.e(TAG, "onSuccess: key table awal " + table );
                         try {
+
                             JSONObject jml_dan_timestamp = jsonObject.getJSONObject(table);
                             boolean isHasNewData = isHasNewData(table, jml_dan_timestamp);
                             Log.e(TAG, "onSuccess: apakah ada data baru di  " + table +" " + isHasNewData );
@@ -64,20 +76,27 @@ public class SinkronisasiService extends IntentService {
                         */
                             if (isHasNewData){
                                 memulaiSinkronisasi(table);
+                                cek_ke_broadcast[i] = true;
                             }else {
+                                cek_ke_broadcast[i] = false;
                                 Log.e(TAG, "onSuccess: data table " + table + " tidak ada perubahan" );
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                        i++;
                     }
+                    broadcast_intent.putExtra(KEY_IS_SUCCESS_UPDATE, true);
+                    broadcast_intent.putExtra(KEY_IS_NEW_DATA, cek_ke_broadcast);
+                    writeLastSyncPreferences();
                 }
             });
         }else {
+            broadcast_intent.putExtra(KEY_INTERNET_CONNECTION, false);
 
         }
-
+        LocalBroadcastManager.getInstance(this).sendBroadcast(broadcast_intent);
     }
 
     private void memulaiSinkronisasi(String table) {
@@ -166,5 +185,14 @@ public class SinkronisasiService extends IntentService {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void writeLastSyncPreferences(){
+        Date currentDate = new Date();
+        final SharedPreferences preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(SetupActivity.KEY_DATE_SYNC, currentDate.getTime());
+        editor.commit();
+        Log.e(TAG, "writeLastSyncPreferences: " + currentDate );
     }
 }

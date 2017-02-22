@@ -49,15 +49,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
         Log.e("splashactivity", "onCreate: di splash");
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-                Log.d("splashactivity", "Key: " + key + " Value: " + value);
-            }
-        }
         long millies = preferences.getLong(SetupActivity.KEY_DATE_SYNC, new Date().getTime());
         DateTime last_date_sync = new DateTime(millies);
-
+        Log.e(TAG, "onCreate: last date sync " + last_date_sync );
         Log.e(TAG, "onCreate: beda hari with joda " +
                 Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays());
         int beda_hari =  Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays();

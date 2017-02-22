@@ -4,10 +4,12 @@ import android.app.Dialog;
 
 import android.app.SearchManager;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -15,6 +17,7 @@ import android.support.v4.app.FragmentManager;
 
 import android.support.v4.app.FragmentTransaction;
 
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
@@ -73,6 +76,7 @@ public class MainActivity extends AppCompatActivity
     private static final String KEY_CHOOSE_FRAGMENT = "com.spp.banu.aluradmi.key.choose.fragment";
     private static final String KEY_IS_DIALOG_SHOW= "com.spp.banu.aluradmi.key.dialog.jurusan";
     private static final String TAG = "MainActivity";
+    private ExpandableDrawerItem kategori_expand;
     Drawer result;
     AccountHeader resultHeader;
     private boolean isJurusanDialogShown;
@@ -81,6 +85,42 @@ public class MainActivity extends AppCompatActivity
     public static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
     public static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
 
+    private BroadcastReceiver receiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent.hasExtra(SinkronisasiService.KEY_INTERNET_CONNECTION)){
+                boolean ada_internet = intent.getBooleanExtra(SinkronisasiService.KEY_INTERNET_CONNECTION, true);
+                Log.e(TAG, "onReceive: " + ada_internet );
+                if (!ada_internet){
+                    Toast.makeText(MainActivity.this, "Tidak Dapat Melakukan Pembaharuan Data, " +
+                            "Butuh Koneksi Internet", Toast.LENGTH_SHORT).show();
+                }
+            }
+            if (intent.hasExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE)){
+                boolean is_success_update = intent.getBooleanExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE, false);
+                if (is_success_update){
+                    Toast.makeText(MainActivity.this, "Perbaruan Data Selesai", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            if (intent.hasExtra(SinkronisasiService.KEY_IS_NEW_DATA)){
+                boolean is_new[] = intent.getBooleanArrayExtra(SinkronisasiService.KEY_IS_NEW_DATA);
+                boolean baru = false;
+                for (int i = 0 ; i < is_new.length;i++){
+                    baru = is_new[i];
+                    if (baru){
+                        updateKategoriDrawer();
+                        Toast.makeText(MainActivity.this, "Data Sudah Diupdate", Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                }
+                if (!baru){
+                    Toast.makeText(MainActivity.this, "Tidak Terdapat Perubahan Data", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }
+    };
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -99,18 +139,11 @@ public class MainActivity extends AppCompatActivity
                 .addProfiles(new ProfileDrawerItem().withName("Aluradmi").withIcon(FontAwesome.Icon.faw_paper_plane_o))
                 .build();
         //Penambahan Kategori
-        ReuniKategori reuniKategori = new ReuniKategori(this);
-        List<Kategori> kategoriList = reuniKategori.getKategoris(null,null);
-        if (kategoriList.size() == 0){
-            Kategori kategori = new Kategori();
-            kategori.setId_kategori(0);
-            kategori.setNama("Data Masih Kosong");
-            kategoriList.add(kategori);
-        }
+
         //membuat drawer item
         PrimaryDrawerItem itemHome = new PrimaryDrawerItem().withIdentifier(100000).withName(R.string.home)
                 .withIcon(GoogleMaterial.Icon.gmd_home);
-        ExpandableDrawerItem kategori_expand = new ExpandableDrawerItem().withName(R.string.kategori)
+        kategori_expand = new ExpandableDrawerItem().withName(R.string.kategori)
                 .withIcon(GoogleMaterial.Icon.gmd_receipt).withIdentifier(200000).withSelectable(false);
         PrimaryDrawerItem itemLokasi = new PrimaryDrawerItem().withIdentifier(300000).withName(R.string.lokasi)
                 .withIcon(GoogleMaterial.Icon.gmd_place);
@@ -119,17 +152,11 @@ public class MainActivity extends AppCompatActivity
         PrimaryDrawerItem itemBantuan = new PrimaryDrawerItem().withIdentifier(400000).withName(R.string.bantuan)
                 .withIcon(GoogleMaterial.Icon.gmd_help_outline);
 
-        List<IDrawerItem> kategori_item_list = new ArrayList<>();
+
 
         //perulangan untuk memasukkan kategori ke dalam expand drawer
         //belum dimasukkan apabila data kosong
-        for (Kategori kategori : kategoriList){
-            if (kategori.getId_kategori() != 0){
-                kategori_item_list.add(new SecondaryDrawerItem().withName(kategori.getNama()).withIdentifier(kategori.getId_kategori())
-                        .withIcon(GoogleMaterial.Icon.gmd_receipt));
-            }
-        }
-        kategori_expand.withSubItems(kategori_item_list);
+
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -155,15 +182,25 @@ public class MainActivity extends AppCompatActivity
                 isJurusanDialogShown = savedInstanceState.getBoolean(KEY_IS_DIALOG_SHOW);
             }
         }
-        if (getIntent().getExtras() != null) {
-            for (String key : getIntent().getExtras().keySet()) {
-                String value = getIntent().getExtras().getString(key);
-                Log.d(TAG, "Key: " + key + " Value: " + value);
-            }
-        }
 
     }
-
+    public void updateKategoriDrawer(){
+        ReuniKategori reuniKategori = new ReuniKategori(this);
+        List<Kategori> kategoriList = reuniKategori.getKategoris(null,null);
+        if (kategoriList.size() == 0){
+            Kategori kategori = new Kategori();
+            kategori.setId_kategori(0);
+            kategori.setNama("Data Masih Kosong");
+            kategoriList.add(kategori);
+        }
+        List<IDrawerItem> kategori_item_list = new ArrayList<>();
+        for (Kategori kategori : kategoriList){
+            kategori_item_list.add(new SecondaryDrawerItem().withName(kategori.getNama()).withIdentifier(kategori.getId_kategori())
+                        .withIcon(GoogleMaterial.Icon.gmd_receipt));
+        }
+        kategori_expand.withSubItems(kategori_item_list);
+        result.updateItem(kategori_expand);
+    }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
@@ -201,6 +238,20 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        updateKategoriDrawer();
+        IntentFilter intentFilter = new IntentFilter(SinkronisasiService.TAG_INTENT_SINKRONISASI);
+        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
     }
 
     @Override
@@ -277,8 +328,9 @@ public class MainActivity extends AppCompatActivity
             }
             choose_fragment = id;
         } else if (id == 200000){
-            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this, true);
-            Log.e(TAG, "onCreate: " + databaseHelper.getMaxTimestamp("kategori"));
+
+        }else if (id == 0){
+
         }else if (id == 300000){
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
