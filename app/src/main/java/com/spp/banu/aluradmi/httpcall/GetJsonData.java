@@ -22,7 +22,7 @@ import java.util.Iterator;
  */
 
 public class GetJsonData extends AsyncTask<Void, Void, Void> {
-    private String url;
+    private String url = "http://aluradmi.pe.hu/";
     private Context context;
     private String table;
     private String field_id;
@@ -30,7 +30,7 @@ public class GetJsonData extends AsyncTask<Void, Void, Void> {
     private String method;
     private SQLiteDatabase sqLiteDatabase;
     private String TAG = GetJsonData.class.getSimpleName();
-    public GetJsonData(String url, String method, String table, String idOrTimestamp, Context context){
+    public GetJsonData(String method, String table, String idOrTimestamp, Context context){
        if (method == "tambah"){
            this.method = method;
            this.table = table;

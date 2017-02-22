@@ -247,10 +247,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         createLocationRequest();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-    }
 
     public static Intent newIntent(Context packagecontext, int id_gedung) {
         Intent intent = new Intent(packagecontext, MapsActivity.class);
@@ -379,10 +375,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             // for ActivityCompat#requestPermissions for more details.
             return;
         }
-        if (currentLocation == null){
-            currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-        }
-
+        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
+        currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
         MarkerOptions options = new MarkerOptions()
                 .title("Lokasi Anda")
                 .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
@@ -398,17 +392,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
             Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
         }
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
+
         Intent intent = getIntent();
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true).

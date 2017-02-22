@@ -10,7 +10,6 @@ import android.content.Intent;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 
@@ -61,7 +60,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements Drawer.OnDrawerItemClickListener {
 
-
     private boolean isFirstRun;
 
     private final static String TAG_home_fragment = "home_fragment";
@@ -76,8 +74,8 @@ public class MainActivity extends AppCompatActivity
     private boolean isJurusanDialogShown;
     FragmentManager fragmentManager;
     Fragment fragment;
-    private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
-    private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
+    public static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
+    public static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,6 +151,13 @@ public class MainActivity extends AppCompatActivity
                 isJurusanDialogShown = savedInstanceState.getBoolean(KEY_IS_DIALOG_SHOW);
             }
         }
+        if (getIntent().getExtras() != null) {
+            for (String key : getIntent().getExtras().keySet()) {
+                String value = getIntent().getExtras().getString(key);
+                Log.d(TAG, "Key: " + key + " Value: " + value);
+            }
+        }
+
     }
 
     @Override
@@ -265,7 +270,8 @@ public class MainActivity extends AppCompatActivity
             }
             choose_fragment = id;
         } else if (id == 200000){
-
+            DatabaseHelper databaseHelper = DatabaseHelper.getInstance(this, true);
+            Log.e(TAG, "onCreate: " + databaseHelper.getMaxTimestamp("kategori"));
         }else if (id == 300000){
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);

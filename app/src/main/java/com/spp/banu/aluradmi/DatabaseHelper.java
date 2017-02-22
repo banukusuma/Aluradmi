@@ -21,7 +21,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by banu on 16/11/16.
@@ -29,7 +31,7 @@ import java.util.Iterator;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String DATABASE_NAME = "aluradmi.sqlite";
-    private static final String TAG = "com.spp.aluradmi.databaseHelper";
+    private static final String TAG = "databaseHelper";
     private static DatabaseHelper helper;
     private static final String TABLE_JURUSAN = "CREATE TABLE "+ JurusanDbSchema.JurusanTable.TABLE_NAME +
             " (" + JurusanDbSchema.JurusanTable.Kolom.ID_JURUSAN + " INTEGER PRIMARY KEY NOT NULL, " +
@@ -139,7 +141,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Iterator<String> keys = jsonObject.keys();
         while (keys.hasNext()){
             try {
-                String theKey = (String)keys.next();
+                String theKey = keys.next();
                 String theValue = jsonObject.getString(theKey);
                 Log.d("key TAG", "KEYS: " + theKey);
                 Log.d("value TAG", "VALUE: " + theValue);
@@ -193,11 +195,56 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM " + table + " WHERE id_" +table + " = ?",new String[]{id} );
         if (cursor.getCount() > 0){
+            cursor.close();
             return true;
         }
         else {
+            cursor.close();
             return false;
         }
+    }
+
+    public String getMaxTimestamp(String table){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT MAX(timestamp) FROM " + table, null);
+        cursor.moveToFirst();
+        String timestamp = cursor.getString(0);
+        cursor.close();
+        return timestamp;
+    }
+
+    public int countDataInTable(String table){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table, null);
+        int jumlah = cursor.getCount();
+        cursor.close();
+        return jumlah;
+    }
+
+
+    public List<Integer> getListIdFromTable(String table){
+        SQLiteDatabase db = getReadableDatabase();
+        List<Integer> listID = new ArrayList<>();
+        Cursor cursor = db.rawQuery("SELECT id_" + table + " FROM " + table, null);
+        Log.e(TAG, "getListIdFromTable: jumlah cursor id " + cursor.getCount() );
+        try {
+            while (cursor.moveToNext()){
+                Integer id = cursor.getInt(0);
+                Log.e(TAG, "getListIdFromTable: id" + id );
+                 listID.add(id);
+            }
+        }finally {
+            cursor.close();
+        }
+        return listID;
+    }
+
+    public int getIdParent(String table_child, String table_parent, String id_child){
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM " + table_child + "WHERE id_" +table_child + " = ? ",
+                new String[]{id_child});
+        cursor.moveToFirst();
+        return cursor.getInt(cursor.getColumnIndex("id_" + table_parent));
     }
 
     @Override

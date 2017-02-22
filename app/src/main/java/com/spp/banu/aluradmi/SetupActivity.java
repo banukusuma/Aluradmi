@@ -17,12 +17,15 @@ import android.widget.TextView;
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 import com.spp.banu.aluradmi.httpcall.GetAllData;
 
+import java.util.Date;
+
 public class SetupActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private TextView textView;
     private Button button;
-    static final String KEY_FIRST_TIME = "com.spp.aluradmi.first_time";
-    static final String KEY = "com.spp.aluradmi.first";
+    public static final String KEY_FIRST_TIME = "com.spp.aluradmi.first_time";
+    public static final String KEY_DATE_SYNC = "com.spp.aluradmi.date.sinkronisasi";
+    public static final String KEY = "com.spp.aluradmi.preferences.data.aplikasi";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,8 +118,10 @@ public class SetupActivity extends AppCompatActivity {
     }
 
     public void writeFirstRunPreferences(){
+        Date currentDate = new Date();
         final SharedPreferences preferences = getSharedPreferences(KEY,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
+        editor.putLong(KEY_DATE_SYNC, currentDate.getTime());
         editor.putBoolean(KEY_FIRST_TIME, false);
         editor.commit();
     }

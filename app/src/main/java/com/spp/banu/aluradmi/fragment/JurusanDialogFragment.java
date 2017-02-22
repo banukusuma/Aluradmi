@@ -23,12 +23,8 @@ import java.util.List;
 public class JurusanDialogFragment extends DialogFragment {
     private String namaJurusan;
     private ReuniJurusan reuniJurusan;
-    private JurusanDialogInterfaceListener listener;
     private final static String TAG_home_fragment = "home_fragment";
     private static final String ALUR_FRAGMENT_TAG = "alur_list_fragment";
-    public interface JurusanDialogInterfaceListener{
-        void onSelectedJurusan(String nama_jurusan);
-    }
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {

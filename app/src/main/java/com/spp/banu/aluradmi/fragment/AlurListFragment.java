@@ -1,6 +1,8 @@
 package com.spp.banu.aluradmi.fragment;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -38,6 +40,7 @@ public class AlurListFragment extends Fragment {
     private int id_kategori;
     private ReuniJurusan reuniJurusan;
     private ReuniAlur reuniAlur;
+    private List<Alur> alurList;
     private final static String TAG = "alurListFragment";
     private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
     private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
@@ -91,7 +94,8 @@ public class AlurListFragment extends Fragment {
         reuniAlur = new ReuniAlur(getActivity());
          reuniJurusan = new ReuniJurusan(getActivity());
         Jurusan jurusan = reuniJurusan.getSelectJurusan();
-        List<Alur> alurList = reuniAlur.getAlurs(
+        //List<Alur>
+        alurList = reuniAlur.getAlurs(
                 AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
                         AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
                 new String[]{Integer.toString(id_kategori), Integer.toString(jurusan.getId_jurusan())}
