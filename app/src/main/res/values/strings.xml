@@ -35,4 +35,8 @@
     <string name="search_hint">Cari Alur</string>
     <string name="search">Search</string>
     <string name="sync">Perbarui Data</string>
+    <string name="coba">Try Again</string>
+    <string name="gagal_mengunduh">Gagal Mengunduh Data</string>
+    <string name="data_kosong">Data Masih Kosong</string>
+    <string name="data_tidak_cocok">Tidak Ada Alur yang Cocok</string>
 </resources>

@@ -56,6 +56,18 @@ public class ReuniAlur {
         );
         return new AlurCursorWrapper(cursor, this.context);
     }
+    private AlurCursorWrapper querySearchAlur(String whereClause, String[] whereArgs){
+        Cursor cursor = db.query(
+                AlurDbSchema.AlurTable.TABLE_NAME,
+                null, // Columns - null selects all columns
+                whereClause,
+                whereArgs,
+                null, // groupBy
+                null, // having
+                AlurDbSchema.AlurTable.Kolom.NAMA + " ASC" // orderBy
+        );
+        return new AlurCursorWrapper(cursor, this.context);
+    }
 
     public Alur getAlur(int id_alur){
         Alur alur = new Alur();
@@ -80,7 +92,7 @@ public class ReuniAlur {
     public List<Alur> searchAlur(String name){
         ReuniJurusan reuniJurusan = new ReuniJurusan(context);
         List<Alur> alurList = new ArrayList<>();
-        AlurCursorWrapper cursorWrapper = queryAlur(AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? AND " +
+        AlurCursorWrapper cursorWrapper = querySearchAlur(AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? AND " +
                 AlurDbSchema.AlurTable.Kolom.NAMA + " LIKE ?", new String[]{Integer.toString(
                 reuniJurusan.getSelectJurusan().getId_jurusan())
                 , "%"+name+"%"});

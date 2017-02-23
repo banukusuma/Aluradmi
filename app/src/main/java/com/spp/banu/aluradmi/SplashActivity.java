@@ -54,6 +54,7 @@ public class SplashActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: last date sync " + last_date_sync );
         Log.e(TAG, "onCreate: beda hari with joda " +
                 Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays());
+        //mencoba ditambah 3 hari
         int beda_hari =  Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays();
         boolean isFirstRun = checkFirstRun();
         if (isFirstRun) {

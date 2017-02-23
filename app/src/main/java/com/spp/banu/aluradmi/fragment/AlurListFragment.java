@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -83,13 +84,7 @@ public class AlurListFragment extends Fragment {
 
 
     public void updateUI(){
-        ReuniKategori reuniKategori = new ReuniKategori(getActivity());
-        String title = reuniKategori.getKategori(id_kategori).getNama();
-        if (title != null){
-            getActivity().setTitle("Alur " + title);
-        } else {
-            getActivity().setTitle("Alur");
-        }
+
 
         reuniAlur = new ReuniAlur(getActivity());
          reuniJurusan = new ReuniJurusan(getActivity());
@@ -167,6 +162,7 @@ public class AlurListFragment extends Fragment {
         private TextView namaAlur, progress_text, urut_Alur;
         private Alur alur;
         private RelativeLayout layout_urut;
+        private ImageView  next_image;
 
         public AlurHolder(View itemView) {
             super(itemView);
@@ -174,6 +170,7 @@ public class AlurListFragment extends Fragment {
             progress_text = (TextView) itemView.findViewById(R.id.progress_text_view);
             urut_Alur = (TextView)itemView.findViewById(R.id.urut_alur_text_view);
             layout_urut = (RelativeLayout) itemView.findViewById(R.id.relative_layout_urut_Alur);
+            next_image = (ImageView) itemView.findViewById(R.id.next_image_alur);
             itemView.setOnClickListener(this);
             //progressBar = (ProgressBar) itemView.findViewById(R.id.progress_alur_progress_bar);
         }
@@ -188,12 +185,7 @@ public class AlurListFragment extends Fragment {
                 urut_Alur.setText(Integer.toString(urut));
                 namaAlur.setText(this.alur.getNama());
                 progress_text.setText("Progress : " + this.alur.getProgress() + "%");
-            } else {
-                namaAlur.setText("Data Masih Kosong");
-                layout_urut.setVisibility(View.GONE);
-                progress_text.setVisibility(View.GONE);
             }
-
         }
 
         @Override

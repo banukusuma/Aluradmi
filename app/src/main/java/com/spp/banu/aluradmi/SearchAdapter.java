@@ -81,17 +81,11 @@ public class SearchAdapter extends BaseAdapter {
 
         public void bindAlur(Alur alur2){
             alur = alur2;
-            if (alur.getId_alur() == 0){
-                nama_alur.setText("Data Tidak Ditemukan");
-                kategori.setVisibility(View.GONE);
-            }else {
-                ReuniKategori reuniKategori = new ReuniKategori(context);
-                String nama_kategori = reuniKategori.getKategori(alur.getId_kategori()).getNama();
-                nama_alur.setText(alur.getNama());
-                kategori.setText("Kategori : " + nama_kategori);
-            }
+            ReuniKategori reuniKategori = new ReuniKategori(context);
+            String nama_kategori = reuniKategori.getKategori(alur.getId_kategori()).getNama();
+            nama_alur.setText(alur.getNama());
+            kategori.setText("Kategori : " + nama_kategori);
 
-            //urut_alur.setText(Integer.toString(alur.getUrut()));
         }
 
         @Override

@@ -148,9 +148,9 @@ public class MainActivity extends AppCompatActivity
         PrimaryDrawerItem itemLokasi = new PrimaryDrawerItem().withIdentifier(300000).withName(R.string.lokasi)
                 .withIcon(GoogleMaterial.Icon.gmd_place);
         PrimaryDrawerItem itemAbout = new PrimaryDrawerItem().withIdentifier(500000).withName(R.string.about)
-                .withIcon(GoogleMaterial.Icon.gmd_info_outline);
+                .withIcon(GoogleMaterial.Icon.gmd_info);
         PrimaryDrawerItem itemBantuan = new PrimaryDrawerItem().withIdentifier(400000).withName(R.string.bantuan)
-                .withIcon(GoogleMaterial.Icon.gmd_help_outline);
+                .withIcon(GoogleMaterial.Icon.gmd_help);
 
 
 
@@ -212,8 +212,8 @@ public class MainActivity extends AppCompatActivity
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(
                 new ComponentName(this, AlurSearchActivity.class)));
-        searchView.setIconifiedByDefault(true);
-        // Do not iconify the widget; expand it by default
+        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
+
         return true;
     }
 

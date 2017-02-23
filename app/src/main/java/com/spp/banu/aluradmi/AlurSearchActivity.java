@@ -17,7 +17,9 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.spp.banu.aluradmi.model.Alur;
 
@@ -30,16 +32,39 @@ import java.util.List;
 
 public class AlurSearchActivity extends AppCompatActivity implements onSearchListSelected {
     ListView listView;
+    ImageView image_kosong;
+    TextView text_tidak_cocok;
+    private final static String TAG_LAST_QUERY = "com.spp.banu.aluradmi.last.query";
+    private final static String EXTRA_LAST_QUERY = "com.spp.banu.aluradmi.extra.query";
+    private String last_query;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
+        image_kosong = (ImageView) findViewById(R.id.imageView_empty_data_search);
+        text_tidak_cocok = (TextView) findViewById(R.id.textView_kosong_search);
+        image_kosong.setVisibility(View.INVISIBLE);
+        text_tidak_cocok.setVisibility(View.INVISIBLE);
         listView = (ListView) findViewById(R.id.listview_search);
+        last_query = null;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search);
-        handleIntent(getIntent());
+        if (savedInstanceState != null){
+            if (savedInstanceState.keySet().contains(TAG_LAST_QUERY)){
+                last_query = savedInstanceState.getString(TAG_LAST_QUERY);
+            }
+        }
+        if (last_query != null){
+            doSearch(last_query);
+        }else {
+            handleIntent(getIntent());
+        }
+
+
+
 
     }
 
@@ -62,7 +87,9 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                doSearch(newText);
+                if (!newText.isEmpty()){
+                    doSearch(newText);
+                }
                 return true;
             }
         });
@@ -76,22 +103,32 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
 
     private void handleIntent(Intent intent){
         if (Intent.ACTION_SEARCH.equals(intent.getAction())){
-            String query = intent.getStringExtra(SearchManager.QUERY);
-            doSearch(query);
+            String query;
+            if (intent.hasExtra(EXTRA_LAST_QUERY)){
+                query = intent.getStringExtra(EXTRA_LAST_QUERY);
+                doSearch(query);
+            }else {
+                query = intent.getStringExtra(SearchManager.QUERY);
+                doSearch(query);
+            }
         }
     }
 
     private void doSearch(String query){
+        last_query = query;
         Log.e("alursearch", "doSearch: query " +query );
         ReuniAlur reuniAlur = new ReuniAlur(this);
         List<Alur> alurList = reuniAlur.searchAlur(query);
-        if (alurList.size() == 0 ){
-            Alur alur = new Alur();
-            alur.setId_alur(0);
-            alurList.add(alur);
-        }
         SearchAdapter adapter = new SearchAdapter(this, alurList, this);
-        listView.setAdapter(adapter);
+        if (!alurList.isEmpty()){
+            image_kosong.setVisibility(View.INVISIBLE);
+            text_tidak_cocok.setVisibility(View.INVISIBLE);
+            listView.setAdapter(adapter);
+        }else {
+            image_kosong.setVisibility(View.VISIBLE);
+            text_tidak_cocok.setVisibility(View.VISIBLE);
+            listView.setAdapter(adapter);
+        }
     }
 
     @Override
@@ -100,5 +137,11 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
             Intent intent = KeteranganPagerActivity.newIntent(this, id_alur);
             startActivity(intent);
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(TAG_LAST_QUERY, last_query);
+        super.onSaveInstanceState(outState);
     }
 }
