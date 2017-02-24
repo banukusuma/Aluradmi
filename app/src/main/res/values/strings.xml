@@ -32,8 +32,8 @@
     <string name="lantai">Lantai </string>
     <string name="ruang">Ruang </string>
     <string name="unduh_denah">Sedang Mengunduh Denah</string>
-    <string name="search_hint">Cari Alur</string>
-    <string name="search">Search</string>
+    <string name="search_hint">Nama Alur....</string>
+    <string name="search">Cari Alur</string>
     <string name="sync">Perbarui Data</string>
     <string name="coba">Try Again</string>
     <string name="gagal_mengunduh">Gagal Mengunduh Data</string>

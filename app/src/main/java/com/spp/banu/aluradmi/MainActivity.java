@@ -205,6 +205,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
+        /*
         MenuItem searchitem = menu.findItem(R.id.menu_search_main);
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
@@ -213,7 +214,7 @@ public class MainActivity extends AppCompatActivity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(
                 new ComponentName(this, AlurSearchActivity.class)));
         searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-
+        */
         return true;
     }
 
@@ -283,6 +284,9 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Memulai Perbaharuan Data", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SinkronisasiService.class);
             startService(intent);
+        }else if (id == R.id.menu_search_main){
+            Intent intent = new Intent(this, AlurSearchActivity.class);
+            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

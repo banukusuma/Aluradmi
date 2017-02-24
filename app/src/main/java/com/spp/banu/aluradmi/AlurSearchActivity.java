@@ -11,12 +11,15 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,10 +33,12 @@ import java.util.List;
  * Created by banu on 05/02/17.
  */
 
-public class AlurSearchActivity extends AppCompatActivity implements onSearchListSelected {
+public class AlurSearchActivity extends AppCompatActivity implements onSearchListSelected, TextWatcher {
+    private static final String TAG = "AlurSearchActivity";
     ListView listView;
     ImageView image_kosong;
     TextView text_tidak_cocok;
+    private EditText search_edit;
     private final static String TAG_LAST_QUERY = "com.spp.banu.aluradmi.last.query";
     private final static String EXTRA_LAST_QUERY = "com.spp.banu.aluradmi.extra.query";
     private String last_query;
@@ -47,11 +52,14 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
         text_tidak_cocok = (TextView) findViewById(R.id.textView_kosong_search);
         image_kosong.setVisibility(View.INVISIBLE);
         text_tidak_cocok.setVisibility(View.INVISIBLE);
+        search_edit = (EditText) findViewById(R.id.search_edit_text_alur);
+        search_edit.addTextChangedListener(this);
         listView = (ListView) findViewById(R.id.listview_search);
         last_query = null;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.search);
+        /*
         if (savedInstanceState != null){
             if (savedInstanceState.keySet().contains(TAG_LAST_QUERY)){
                 last_query = savedInstanceState.getString(TAG_LAST_QUERY);
@@ -62,39 +70,12 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
         }else {
             handleIntent(getIntent());
         }
-
+        */
 
 
 
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.search_menu, menu);
-        MenuItem searchitem = menu.findItem(R.id.app_bar_search);
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchitem);
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                if (!newText.isEmpty()){
-                    doSearch(newText);
-                }
-                return true;
-            }
-        });
-        return true;
-    }
+    /*
 
     public void onNewIntent(Intent intent){
         setIntent(intent);
@@ -113,27 +94,37 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
             }
         }
     }
-
+    */
     private void doSearch(String query){
         last_query = query;
+        listView.setVisibility(View.VISIBLE);
         Log.e("alursearch", "doSearch: query " +query );
         ReuniAlur reuniAlur = new ReuniAlur(this);
         List<Alur> alurList = reuniAlur.searchAlur(query);
         SearchAdapter adapter = new SearchAdapter(this, alurList, this);
         if (!alurList.isEmpty()){
+            Log.e(TAG, "doSearch: alurlist tidak kosong" );
             image_kosong.setVisibility(View.INVISIBLE);
             text_tidak_cocok.setVisibility(View.INVISIBLE);
             listView.setAdapter(adapter);
         }else {
+            listView.setVisibility(View.INVISIBLE);
+            Log.e(TAG, "doSearch: alurlist kosong" );
             image_kosong.setVisibility(View.VISIBLE);
             text_tidak_cocok.setVisibility(View.VISIBLE);
-            listView.setAdapter(adapter);
+            //listView.setAdapter(adapter);
         }
     }
 
     @Override
     public void onSearchItemSelected(int id_alur) {
         if (id_alur != 0 ){
+            ReuniAlur reuniAlur = new ReuniAlur(this);
+            int id_kategori = reuniAlur.getAlur(id_alur).getId_kategori();
+            SharedPreferences preferences = getSharedPreferences(MainActivity.KEY_PREFERENCE, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(MainActivity.KEY_ID_KATEGORI, id_kategori);
+            editor.commit();
             Intent intent = KeteranganPagerActivity.newIntent(this, id_alur);
             startActivity(intent);
         }
@@ -143,5 +134,22 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(TAG_LAST_QUERY, last_query);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        if (charSequence.length() != 0){
+            doSearch(charSequence.toString());
+        }
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }

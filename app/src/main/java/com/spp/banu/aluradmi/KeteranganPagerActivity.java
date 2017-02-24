@@ -14,6 +14,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 
 import com.astuetz.PagerSlidingTabStrip;
@@ -33,8 +36,9 @@ public class KeteranganPagerActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private List<Keterangan> keteranganList;
     private PagerAdapter pagerAdapter;
-    private final String TAG = "keteranganPagerActivity";
-    private int id_alur;
+    private final static String TAG = "keteranganPagerActivity";
+    private ImageView image_kosong;
+    private TextView text_kosong;
     private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
     private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
     private boolean canChecked;
@@ -47,7 +51,10 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        id_alur = getIntent().getIntExtra(EXTRA_ID_ALUR, 0);
+        image_kosong = (ImageView) findViewById(R.id.imageView_keterangan_kosong);
+        text_kosong = (TextView) findViewById(R.id.textView_keterangan_kosong);
+        Log.e(TAG, "onCreate: " + getIntent().getIntExtra(EXTRA_ID_ALUR, 0) );
+         int id_alur = getIntent().getIntExtra(EXTRA_ID_ALUR, 0);
         ReuniAlur reuniAlur = new ReuniAlur(this);
         Alur alur = reuniAlur.getAlur(id_alur);
         getSupportActionBar().setTitle(alur.getNama());
@@ -64,22 +71,23 @@ public class KeteranganPagerActivity extends AppCompatActivity {
                 KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? ",
             new String[]{Integer.toString(id_alur)}
         );
-        if (keteranganList.isEmpty()){
-            Keterangan keterangan = new Keterangan();
-            keterangan.setId_keterangan(0);
-            keterangan.setNama("Data Masih Kosong");
-            keteranganList.add(keterangan);
-        }
         FragmentManager fragmentManager = getSupportFragmentManager();
         viewPager = (ViewPager) findViewById(R.id.keterangan_view_pager);
         pagerAdapter = new ScreenSlidePagerAdapter(fragmentManager);
-        viewPager.setAdapter(pagerAdapter);
-        PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip)findViewById(R.id.tabs);
-        tabStrip.setViewPager(viewPager);
-
+        if (keteranganList.isEmpty()){
+            image_kosong.setVisibility(View.VISIBLE);
+            text_kosong.setVisibility(View.VISIBLE);
+        }else {
+            image_kosong.setVisibility(View.INVISIBLE);
+            text_kosong.setVisibility(View.INVISIBLE);
+            viewPager.setAdapter(pagerAdapter);
+            PagerSlidingTabStrip tabStrip = (PagerSlidingTabStrip)findViewById(R.id.tabs);
+            tabStrip.setViewPager(viewPager);
+        }
     }
 
     public static Intent newIntent(Context packagecontext, int id_alur){
+        Log.e(TAG, "newIntent: " + id_alur );
         Intent intent = new Intent(packagecontext, KeteranganPagerActivity.class);
         intent.putExtra(EXTRA_ID_ALUR, id_alur);
         return intent;
@@ -100,8 +108,11 @@ public class KeteranganPagerActivity extends AppCompatActivity {
             Alur alurBefore = new Alur();
             if (!alurList.isEmpty()){
                 for (int i = 0; i < alurList.size();i++){
+                    Log.e(TAG, "id_alur yang dilempar ke isbeforeAlur " + alur.getId_alur() );
+                    Log.e(TAG, "list_alur_keterangan_pager " + alurList.get(i).getId_alur());
                     if (alurList.get(i).getId_alur() == alur.getId_alur()){
                         int j = i - 1;
+                        Log.e(TAG, "alur sebelumnya : " + alurList.get(j));
                         alurBefore = alurList.get(j);
                         break;
                     }
@@ -119,14 +130,19 @@ public class KeteranganPagerActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (viewPager.getCurrentItem() == 0) {
-            // If the user is currently looking at the first step, allow the system to handle the
-            // Back button. This calls finish() on this activity and pops the back stack.
+        if (viewPager != null){
+            if (viewPager.getCurrentItem() == 0) {
+                // If the user is currently looking at the first step, allow the system to handle the
+                // Back button. This calls finish() on this activity and pops the back stack.
+                super.onBackPressed();
+            } else {
+                // Otherwise, select the previous step.
+                viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
+            }
+        }else {
             super.onBackPressed();
-        } else {
-            // Otherwise, select the previous step.
-            viewPager.setCurrentItem(viewPager.getCurrentItem() - 1);
         }
+
 
     }
 
