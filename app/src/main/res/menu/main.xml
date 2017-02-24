@@ -4,13 +4,13 @@
     <item
         android:id="@+id/menu_jurusan"
         android:title="@string/action_pilih_jurusan"
-        android:orderInCategory="1"
+        android:orderInCategory="2"
         android:icon="@drawable/ic_account_balance_white_24px"
         app:showAsAction="ifRoom" />
     <item
         android:id="@+id/menu_search_main"
         app:showAsAction="ifRoom"
-        android:orderInCategory="3"
+        android:orderInCategory="1"
         android:icon="@drawable/ic_search_white_24px"
         android:title="@string/search"
         />
@@ -19,7 +19,7 @@
     -->
     <item android:title="@string/sync"
         app:showAsAction="ifRoom"
-        android:orderInCategory="2"
+        android:orderInCategory="3"
         android:id="@+id/menu_sync"
         android:icon="@drawable/ic_sync_white_24dp"/>
 </menu>

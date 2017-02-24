@@ -4,23 +4,22 @@ import android.app.IntentService;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.spp.banu.aluradmi.httpcall.AluradmiRestClient;
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 
-import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,13 +36,14 @@ public class SinkronisasiService extends IntentService {
     public static final String KEY_INTERNET_CONNECTION = "com.spp.banu.aluradmi.koneksi.internet";
     public static final String KEY_IS_NEW_DATA = "com.spp.banu.aluradmi.is.new.data";
     public static final String KEY_IS_SUCCESS_UPDATE = "com.spp.banu.aluradmi.is.success.update";
+    public static final String KEY_LIST_UPDATE = "com.spp.banu.aluradmi.list.update";
     private Intent broadcast_intent = new Intent(TAG_INTENT_SINKRONISASI);
     public SinkronisasiService() {
         super("SinkronisasiService");
     }
-    private String table_class;
     @Override
     protected void onHandleIntent(Intent intent) {
+        WakefulBroadcastReceiver.completeWakefulIntent(intent);
         db = DatabaseHelper.getInstance(this,true);
         Log.e(TAG, "onHandleIntent: memulai sinkronisasi intentService"  );
         CheckNetwork network = new CheckNetwork(this);
@@ -58,26 +58,29 @@ public class SinkronisasiService extends IntentService {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    JSONObject jsonObject = response;
                     Log.e(TAG, "onSuccess: respon " + response );
-                    Iterator<String> keys = jsonObject.keys();
+                    Iterator<String> keys = response.keys();
                     boolean[] cek_ke_broadcast = new boolean[8];
+                    HashMap<String, Boolean> list_update = new HashMap<>();
                     int i = 0;
                     while (keys.hasNext()){
                         String table = keys.next();
                         Log.e(TAG, "onSuccess: key table awal " + table );
                         try {
 
-                            JSONObject jml_dan_timestamp = jsonObject.getJSONObject(table);
+                            JSONObject jml_dan_timestamp = response.getJSONObject(table);
                             boolean isHasNewData = isHasNewData(table, jml_dan_timestamp);
                             Log.e(TAG, "onSuccess: apakah ada data baru di  " + table +" " + isHasNewData );
                         /*
                         sementara di buat true untuk mengetes data baru
                         */
+
                             if (isHasNewData){
                                 memulaiSinkronisasi(table);
+                                list_update.put(table, true);
                                 cek_ke_broadcast[i] = true;
                             }else {
+                                list_update.put(table, true);
                                 cek_ke_broadcast[i] = false;
                                 Log.e(TAG, "onSuccess: data table " + table + " tidak ada perubahan" );
                             }
@@ -87,6 +90,7 @@ public class SinkronisasiService extends IntentService {
                         }
                         i++;
                     }
+                    broadcast_intent.putExtra(KEY_LIST_UPDATE, list_update);
                     broadcast_intent.putExtra(KEY_IS_SUCCESS_UPDATE, true);
                     broadcast_intent.putExtra(KEY_IS_NEW_DATA, cek_ke_broadcast);
                     writeLastSyncPreferences();
@@ -116,9 +120,9 @@ public class SinkronisasiService extends IntentService {
                 @Override
                 public void onSuccess(int statusCode, Header[] headers, JSONObject response) {
                     super.onSuccess(statusCode, headers, response);
-                    JSONObject hasil = response;
+
                     try {
-                        JSONObject data = hasil.getJSONObject("data");
+                        JSONObject data = response.getJSONObject("data");
                         String table = data.getString("table");
                         String id = data.getString("id");
                         boolean ada = data.getBoolean("ada");
@@ -152,7 +156,7 @@ public class SinkronisasiService extends IntentService {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                    if (jsonArray.length() > 0){
+                    if ((jsonArray != null ? jsonArray.length() : 0) > 0){
                         Log.e(TAG, "onSuccess: memulai sinkronisasi memasukkan data atau mengupdate " + jsonArray );
                         db.insertData(table,jsonArray);
                     }

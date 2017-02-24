@@ -1,7 +1,9 @@
 package com.spp.banu.aluradmi;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 
+import android.app.PendingIntent;
 import android.content.Context;
 
 
@@ -10,6 +12,7 @@ import android.content.Intent;
 
 
 import android.content.SharedPreferences;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -49,6 +52,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
         Log.e("splashactivity", "onCreate: di splash");
+        scheduleAlarm();
         long millies = preferences.getLong(SetupActivity.KEY_DATE_SYNC, new Date().getTime());
         DateTime last_date_sync = new DateTime(millies);
         Log.e(TAG, "onCreate: last date sync " + last_date_sync );
@@ -95,5 +99,30 @@ public class SplashActivity extends AppCompatActivity {
             result.put(unit,diff);
         }
         return result;
+    }
+
+    // Setup a recurring alarm every half hour
+    public void scheduleAlarm() {
+        // Construct an intent that will execute the AlarmReceiver
+        Intent intent = new Intent(getApplicationContext(), PeriodicTaskReceiver.class);
+        // Create a PendingIntent to be triggered when the alarm goes off
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, PeriodicTaskReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        // Setup periodic alarm every 5 seconds
+        long firstMillis = System.currentTimeMillis(); // alarm is set right away
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
+        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
+        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
+                AlarmManager.INTERVAL_DAY, pIntent);
+        //INTERVAL_HALF_HOUR
+    }
+
+    public void cancelAlarm() {
+        Intent intent = new Intent(getApplicationContext(), PeriodicTaskReceiver.class);
+        final PendingIntent pIntent = PendingIntent.getBroadcast(this, PeriodicTaskReceiver.REQUEST_CODE,
+                intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+        alarm.cancel(pIntent);
     }
 }

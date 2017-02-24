@@ -371,10 +371,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
-        MarkerOptions options = new MarkerOptions()
-                .title("Lokasi Anda")
-                .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
-        currentLocationMarker = map.addMarker(options);
+        if (currentLocation != null){
+            MarkerOptions options = new MarkerOptions()
+                    .title("Lokasi Anda")
+                    .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+            currentLocationMarker = map.addMarker(options);
+        }
+
         boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
         if (isInFT) {
             STATUS_POSISI = 1;
@@ -418,7 +421,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         locationRequest.setInterval(3600000);
-        locationRequest.setFastestInterval(300000);
+        locationRequest.setFastestInterval(60000);
     }
 
 

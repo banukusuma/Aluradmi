@@ -22,7 +22,10 @@
                 android:background="@android:drawable/screen_background_light"
                 android:minHeight="?attr/actionBarSize"
                 android:id="@+id/toolbar3"
-                app:popupTheme="@style/AppTheme.PopupOverlay" />
+                app:popupTheme="@style/AppTheme.PopupOverlay"
+                android:layout_marginTop="16dp"
+                android:layout_marginLeft="16dp"
+                android:layout_marginRight="16dp"/>
         </FrameLayout>
 
 

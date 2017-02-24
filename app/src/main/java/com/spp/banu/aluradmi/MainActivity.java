@@ -61,6 +61,7 @@ import com.spp.banu.aluradmi.model.Kategori;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -92,14 +93,14 @@ public class MainActivity extends AppCompatActivity
                 boolean ada_internet = intent.getBooleanExtra(SinkronisasiService.KEY_INTERNET_CONNECTION, true);
                 Log.e(TAG, "onReceive: " + ada_internet );
                 if (!ada_internet){
-                    Toast.makeText(MainActivity.this, "Tidak Dapat Melakukan Pembaharuan Data, " +
+                    Toast.makeText(MainActivity.this, "Tidak Dapat Melakukan Sinkronisasi, " +
                             "Butuh Koneksi Internet", Toast.LENGTH_SHORT).show();
                 }
             }
             if (intent.hasExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE)){
                 boolean is_success_update = intent.getBooleanExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE, false);
                 if (is_success_update){
-                    Toast.makeText(MainActivity.this, "Perbaruan Data Selesai", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Sinkronisasi Selesai", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -109,7 +110,6 @@ public class MainActivity extends AppCompatActivity
                 for (int i = 0 ; i < is_new.length;i++){
                     baru = is_new[i];
                     if (baru){
-                        updateKategoriDrawer();
                         Toast.makeText(MainActivity.this, "Data Sudah Diupdate", Toast.LENGTH_SHORT).show();
                         break;
                     }
@@ -118,6 +118,15 @@ public class MainActivity extends AppCompatActivity
                     Toast.makeText(MainActivity.this, "Tidak Terdapat Perubahan Data", Toast.LENGTH_SHORT).show();
                 }
             }
+
+            if (intent.hasExtra(SinkronisasiService.KEY_LIST_UPDATE)){
+                HashMap<String,Boolean> list_update = (HashMap<String, Boolean>) intent.getSerializableExtra(SinkronisasiService.KEY_LIST_UPDATE);
+                if (list_update.get("kategori")){
+                    updateKategoriDrawer();
+                }
+            }
+
+
 
         }
     };
@@ -281,7 +290,7 @@ public class MainActivity extends AppCompatActivity
            menuJurusan();
             return true;
         }else if (id == R.id.menu_sync){
-            Toast.makeText(this, "Memulai Perbaharuan Data", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Memulai Sinkronisasi Data", Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, SinkronisasiService.class);
             startService(intent);
         }else if (id == R.id.menu_search_main){

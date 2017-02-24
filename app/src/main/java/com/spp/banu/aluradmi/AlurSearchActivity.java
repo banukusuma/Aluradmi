@@ -38,9 +38,7 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     ListView listView;
     ImageView image_kosong;
     TextView text_tidak_cocok;
-    private EditText search_edit;
     private final static String TAG_LAST_QUERY = "com.spp.banu.aluradmi.last.query";
-    private final static String EXTRA_LAST_QUERY = "com.spp.banu.aluradmi.extra.query";
     private String last_query;
 
     @Override
@@ -52,7 +50,7 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
         text_tidak_cocok = (TextView) findViewById(R.id.textView_kosong_search);
         image_kosong.setVisibility(View.INVISIBLE);
         text_tidak_cocok.setVisibility(View.INVISIBLE);
-        search_edit = (EditText) findViewById(R.id.search_edit_text_alur);
+        EditText search_edit = (EditText) findViewById(R.id.search_edit_text_alur);
         search_edit.addTextChangedListener(this);
         listView = (ListView) findViewById(R.id.listview_search);
         last_query = null;
@@ -98,11 +96,11 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     private void doSearch(String query){
         last_query = query;
         listView.setVisibility(View.VISIBLE);
-        Log.e("alursearch", "doSearch: query " +query );
+        Log.e("alursearch", "doSearch: query " +query + " boolean query " + last_query.isEmpty());
         ReuniAlur reuniAlur = new ReuniAlur(this);
-        List<Alur> alurList = reuniAlur.searchAlur(query);
+        List<Alur> alurList = reuniAlur.searchAlur(last_query);
         SearchAdapter adapter = new SearchAdapter(this, alurList, this);
-        if (!alurList.isEmpty()){
+        if (!alurList.isEmpty() && !last_query.isEmpty()){
             Log.e(TAG, "doSearch: alurlist tidak kosong" );
             image_kosong.setVisibility(View.INVISIBLE);
             text_tidak_cocok.setVisibility(View.INVISIBLE);
@@ -143,9 +141,7 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
 
     @Override
     public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        if (charSequence.length() != 0){
             doSearch(charSequence.toString());
-        }
     }
 
     @Override
