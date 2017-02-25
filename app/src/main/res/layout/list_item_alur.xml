@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:clickable="true"
     android:id="@+id/layout_utama_alur"
-    android:background="?attr/selectableItemBackground"
+    android:background="?android:selectableItemBackground"
     android:layout_height="wrap_content">
 
     <LinearLayout

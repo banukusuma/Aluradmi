@@ -105,7 +105,11 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
             image_kosong.setVisibility(View.INVISIBLE);
             text_tidak_cocok.setVisibility(View.INVISIBLE);
             listView.setAdapter(adapter);
-        }else {
+        }else if (last_query.isEmpty()){
+            image_kosong.setVisibility(View.INVISIBLE);
+            text_tidak_cocok.setVisibility(View.INVISIBLE);
+            listView.setVisibility(View.INVISIBLE);
+        } else{
             listView.setVisibility(View.INVISIBLE);
             Log.e(TAG, "doSearch: alurlist kosong" );
             image_kosong.setVisibility(View.VISIBLE);

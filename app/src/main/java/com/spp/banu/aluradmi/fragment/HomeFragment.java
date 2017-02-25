@@ -67,15 +67,7 @@ public class HomeFragment extends Fragment {
         public HomeViewHolder(View itemView) {
             super(itemView);
             linearLayout = (LinearLayout) itemView.findViewById(R.id.layout_ganti_jurusan);
-            text_jurusan = (TextView) itemView.findViewById(R.id.jurusan_home);
-            linearLayout.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                    JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
-                    dialogFragment.show(fragmentManager, "jurusanDialog");
-                }
-            });
+            text_jurusan = (TextView) itemView.findViewById(R.id.isi_home);
         }
 
         public void bindJurusan(Jurusan jurusan){
@@ -113,6 +105,7 @@ public class HomeFragment extends Fragment {
         public void setJurusan(Jurusan jurusan) {
             this.jurusan = jurusan;
         }
+
     }
 
 }

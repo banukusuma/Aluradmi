@@ -7,6 +7,11 @@
         android:orderInCategory="2"
         android:icon="@drawable/ic_account_balance_white_24px"
         app:showAsAction="ifRoom" />
+    <item android:title="@string/pengaturan"
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_settings_white_24px"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="4"/>
     <item
         android:id="@+id/menu_search_main"
         app:showAsAction="ifRoom"
