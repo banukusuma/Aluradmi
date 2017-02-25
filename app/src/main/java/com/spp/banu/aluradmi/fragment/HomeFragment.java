@@ -17,6 +17,8 @@ import com.spp.banu.aluradmi.R;
 import com.spp.banu.aluradmi.ReuniJurusan;
 import com.spp.banu.aluradmi.model.Jurusan;
 
+import java.util.HashMap;
+
 /**
  * Created by banu on 09/01/17.
  */
@@ -85,6 +87,7 @@ public class HomeFragment extends Fragment {
 
     private class HomeAdapter extends RecyclerView.Adapter<HomeViewHolder> {
         private Jurusan jurusan;
+        private HashMap<String, String> list_item_home;
 
         public HomeAdapter(Jurusan jurusan) {
             this.jurusan = jurusan;
