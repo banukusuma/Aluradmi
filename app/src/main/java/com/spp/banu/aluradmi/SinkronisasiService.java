@@ -12,6 +12,7 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 import com.spp.banu.aluradmi.httpcall.AluradmiRestClient;
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
+import com.spp.banu.aluradmi.service.ScheduleAlarmService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +32,7 @@ import cz.msebera.android.httpclient.Header;
 
 public class SinkronisasiService extends IntentService {
     private DatabaseHelper db;
+    SharedPreferences preferences;
     public static final String TAG_INTENT_SINKRONISASI = "com.spp.banu.aluradmi.sinkronisasi.pesan.broadcast";
     private static final String TAG = "SinkronisasiService";
     public static final String KEY_INTERNET_CONNECTION = "com.spp.banu.aluradmi.koneksi.internet";
@@ -43,7 +45,7 @@ public class SinkronisasiService extends IntentService {
     }
     @Override
     protected void onHandleIntent(Intent intent) {
-        WakefulBroadcastReceiver.completeWakefulIntent(intent);
+        preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
         db = DatabaseHelper.getInstance(this,true);
         Log.e(TAG, "onHandleIntent: memulai sinkronisasi intentService"  );
         CheckNetwork network = new CheckNetwork(this);
@@ -193,7 +195,6 @@ public class SinkronisasiService extends IntentService {
 
     private void writeLastSyncPreferences(){
         Date currentDate = new Date();
-        final SharedPreferences preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putLong(SetupActivity.KEY_DATE_SYNC, currentDate.getTime());
         editor.commit();

@@ -24,6 +24,7 @@ import com.spp.banu.aluradmi.httpcall.AluradmiRestClient;
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 
 import com.spp.banu.aluradmi.httpcall.GetAllData;
+import com.spp.banu.aluradmi.service.ScheduleAlarmService;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -62,8 +63,8 @@ public class SplashActivity extends AppCompatActivity {
         int beda_hari =  Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays();
         boolean isFirstRun = checkFirstRun();
         if (isFirstRun) {
-            Intent intent = new Intent(SplashActivity.this, SetupActivity.class);
-            startActivity(intent);
+            Intent intent2 = new Intent(SplashActivity.this, SetupActivity.class);
+            startActivity(intent2);
             finish();
         } else {
             startMainActivity();

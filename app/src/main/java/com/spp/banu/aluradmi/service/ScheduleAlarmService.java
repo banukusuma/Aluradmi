@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.spp.banu.aluradmi.BootBroadcastReceiver;
 import com.spp.banu.aluradmi.PeriodicTaskReceiver;
 import com.spp.banu.aluradmi.SetupActivity;
 
@@ -19,7 +20,7 @@ import java.util.Date;
 
 public class ScheduleAlarmService extends IntentService {
     private static final String TAG = "ScheduleAlarmService";
-    public static final String KEY_MODE_ALARM = "com.spp.banu.aluradmi.mode.alarm";
+    public static final String KEY_PREF_MODE_ALARM = "com.spp.aluradmi.banu.pref.mode.alarm";
     public static int MODE_ALARM_SCHEDULE;
     SharedPreferences preferences;
 
@@ -30,20 +31,14 @@ public class ScheduleAlarmService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         scheduleAlarm();
+        Log.e(TAG, "onHandleIntent: schedule alarmservice dimulai" );
+        //BootBroadcastReceiver.completeWakefulIntent(intent);
     }
 
     // Setup a recurring alarm every half hour
     public void scheduleAlarm() {
-        preferences = getSharedPreferences(SetupActivity.KEY,Context.MODE_PRIVATE);
-        MODE_ALARM_SCHEDULE = preferences.getInt(KEY_MODE_ALARM, 1);
-        /*
-            MODE 1 = setiap hari
-                MODE 2 = seminggu
-                MODE 3 = 15 hari
-                MODE 4 = 30 hari
-
-
-         */
+        preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
+        MODE_ALARM_SCHEDULE = preferences.getInt(SetupActivity.KEY_MODE_ALARM, 1);
         // Construct an intent that will execute the AlarmReceiver
         Intent intent = new Intent(getApplicationContext(), PeriodicTaskReceiver.class);
         // Create a PendingIntent to be triggered when the alarm goes off
@@ -72,7 +67,13 @@ public class ScheduleAlarmService extends IntentService {
                     AlarmManager.INTERVAL_DAY * 30, pIntent);
             Log.e(TAG, "scheduleAlarm: 30 hari"  );
         }
+    }
 
+    public void writeSchedulePreferences(int mode){
+        final SharedPreferences preferences = getSharedPreferences(SetupActivity.KEY,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(KEY_PREF_MODE_ALARM, mode);
+        editor.commit();
     }
 
     public void cancelAlarm() {

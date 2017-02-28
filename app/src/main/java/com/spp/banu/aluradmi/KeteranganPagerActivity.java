@@ -14,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -91,6 +92,11 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         Intent intent = new Intent(packagecontext, KeteranganPagerActivity.class);
         intent.putExtra(EXTRA_ID_ALUR, id_alur);
         return intent;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
     }
 
     private boolean isBeforeAlurDone(Alur alur){

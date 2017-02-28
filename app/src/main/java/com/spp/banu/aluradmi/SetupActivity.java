@@ -19,10 +19,11 @@ import android.widget.TextView;
 
 import com.spp.banu.aluradmi.httpcall.CheckNetwork;
 import com.spp.banu.aluradmi.httpcall.GetAllData;
+import com.spp.banu.aluradmi.service.ScheduleAlarmService;
 
 import java.util.Date;
 
-public class SetupActivity extends AppCompatActivity {
+public class SetupActivity extends AppCompatActivity implements AsyncBooleanListener {
     private static final String TAG = "SetupActivity";
     private ProgressBar progressBar;
     private TextView textView;
@@ -31,6 +32,7 @@ public class SetupActivity extends AppCompatActivity {
     private boolean isDialogOpen;
     public static final String KEY_FIRST_TIME = "com.spp.aluradmi.first_time";
     public static final String KEY_DATE_SYNC = "com.spp.aluradmi.date.sinkronisasi";
+    public static final String KEY_MODE_ALARM = "com.spp.aluradmi.banu.mode.alarm.service";
     public static final String KEY = "com.spp.aluradmi.preferences.data.aplikasi";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,21 +111,7 @@ public class SetupActivity extends AppCompatActivity {
         final Context context = ctx;
         progressBar.setVisibility(View.VISIBLE);
         sad.setVisibility(View.INVISIBLE);
-            GetAllData getAllData = new GetAllData(context, new AsyncBooleanListener() {
-                @Override
-                public void getResult(boolean result) {
-                    if (result != false){
-                        writeFirstRunPreferences();
-                        scheduleAlarm();
-                        startMainActivity();
-                    }else{
-                        button.setVisibility(View.VISIBLE);
-                        sad.setVisibility(View.VISIBLE);
-                        progressBar.setVisibility(View.INVISIBLE);
-                        textView.setText(R.string.gagal_mengunduh);
-                    }
-                }
-            }, textView);
+            GetAllData getAllData = new GetAllData(context, this, textView);
             getAllData.execute();
 
     }
@@ -132,11 +120,29 @@ public class SetupActivity extends AppCompatActivity {
         Date currentDate = new Date();
         final SharedPreferences preferences = getSharedPreferences(KEY,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(KEY_MODE_ALARM, 1);
         editor.putLong(KEY_DATE_SYNC, currentDate.getTime());
         editor.putBoolean(KEY_FIRST_TIME, false);
         editor.commit();
     }
 
+    @Override
+    public void getResult(boolean result) {
+        if (result != false){
+            writeFirstRunPreferences();
+            Intent intent = new Intent(this, ScheduleAlarmService.class);
+            startService(intent);
+            startMainActivity();
+        }else{
+            button.setVisibility(View.VISIBLE);
+            sad.setVisibility(View.VISIBLE);
+            progressBar.setVisibility(View.INVISIBLE);
+            textView.setText(R.string.gagal_mengunduh);
+        }
+
+
+    }
+    /*
     // Setup a recurring alarm every half hour
     public void scheduleAlarm() {
         // Construct an intent that will execute the AlarmReceiver
@@ -161,4 +167,5 @@ public class SetupActivity extends AppCompatActivity {
         AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
         alarm.cancel(pIntent);
     }
+    */
 }

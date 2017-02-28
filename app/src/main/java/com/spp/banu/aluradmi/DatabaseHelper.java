@@ -168,7 +168,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         db.insert(table, null, values);
                     }
                     else{
-                        Log.e(TAG, "insertData: data " + table + " " + id + " object " + jsonObject);
                         updateData(table,field, id, jsonObject);
 
                     }

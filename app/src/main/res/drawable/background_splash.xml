@@ -4,7 +4,7 @@
         <color android:color="@color/cardview_light_background" />
     </item>
     <item>
-        <bitmap android:src="@android:drawable/sym_def_app_icon"
+        <bitmap android:src="@drawable/branding_alternatif"
             android:gravity="center"></bitmap>
     </item>
 </layer-list>

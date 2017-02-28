@@ -145,7 +145,7 @@ public class MainActivity extends AppCompatActivity
                 .withHeaderBackground(R.color.primary)
                 .withSelectionListEnabledForSingleProfile(false)
                 .withProfileImagesClickable(false)
-                .addProfiles(new ProfileDrawerItem().withName("Aluradmi").withIcon(FontAwesome.Icon.faw_paper_plane_o))
+                .addProfiles(new ProfileDrawerItem().withName("Aluradmi").withIcon(R.drawable.header_nav_drawer))
                 .build();
         //Penambahan Kategori
 
@@ -295,6 +295,9 @@ public class MainActivity extends AppCompatActivity
             startService(intent);
         }else if (id == R.id.menu_search_main){
             Intent intent = new Intent(this, AlurSearchActivity.class);
+            startActivity(intent);
+        }else if (id == R.id.menu_settings){
+            Intent intent = new Intent(this, SettingActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
