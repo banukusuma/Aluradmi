@@ -59,15 +59,21 @@ public class SplashActivity extends AppCompatActivity {
         Log.e(TAG, "onCreate: last date sync " + last_date_sync );
         Log.e(TAG, "onCreate: beda hari with joda " +
                 Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays());
-        //mencoba ditambah 3 hari
-        int beda_hari =  Days.daysBetween(last_date_sync.toLocalDate(), new DateTime().toLocalDate()).getDays();
+
         boolean isFirstRun = checkFirstRun();
         if (isFirstRun) {
             Intent intent2 = new Intent(SplashActivity.this, SetupActivity.class);
             startActivity(intent2);
             finish();
         } else {
-            startMainActivity();
+            ReuniJurusan reuniJurusan = new ReuniJurusan(this);
+            boolean isSelectedJurusan = reuniJurusan.isSelectedJurusan();
+            if (isSelectedJurusan){
+                startJurusanActivity();
+            }else {
+                startMainActivity();
+            }
+
         }
 
 
@@ -75,6 +81,11 @@ public class SplashActivity extends AppCompatActivity {
 
     public void startMainActivity(){
         Intent intent = new Intent(SplashActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+    private void startJurusanActivity(){
+        Intent intent = new Intent(this, JurusanActivity.class);
         startActivity(intent);
         finish();
     }

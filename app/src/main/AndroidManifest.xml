@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.spp.banu.aluradmi"
-    android:installLocation="internalOnly">
+    android:installLocation="internalOnly"
+    >
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -36,6 +37,8 @@
                 android:name="android.app.default_searchable"
                 android:value=".AlurSearchActivity" />
         </activity>
+        <activity android:name=".JurusanActivity"
+            android:parentActivityName=".MainActivity"/>
         <activity
             android:name=".SplashActivity"
             android:theme="@style/SplashTheme">

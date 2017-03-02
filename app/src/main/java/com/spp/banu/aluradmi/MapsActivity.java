@@ -272,10 +272,16 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.lokasi_saya) {
-            gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 14);
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            case R.id.lokasi_saya:
+                gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 14);
+                return true;
         }
-        return super.onOptionsItemSelected(item);
+        return(super.onOptionsItemSelected(item));
+
     }
 
     /**
@@ -420,7 +426,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void createLocationRequest(){
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        locationRequest.setInterval(3600000);
+        locationRequest.setInterval(300000);
         locationRequest.setFastestInterval(60000);
     }
 

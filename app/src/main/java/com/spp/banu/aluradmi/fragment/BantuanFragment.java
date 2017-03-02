@@ -70,13 +70,16 @@ public class BantuanFragment extends Fragment {
                 R.drawable.ic_check_box_black_24dp);
         bantuanList.add(item);
 
-        item = new Bantuan("Memilih jurusan", R.drawable.ic_account_balance_black_24dp);
+        item = new Bantuan("Mengganti jurusan", R.drawable.ic_account_balance_black_24dp);
         bantuanList.add(item);
 
         item = new Bantuan("Mengakses fitur pencarian alur", R.drawable.ic_search_black_24px);
         bantuanList.add(item);
 
         item = new Bantuan("Melakukan proses sinkronisasi data dengan server", R.drawable.ic_sync_black_24dp);
+        bantuanList.add(item);
+
+        item = new Bantuan("Mengakses halaman pengaturan", R.drawable.ic_settings_black_24dp);
         bantuanList.add(item);
         bantuanAdapter = new BantuanAdapter(bantuanList);
         bantuanRecyclerview.setAdapter(bantuanAdapter);

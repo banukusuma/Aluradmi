@@ -132,7 +132,7 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
             writeFirstRunPreferences();
             Intent intent = new Intent(this, ScheduleAlarmService.class);
             startService(intent);
-            startMainActivity();
+            startJurusanActivity();
         }else{
             button.setVisibility(View.VISIBLE);
             sad.setVisibility(View.VISIBLE);
@@ -141,6 +141,11 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
         }
 
 
+    }
+    private void startJurusanActivity(){
+        Intent intent = new Intent(this, JurusanActivity.class);
+        startActivity(intent);
+        finish();
     }
     /*
     // Setup a recurring alarm every half hour

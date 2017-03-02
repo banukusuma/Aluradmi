@@ -41,6 +41,8 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         setTitle("Pengaturan");
         preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
+        int selected_from_pref = preferences.getInt(SetupActivity.KEY_MODE_ALARM, 1);
+        int selected_last = selected_from_pref - 1;
         List<String> periode = new ArrayList<>();
         periode.add("1 Hari");
         periode.add("7 Hari");
@@ -54,9 +56,11 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
         Picasso.with(this).load(R.drawable.ic_sync_black_24dp).resize(56,56).into(logo_sync);
         spinner_sinkronisasi = (Spinner) findViewById(R.id.spinner_sinkronisasi_setting);
         spinner_sinkronisasi.setOnItemSelectedListener(this);
+
         ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, periode);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_sinkronisasi.setAdapter(arrayAdapter);
+        spinner_sinkronisasi.setSelection(selected_last);
 
     }
 
@@ -95,6 +99,6 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
         editor.putInt(SetupActivity.KEY_MODE_ALARM, mode_alarm);
         editor.commit();
         startService(intent);
-        Toast.makeText(this, "Sinkronisasi akan dilakukan setiap " + select_text + " sekali ", Toast.LENGTH_SHORT);
+        Toast.makeText(this, "Sinkronisasi akan dilakukan setiap " + select_text + " sekali ", Toast.LENGTH_SHORT).show();
     }
 }

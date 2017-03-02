@@ -52,7 +52,7 @@ public class ScheduleAlarmService extends IntentService {
         // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
         if (MODE_ALARM_SCHEDULE == 1){
             alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                    AlarmManager.INTERVAL_DAY , pIntent);
+                    AlarmManager.INTERVAL_DAY, pIntent);
             Log.e(TAG, "scheduleAlarm: sehari"  );
         }else if (MODE_ALARM_SCHEDULE == 2){
             alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,

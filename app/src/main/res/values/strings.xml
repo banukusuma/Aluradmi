@@ -8,7 +8,7 @@
     <string name="nama_kategori">Nama Kategori</string>
     <string name="item_lokasi_keterangan">Lokasi : </string>
     <string name="item_berkas_keterangan">Berkas : </string>
-    <string name="action_pilih_jurusan">Pilih Jurusan</string>
+    <string name="action_pilih_jurusan">Ganti Jurusan</string>
     <string name="kategori">Kategori</string>
     <string name="lokasi">Lokasi</string>
     <string name="about">Tentang</string>
@@ -43,9 +43,10 @@
     <string name="pengaturan">Pengaturan</string>
     <string name="penjelasan_aluradmi">Aluradmi adalah aplikasi yang memberikan informasi mengenai
         prosedur pengurusan berkas administrasi mahasiswa Fakultas Teknik Universitas Negeri Yogyakarta</string>
-    <string name="versi">Aluradmi V.1.0.0</string>
+    <string name="versi">Aluradmi V.1.0</string>
     <string name="powered">Powered by :</string>
     <string name="nama">Banu Kusuma </string>
     <string name="nim">12520244039</string>
     <string name="sinkronisasi_pengaturan">Sinkrosisasi setiap : </string>
+    <string name="pilih_jurusan_header">Silahkan Pilih Salah Satu Jurusan</string>
 </resources>

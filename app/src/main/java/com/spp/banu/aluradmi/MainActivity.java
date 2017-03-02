@@ -100,6 +100,10 @@ public class MainActivity extends AppCompatActivity
             if (intent.hasExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE)){
                 boolean is_success_update = intent.getBooleanExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE, false);
                 if (is_success_update){
+                    HomeFragment homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(TAG_home_fragment);
+                    if (homeFragment != null && homeFragment.isVisible()){
+                        homeFragment.notifyTheAdapater();
+                    }
                     Toast.makeText(MainActivity.this, "Sinkronisasi Selesai", Toast.LENGTH_SHORT).show();
                 }
             }
@@ -271,6 +275,7 @@ public class MainActivity extends AppCompatActivity
         Log.i("" +this, "onResume: " + isFirstRun);
         Log.e(TAG, "onResume: " );
         ReuniJurusan reuniJurusan = new ReuniJurusan(this);
+        /*
         isFirstRun = reuniJurusan.isSelectedJurusan();
         if (isFirstRun){
             if (!isJurusanDialogShown){
@@ -279,6 +284,7 @@ public class MainActivity extends AppCompatActivity
             }
 
         }
+        */
         result.setSelection(choose_fragment, true);
     }
 
@@ -287,7 +293,8 @@ public class MainActivity extends AppCompatActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.menu_jurusan){
-           menuJurusan();
+            Intent intent = new Intent(this, JurusanActivity.class);
+            startActivity(intent);
             return true;
         }else if (id == R.id.menu_sync){
             Toast.makeText(this, "Memulai Sinkronisasi Data", Toast.LENGTH_SHORT).show();
@@ -299,6 +306,7 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.menu_settings){
             Intent intent = new Intent(this, SettingActivity.class);
             startActivity(intent);
+
         }
         return super.onOptionsItemSelected(item);
     }
