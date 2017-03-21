@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
     <LinearLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
+        android:id="@+id/linear_alur_ganti_warna"
         android:clickable="true"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
@@ -25,7 +27,7 @@
                 android:scaleType="fitXY"
                 android:adjustViewBounds="true"
                 android:layout_margin="5dp"
-                android:layout_width="75dp" />
+                android:layout_width="72dp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -41,12 +43,13 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:layout_weight="3">
+            android:layout_weight="3"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp">
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:id="@+id/nama_alur_text_view"
                 android:textStyle="bold"
                 android:textAlignment="textStart"
@@ -67,10 +70,12 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_margin="5dp"
-            android:src="@drawable/ic_chevron_right_black_24dp"
+            app:srcCompat="@drawable/ic_chevron_right_black_24dp"
             android:id="@+id/next_image_alur"
             android:layout_height="match_parent"
             android:layout_weight="0.47"/>
+
+
 
     </LinearLayout>
 

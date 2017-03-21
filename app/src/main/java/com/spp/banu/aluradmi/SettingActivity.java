@@ -31,6 +31,7 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
     SharedPreferences preferences;
     private int mode_alarm;
     private  String select_text;
+    int selected_last;
     private Button btn_Save;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +43,7 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
         setTitle("Pengaturan");
         preferences = getSharedPreferences(SetupActivity.KEY, Context.MODE_PRIVATE);
         int selected_from_pref = preferences.getInt(SetupActivity.KEY_MODE_ALARM, 1);
-        int selected_last = selected_from_pref - 1;
+        selected_last = selected_from_pref - 1;
         List<String> periode = new ArrayList<>();
         periode.add("1 Hari");
         periode.add("7 Hari");
@@ -84,7 +85,6 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
             default:
                 break;
         }
-
     }
 
     @Override
@@ -94,6 +94,15 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onClick(View view) {
+        Intent intent = new Intent(this, ScheduleAlarmService.class);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(SetupActivity.KEY_MODE_ALARM, mode_alarm);
+        editor.commit();
+        startService(intent);
+        Toast.makeText(this, "Sinkronisasi akan dilakukan setiap " + select_text + " sekali ", Toast.LENGTH_SHORT).show();
+    }
+
+    public void savePreferences(){
         Intent intent = new Intent(this, ScheduleAlarmService.class);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(SetupActivity.KEY_MODE_ALARM, mode_alarm);

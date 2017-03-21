@@ -10,10 +10,12 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -161,31 +163,40 @@ public class AlurListFragment extends Fragment {
 
         private TextView namaAlur, progress_text, urut_Alur;
         private Alur alur;
-        private RelativeLayout layout_urut;
-        private ImageView  next_image;
-
+        ImageView image_urut;
+        LinearLayout linearLayout;
+        RelativeLayout relativeLayout;
         public AlurHolder(View itemView) {
             super(itemView);
             namaAlur = (TextView) itemView.findViewById(R.id.nama_alur_text_view);
             progress_text = (TextView) itemView.findViewById(R.id.progress_text_view);
             urut_Alur = (TextView)itemView.findViewById(R.id.urut_alur_text_view);
-            layout_urut = (RelativeLayout) itemView.findViewById(R.id.relative_layout_urut_Alur);
-            next_image = (ImageView) itemView.findViewById(R.id.next_image_alur);
             itemView.setOnClickListener(this);
+            linearLayout = (LinearLayout) itemView.findViewById(R.id.linear_alur_ganti_warna);
+            //image_urut = (ImageView) itemView.findViewById(R.id.image_urut);
+            relativeLayout = (RelativeLayout) itemView.findViewById(R.id.relative_layout_urut_Alur);
             //progressBar = (ProgressBar) itemView.findViewById(R.id.progress_alur_progress_bar);
         }
 
         public void bindAlur(Alur alur){
-            this.alur = alur;
-            if (this.alur.getId_alur() != 0 ){
+                this.alur = alur;
+                int progress = Math.round(this.alur.getProgress());
+                if (progress == 100){
+                    //linearLayout.setBackgroundColor(getResources().getColor(R.color.md_green_400));
+                    linearLayout.setBackground(getResources().getDrawable(R.drawable.done_state));
+                }else if (progress > 0 && progress < 100){
+                    linearLayout.setBackground(getResources().getDrawable(R.drawable.ongoing_state));
+                }else {
+                    //linearLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
+                    TypedValue outValue = new TypedValue();
+                    getContext().getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+                    linearLayout.setBackgroundResource(outValue.resourceId);
+                    //linearLayout.setBackground(android.R.attr.selectableItemBackground);
+                }
                 int urut = this.alur.getUrut();
-                namaAlur.setVisibility(View.VISIBLE);
-                progress_text.setVisibility(View.VISIBLE);
-                layout_urut.setVisibility(View.VISIBLE);
                 urut_Alur.setText(Integer.toString(urut));
                 namaAlur.setText(this.alur.getNama());
                 progress_text.setText("Progress : " + this.alur.getProgress() + "%");
-            }
         }
 
         @Override

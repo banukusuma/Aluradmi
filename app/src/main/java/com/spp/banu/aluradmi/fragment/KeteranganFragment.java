@@ -176,10 +176,12 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
             labelberkas.setVisibility(View.VISIBLE);
             isiBerkas.setVisibility(View.VISIBLE);
             List<String> strings = new ArrayList<>();
+            int i = 1;
             for (Berkas berkas: berkasList){
-                strings.add(berkas.getNama());
+                strings.add(Integer.toString(i) +". " + berkas.getNama());
+                i++;
             }
-            isiBerkas.setText(TextUtils.join("\n", strings).toString());
+            isiBerkas.setText(TextUtils.join("\n\n", strings).toString());
         } else {
             labelberkas.setVisibility(View.GONE);
             isiBerkas.setVisibility(View.GONE);

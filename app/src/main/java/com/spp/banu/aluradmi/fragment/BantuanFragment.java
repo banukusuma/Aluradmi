@@ -122,7 +122,8 @@ public class BantuanFragment extends Fragment {
         }
 
         public void bindBantuan(Bantuan bantuan){
-            Picasso.with(getActivity()).load(bantuan.getThumbnail()).resize(56,56).into(icon);
+            //Picasso.with(getActivity()).load(bantuan.getThumbnail()).resize(56,56).into(icon);
+            icon.setImageResource(bantuan.getThumbnail());
             penjelasan_text.setText(bantuan.getPenjelasan());
         }
     }
