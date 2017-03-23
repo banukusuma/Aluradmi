@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -45,8 +46,8 @@ public class AlurListFragment extends Fragment {
     private ReuniAlur reuniAlur;
     private List<Alur> alurList;
     private final static String TAG = "alurListFragment";
-    private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
-    private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
+    public static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
+    public static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
     public AlurListFragment() {
     }
 
@@ -114,11 +115,10 @@ public class AlurListFragment extends Fragment {
     }
 
     private void restart_progress_jika_perlu(){
-        Jurusan jurusan = reuniJurusan.getSelectJurusan();
         List<Alur> alurList = reuniAlur.getAlurs(
                 AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
                         AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
-                new String[]{Integer.toString(id_kategori), Integer.toString(jurusan.getId_jurusan())}
+                new String[]{Integer.toString(id_kategori), Integer.toString(reuniJurusan.getSelectJurusan().getId_jurusan())}
         );
         for(int i = 0; i < alurList.size(); i++){
             int h = i - 1;
@@ -132,7 +132,6 @@ public class AlurListFragment extends Fragment {
                     break;
                 }
             }
-
         }
     }
 
@@ -140,8 +139,9 @@ public class AlurListFragment extends Fragment {
         ReuniKeterangan reuniKeterangan = new ReuniKeterangan(getActivity());
         List<Alur> alurList_restart_progress = reuniAlur.getAlurs(
                 AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                        AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? AND " +
                         AlurDbSchema.AlurTable.Kolom.URUT + " >= ? ",
-                new String[]{Integer.toString(id_Kategori), Integer.toString(urut)}
+                new String[]{Integer.toString(id_Kategori),Integer.toString(reuniJurusan.getSelectJurusan().getId_jurusan()), Integer.toString(urut)}
         );
         for (Alur alur : alurList_restart_progress){
             reuniKeterangan.restartProgress(alur.getId_alur());
@@ -163,10 +163,9 @@ public class AlurListFragment extends Fragment {
 
         private TextView namaAlur, progress_text, urut_Alur;
         private Alur alur;
-        ImageView image_urut;
         LinearLayout linearLayout;
         RelativeLayout relativeLayout;
-        public AlurHolder(View itemView) {
+        AlurHolder(View itemView) {
             super(itemView);
             namaAlur = (TextView) itemView.findViewById(R.id.nama_alur_text_view);
             progress_text = (TextView) itemView.findViewById(R.id.progress_text_view);
@@ -178,14 +177,14 @@ public class AlurListFragment extends Fragment {
             //progressBar = (ProgressBar) itemView.findViewById(R.id.progress_alur_progress_bar);
         }
 
-        public void bindAlur(Alur alur){
+        void bindAlur(Alur alur){
                 this.alur = alur;
                 int progress = Math.round(this.alur.getProgress());
                 if (progress == 100){
                     //linearLayout.setBackgroundColor(getResources().getColor(R.color.md_green_400));
-                    linearLayout.setBackground(getResources().getDrawable(R.drawable.done_state));
+                    linearLayout.setBackgroundResource(R.drawable.done_state);
                 }else if (progress > 0 && progress < 100){
-                    linearLayout.setBackground(getResources().getDrawable(R.drawable.ongoing_state));
+                    linearLayout.setBackgroundResource(R.drawable.ongoing_state);
                 }else {
                     //linearLayout.setBackgroundColor(getResources().getColor(android.R.color.transparent));
                     TypedValue outValue = new TypedValue();

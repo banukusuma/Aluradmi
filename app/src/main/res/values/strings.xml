@@ -35,18 +35,19 @@
     <string name="unduh_denah">Sedang Mengunduh Denah</string>
     <string name="search_hint">Nama Alur....</string>
     <string name="search">Cari Alur</string>
-    <string name="sync">Perbarui Data</string>
-    <string name="coba">Try Again</string>
+    <string name="sync">Sinkronisasi Data</string>
+    <string name="coba">Coba Lagi</string>
     <string name="gagal_mengunduh">Gagal Mengunduh Data</string>
     <string name="data_kosong">Data Masih Kosong</string>
     <string name="data_tidak_cocok">Tidak Ada Alur yang Cocok</string>
     <string name="pengaturan">Pengaturan</string>
     <string name="penjelasan_aluradmi">Aluradmi adalah aplikasi yang memberikan informasi mengenai
-        prosedur pengurusan berkas administrasi mahasiswa Fakultas Teknik Universitas Negeri Yogyakarta</string>
-    <string name="versi">Aluradmi V.1.0</string>
+        prosedur pengurusan administrasi bagi mahasiswa Fakultas Teknik Universitas Negeri Yogyakarta</string>
+    <string name="versi">Aluradmi V.1.1</string>
     <string name="powered">Powered by :</string>
     <string name="nama">Banu Kusuma </string>
     <string name="nim">12520244039</string>
     <string name="sinkronisasi_pengaturan">Sinkrosisasi setiap : </string>
     <string name="pilih_jurusan_header">Silahkan Pilih Salah Satu Jurusan</string>
+    <string name="rate">Berikan Masukan</string>
 </resources>

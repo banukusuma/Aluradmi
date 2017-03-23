@@ -6,7 +6,7 @@
         android:title="@string/action_pilih_jurusan"
         android:orderInCategory="4"
         android:icon="@drawable/ic_account_balance_white_24px"
-        app:showAsAction="never" />
+        app:showAsAction="ifRoom" />
     <item android:title="@string/pengaturan"
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_settings_white_24px"
@@ -19,9 +19,12 @@
         android:icon="@drawable/ic_search_white_24px"
         android:title="@string/search"
         />
-    <!--
-       app:actionViewClass="android.support.v7.widget.SearchView"
-    -->
+    <item
+        android:id="@+id/menu_rate_app"
+        app:showAsAction="never"
+        android:orderInCategory="5"
+        android:title="@string/rate"
+        />
     <item android:title="@string/sync"
         app:showAsAction="ifRoom"
         android:orderInCategory="2"

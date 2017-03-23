@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
 
 import java.util.ArrayList;
@@ -122,7 +123,8 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     public void onSearchItemSelected(int id_alur) {
         if (id_alur != 0 ){
             ReuniAlur reuniAlur = new ReuniAlur(this);
-            int id_kategori = reuniAlur.getAlur(id_alur).getId_kategori();
+            int id_kategori = reuniAlur.getAlur(AlurDbSchema.AlurTable.Kolom.ID_ALUR + " = ? ",
+                    new String[]{Integer.toString(id_alur)}).getId_kategori();
             SharedPreferences preferences = getSharedPreferences(MainActivity.KEY_PREFERENCE, Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putInt(MainActivity.KEY_ID_KATEGORI, id_kategori);

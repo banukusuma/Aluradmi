@@ -1,6 +1,10 @@
 package com.spp.banu.aluradmi.fragment;
 
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,14 +20,22 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.spp.banu.aluradmi.DenahActivity;
+import com.spp.banu.aluradmi.KeteranganPagerActivity;
+import com.spp.banu.aluradmi.MainActivity;
 import com.spp.banu.aluradmi.MapsActivity;
 import com.spp.banu.aluradmi.R;
+import com.spp.banu.aluradmi.ReuniAlur;
 import com.spp.banu.aluradmi.ReuniBerkas;
+import com.spp.banu.aluradmi.ReuniJurusan;
 import com.spp.banu.aluradmi.ReuniKeterangan;
 
 import com.spp.banu.aluradmi.ReuniRuang;
+import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
+import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
+import com.spp.banu.aluradmi.model.Alur;
 import com.spp.banu.aluradmi.model.Berkas;
 import com.spp.banu.aluradmi.model.Keterangan;
 
@@ -32,6 +44,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.spp.banu.aluradmi.MainActivity.KEY_PREFERENCE;
 
 /**
  * Created by banu on 05/01/17.
@@ -48,10 +62,17 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     private ReuniKeterangan reuniKeterangan;
     private static final String ARG_KETERANGAN_ID = "id_keterangan";
     private static final String ARG_CAN_CHECKED = "can_checked_checkbox";
-    private static final String ARG_JML_DATA = "jumlah_data_keterangan_list";
+    private static final String ARG_ID_ALUR = "id_alur_pada_keterangan";
     private static final String TAG = "keterangan";
     private int max_data;
+    private int id_alur;
+    int id_kategori;
     private Ruang ruang;
+    ReuniJurusan reuniJurusan;
+    private boolean warning_show;
+    private Alur alurIni;
+    protected static final String CHECK_KEY = "selesai-checked-bisa";
+    ReuniAlur reuniAlur;
     private List<Berkas> berkasList;
     private boolean canCheckedSelesai;
 
@@ -61,19 +82,49 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         reuniKeterangan = new ReuniKeterangan(getActivity());
         ReuniRuang reuniRuang = new ReuniRuang(getActivity());
         int id_keterangan = getArguments().getInt(ARG_KETERANGAN_ID);
-        canCheckedSelesai = getArguments().getBoolean(ARG_CAN_CHECKED);
-        max_data = getArguments().getInt(ARG_JML_DATA);
+        id_alur = getArguments().getInt(ARG_ID_ALUR);
+        Log.e(TAG, "onCreate: id_alur " + id_alur );
+        max_data = reuniKeterangan.getKeteranganList(
+                KeteranganDbSchema.KeteranganTable.Kolom.ID_ALUR + " = ? ", new String[]{Integer.toString(id_alur)}
+        ).size();
         keterangan = reuniKeterangan.getKeterangan(id_keterangan);
+        Log.e(TAG, "onCreate: keterangan = " + keterangan.getNama() );
         ruang = reuniRuang.getRuang(keterangan.getId_ruang());
         ReuniBerkas reuniBerkas = new ReuniBerkas(getActivity());
         berkasList = reuniBerkas.getBerkasList(keterangan.getId_keterangan());
+        reuniAlur = new ReuniAlur(getActivity());
+        alurIni = reuniAlur.getAlur(AlurDbSchema.AlurTable.Kolom.ID_ALUR + " = ? ", new String[]{Integer.toString(id_alur)});
+        canCheckedSelesai = getArguments().getBoolean(ARG_CAN_CHECKED);
+        reuniJurusan = new ReuniJurusan(getActivity());
+        SharedPreferences preferences = getActivity().getSharedPreferences(MainActivity.KEY_PREFERENCE, Context.MODE_PRIVATE);
+        id_kategori = preferences.getInt(MainActivity.KEY_ID_KATEGORI,0);
+       if (savedInstanceState != null){
+           if (savedInstanceState.keySet().contains(CHECK_KEY)){
+               if (savedInstanceState.getBoolean(CHECK_KEY)){
+                   showWarning();
+               }
+           }
+      }
+        Log.e(TAG, "onCreate: saat oncreate dijalankan" );
     }
 
-    public static KeteranganFragment newInstance(int id_keterangan, boolean canCheckedSelesai, int jml_data){
+    @Override
+    public void onStart() {
+        super.onStart();
+        Log.e(TAG, "onStart: " );
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume: " );
+    }
+
+    public static KeteranganFragment newInstance(int id_keterangan, int id_alur, boolean canChecked){
         Bundle bundle = new Bundle();
         bundle.putInt(ARG_KETERANGAN_ID, id_keterangan);
-        bundle.putBoolean(ARG_CAN_CHECKED, canCheckedSelesai);
-        bundle.putInt(ARG_JML_DATA, jml_data);
+        bundle.putInt(ARG_ID_ALUR, id_alur);
+        bundle.putBoolean(ARG_CAN_CHECKED, canChecked);
         KeteranganFragment fragment = new KeteranganFragment();
         fragment.setArguments(bundle);
         return fragment;
@@ -96,7 +147,9 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
         labelDetail = (TextView)view.findViewById(R.id.label_keterangan);
         labelberkas = (TextView)view.findViewById(R.id.label_berkas_keterangan);
         labellokasi = (TextView) view.findViewById(R.id.label_lokasi_keterangan);
-        selesaiCheckBox.setOnCheckedChangeListener(this);
+        //selesaiCheckBox.setOnCheckedChangeListener(this);
+        selesaiCheckBox.setOnClickListener(this);
+        Log.e(TAG, "onCreateView: saat view dibuat" );
         selesaiCheckBox.setChecked(keterangan.isStatus());
         denah.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +161,13 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
 
             }
         });
-        btnrute.setOnClickListener(this);
+        btnrute.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = MapsActivity.newIntent(getActivity(),ruang.getId_gedung());
+                startActivity(intent);
+            }
+        });
         updateUI();
         return view;
     }
@@ -189,13 +248,106 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
-        reuniKeterangan.cekKeterangan(b,keterangan.getId_keterangan());
+    public void onCheckedChanged(final CompoundButton compoundButton, boolean b) {
+
+        //reuniKeterangan.cekKeterangan(b,keterangan.getId_keterangan());
     }
 
     @Override
     public void onClick(View view) {
-        Intent intent = MapsActivity.newIntent(getActivity(),ruang.getId_gedung());
-        startActivity(intent);
+        boolean checked = ((CheckBox) view).isChecked();
+        if (!checked){
+            if (isWarningShow()){
+                showWarning();
+            }else {
+                saveProgress(checked);
+            }
+        }else{
+            saveProgress(checked);
+        }
     }
+
+    private void saveProgress(boolean check){
+        reuniKeterangan.cekKeterangan(check, keterangan.getId_keterangan());
+    }
+
+    private boolean isWarningShow(){
+            int jumlah_alur = reuniAlur.getAlurs(AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                            AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? ",
+                    new String[]{Integer.toString(id_kategori),
+                            Integer.toString(reuniJurusan.getSelectJurusan().getId_jurusan())}).size();
+            int urutNext = alurIni.getUrut() + 1;
+            if (urutNext <= jumlah_alur){
+                Alur alurNext = reuniAlur.getAlur(
+                        AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                                AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? AND " +
+                                AlurDbSchema.AlurTable.Kolom.URUT + " = ? ",
+                        new String[]{Integer.toString(id_kategori),
+                                Integer.toString(reuniJurusan.getSelectJurusan().getId_jurusan()),
+                                Integer.toString(urutNext)}
+                );
+                int progressNext = Math.round(alurNext.getProgress());
+                if (progressNext > 0){
+                    return true;
+                }
+            }
+        return false;
+    }
+
+    private void showWarning(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Membatalkan status ini akan membuat progress setelah alur " +
+        alurIni.getNama() + " kembali ke 0%, Apakah anda yakin ?");
+        builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                resetAfterThisAlur();
+                warning_show = false;
+            }
+        });
+        builder.setNegativeButton("Tidak", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                selesaiCheckBox.setChecked(true);
+                warning_show = false;
+            }
+        });
+        builder.setTitle("Peringatan");
+        builder.setCancelable(false);
+        builder.setIcon(R.drawable.ic_warning_black_24dp);
+        builder.create();
+        warning_show = true;
+        builder.show();
+    }
+
+    private void resetAfterThisAlur(){
+        saveProgress(false);
+        int urutNext = alurIni.getUrut() + 1;
+        ReuniKeterangan reuniKeterangan = new ReuniKeterangan(getActivity());
+        List<Alur> alurList_restart_progress = reuniAlur.getAlurs(
+                    AlurDbSchema.AlurTable.Kolom.ID_KATEGORI + " = ? AND " +
+                            AlurDbSchema.AlurTable.Kolom.ID_JURUSAN + " = ? AND " +
+                            AlurDbSchema.AlurTable.Kolom.URUT + " >= ? ",
+                    new String[]{Integer.toString(id_kategori),Integer.toString(reuniJurusan.getSelectJurusan().getId_jurusan()),
+                            Integer.toString(urutNext)}
+        );
+        for (Alur alur : alurList_restart_progress){
+                reuniKeterangan.restartProgress(alur.getId_alur());
+        }
+
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(CHECK_KEY,warning_show );
+        super.onSaveInstanceState(outState);
+    }
+    //    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        outState.putBoolean(CHECK_KEY, true);
+//        super.onSaveInstanceState(outState);
+//    }
+
+
+
 }

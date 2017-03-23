@@ -1,11 +1,13 @@
 package com.spp.banu.aluradmi;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -24,9 +26,15 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.Status;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResult;
+import com.google.android.gms.location.LocationSettingsStatusCodes;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,6 +79,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private static int STATUS_POSISI;
     private static boolean MODE_DI_DALAM_FT;
     private List<Polyline> polylineList = new ArrayList<>();
+    private final static int REQUEST_LOCATION = 202;
     Intent dialogSettingintent;
     private ArrayList<LatLng> pointToUseInRoute;
     //titik pembatas di area ft
@@ -79,7 +88,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private final static LatLng midlepoint = new LatLng(-7.769945766027917, 110.3877255320549);
     List<Gedung> gedungList;
 
-    private int id_gedung;
     private boolean isUsingRoute;
     //extra id gedung intent
     private static final String EXTRA_ID_GEDUNG = "com.spp.banu.aluradmi.mapsIntent.id.gedung";
@@ -277,7 +285,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 onBackPressed();
                 return true;
             case R.id.lokasi_saya:
-                gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 14);
+                if (currentLocation != null){
+                    gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 14);
+                }else {
+                    Toast.makeText(this, "Lokasi anda tidak ditemukan", Toast.LENGTH_SHORT).show();
+                }
                 return true;
         }
         return(super.onOptionsItemSelected(item));
@@ -300,7 +312,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (map != null) {
             map.setInfoWindowAdapter(this);
-            map.setOnInfoWindowClickListener(this);
+
         }
 
 
@@ -338,6 +350,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     protected void onResume() {
+        Log.e(TAG, "onResume: " );
         super.onResume();
     }
 
@@ -365,6 +378,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onConnected(Bundle bundle) {
+        Log.e(TAG, "onConnected: di connect" );
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -378,24 +392,32 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
         if (currentLocation != null){
+            map.setOnInfoWindowClickListener(this);
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
-                    .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
+                    .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
+                    .visible(true);
+            if (currentLocationMarker != null){
+                currentLocationMarker.remove();
+            }
             currentLocationMarker = map.addMarker(options);
+            boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
+            Log.e(TAG, "onConnected: lokasi di ulang lalala" );
+            if (isInFT) {
+                STATUS_POSISI = 1;
+                Log.e(TAG, "onConnected: status = " + STATUS_POSISI );
+                gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 18);
+                Toast.makeText(this, "Di dalam FT", Toast.LENGTH_SHORT).show();
+            }
+            else {
+                STATUS_POSISI = 2;
+                Log.e(TAG, "onConnected: status = " + STATUS_POSISI );
+                gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
+                Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
+            }
         }
-
-        boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
-        if (isInFT) {
-            STATUS_POSISI = 1;
-            gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 18);
-            Toast.makeText(this, "Di dalam FT", Toast.LENGTH_SHORT).show();
-        }
-        else {
-            STATUS_POSISI = 2;
-            gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
-            Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
-        }
-
+        changeSetting();
+        Log.e(TAG, "onConnected: setelah change setting" );
         Intent intent = getIntent();
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true).
@@ -430,7 +452,81 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         locationRequest.setFastestInterval(60000);
     }
 
+    private void changeSetting(){
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(locationRequest);
+        builder.setAlwaysShow(true);
+        PendingResult<LocationSettingsResult> result = LocationServices.SettingsApi.
+                checkLocationSettings(apiClient,builder.build());
+        result.setResultCallback(new ResultCallback<LocationSettingsResult>() {
+            @Override
+            public void onResult(LocationSettingsResult result) {
+                final Status status = result.getStatus();
+                //final LocationSettingsStates state = result.getLocationSettingsStates();
+                switch (status.getStatusCode()) {
+                    case LocationSettingsStatusCodes.SUCCESS:
+                        // All location settings are satisfied. The client can initialize location
+                        // requests here.
+                        //...
+                        break;
+                    case LocationSettingsStatusCodes.RESOLUTION_REQUIRED:
+                        // Location settings are not satisfied. But could be fixed by showing the user
+                        // a dialog.
+                        try {
+                            // Show the dialog by calling startResolutionForResult(),
+                            // and check the result in onActivityResult().
+                            status.startResolutionForResult(
+                                    MapsActivity.this,
+                                    REQUEST_LOCATION);
+                        } catch (IntentSender.SendIntentException e) {
+                            // Ignore the error.
+                        }
+                        break;
+                    case LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE:
+                        // Location settings are not satisfied. However, we have no way to fix the
+                        // settings so we won't show the dialog.
+                        //...
+                        break;
+                }
+            }
+        });
+    }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.e(TAG, Integer.toString(resultCode));
+
+        //final LocationSettingsStates states = LocationSettingsStates.fromIntent(data);
+        switch (requestCode)
+        {
+            case REQUEST_LOCATION:
+                switch (resultCode)
+                {
+                    case Activity.RESULT_OK:
+                    {
+                        if (apiClient != null && apiClient.isConnected()) {
+                            apiClient.disconnect();
+                            apiClient.connect();
+                        }
+                        gotoLocationZoom(-7.771472121215996, 110.38705229759216, 14);
+                        map.setOnInfoWindowClickListener(this);
+                        Toast.makeText(MapsActivity.this, "Layanan Lokasi di aktifkan", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                    case Activity.RESULT_CANCELED:
+                    {
+                        gotoLocationZoom(-7.771472121215996, 110.38705229759216, 16);
+                        Toast.makeText(MapsActivity.this, "Layanan Lokasi tidak diperbolehkan oleh pengguna.", Toast.LENGTH_LONG).show();
+                        break;
+                    }
+                    default:
+                    {
+                        break;
+                    }
+                }
+                break;
+        }
+    }
 
     private boolean checkPosition(LatLng location){
         double distance1 = haversine(location.latitude, location.longitude,
@@ -482,7 +578,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .title("Lokasi Anda")
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             currentLocationMarker = map.addMarker(options);
-            //gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 12);
+                boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
+                if (isInFT) {
+                    STATUS_POSISI = 1;
+                    Log.e(TAG, "onLocationChange: status = " + STATUS_POSISI );
+                }
+                else {
+                    STATUS_POSISI = 2;
+                    Log.e(TAG, "onLocationChange: status = " + STATUS_POSISI );
+                }
         }
 
     }
@@ -490,7 +594,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void placeMarker(String title, double lat, double lng) {
         MarkerOptions options = new MarkerOptions()
                 .title(title)
-                .position(new LatLng(lat, lng));
+                .position(new LatLng(lat, lng))
+                ;
         map.addMarker(options);
     }
 

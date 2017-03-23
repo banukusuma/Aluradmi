@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:contentDescription="TODO"
-                android:src="@drawable/ic_home_black_24dp"
+                app:srcCompat="@drawable/ic_home_black_24dp"
                 android:layout_width="wrap_content" />
 
             <TextView
@@ -41,14 +41,6 @@
                 android:text="Example application"
                 android:textSize="18sp"
                 android:paddingLeft="10dp" />
-
-            <Button
-                android:text="Save"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/icon_setting_sinkronisasi"
-                android:id="@+id/button_Save_sinkronisasi_setting"
-                android:layout_below="@+id/spinner_sinkronisasi_setting" />
 
             <Spinner
                 android:layout_width="match_parent"

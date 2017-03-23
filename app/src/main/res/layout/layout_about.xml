@@ -28,7 +28,6 @@
                 android:layout_marginTop="10dp" />
 
             <TextView
-                android:text="@string/versi"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="25dp"
                 android:layout_height="wrap_content"

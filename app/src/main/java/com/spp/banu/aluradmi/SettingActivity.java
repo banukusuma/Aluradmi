@@ -26,13 +26,12 @@ import java.util.List;
  * Created by banu on 01/03/17.
  */
 
-public class SettingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, View.OnClickListener {
+public class SettingActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private Spinner spinner_sinkronisasi;
     SharedPreferences preferences;
     private int mode_alarm;
     private  String select_text;
     int selected_last;
-    private Button btn_Save;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,10 +50,9 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
         periode.add("30 Hari");
         ImageView logo_sync = (ImageView) findViewById(R.id.icon_setting_sinkronisasi);
         TextView tulisan_sync = (TextView) findViewById(R.id.ket_sinkronisasi_Setting);
-        btn_Save = (Button) findViewById(R.id.button_Save_sinkronisasi_setting);
-        btn_Save.setOnClickListener(this);
         tulisan_sync.setText("Sinkronisasi dilakukan setiap : ");
-        Picasso.with(this).load(R.drawable.ic_sync_black_24dp).resize(56,56).into(logo_sync);
+        logo_sync.setImageResource(R.drawable.ic_sync_black_24dp);
+        //Picasso.with(this).load(R.drawable.ic_sync_black_24dp).resize(56,56).into(logo_sync);
         spinner_sinkronisasi = (Spinner) findViewById(R.id.spinner_sinkronisasi_setting);
         spinner_sinkronisasi.setOnItemSelectedListener(this);
 
@@ -69,6 +67,30 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         select_text = adapterView.getItemAtPosition(i).toString();
+        if (i != selected_last){
+            selected_last = i;
+            switch (select_text) {
+                case "1 Hari":
+                    mode_alarm = 1;
+                    savePreferences();
+                    break;
+                case "7 Hari":
+                    mode_alarm = 2;
+                    savePreferences();
+                    break;
+                case "15 Hari":
+                    mode_alarm = 3;
+                    savePreferences();
+                    break;
+                case "30 Hari" :
+                    mode_alarm = 4;
+                    savePreferences();
+                    break;
+                default:
+                    break;
+            }
+        }
+        /*
         switch (select_text) {
             case "1 Hari":
                 mode_alarm = 1;
@@ -85,6 +107,7 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
             default:
                 break;
         }
+        */
     }
 
     @Override
@@ -92,15 +115,6 @@ public class SettingActivity extends AppCompatActivity implements AdapterView.On
 
     }
 
-    @Override
-    public void onClick(View view) {
-        Intent intent = new Intent(this, ScheduleAlarmService.class);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putInt(SetupActivity.KEY_MODE_ALARM, mode_alarm);
-        editor.commit();
-        startService(intent);
-        Toast.makeText(this, "Sinkronisasi akan dilakukan setiap " + select_text + " sekali ", Toast.LENGTH_SHORT).show();
-    }
 
     public void savePreferences(){
         Intent intent = new Intent(this, ScheduleAlarmService.class);

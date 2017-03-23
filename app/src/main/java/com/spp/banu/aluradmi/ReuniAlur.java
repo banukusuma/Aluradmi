@@ -69,15 +69,13 @@ public class ReuniAlur {
         return new AlurCursorWrapper(cursor, this.context);
     }
 
-    public Alur getAlur(int id_alur){
+    public Alur getAlur(String whereClause, String[] whereArgs){
         Alur alur = new Alur();
-        AlurCursorWrapper cursorWrapper = queryAlur(
-                AlurDbSchema.AlurTable.Kolom.ID_ALUR + " = ? ",
-                new String[]{Integer.toString(id_alur)}
+        AlurCursorWrapper cursorWrapper = queryAlur(whereClause, whereArgs
         );
         try {
             if (cursorWrapper.getCount() == 0){
-                alur.setId_alur(0);
+                return null;
             } else {
                 cursorWrapper.moveToFirst();
                 alur = cursorWrapper.getAlur();

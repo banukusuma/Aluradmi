@@ -40,6 +40,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
     private final static String TAG = "keteranganPagerActivity";
     private ImageView image_kosong;
     private TextView text_kosong;
+    int id_alur;
     private static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
     private static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
     private boolean canChecked;
@@ -55,9 +56,10 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         image_kosong = (ImageView) findViewById(R.id.imageView_keterangan_kosong);
         text_kosong = (TextView) findViewById(R.id.textView_keterangan_kosong);
         Log.e(TAG, "onCreate: " + getIntent().getIntExtra(EXTRA_ID_ALUR, 0) );
-         int id_alur = getIntent().getIntExtra(EXTRA_ID_ALUR, 0);
+        id_alur = getIntent().getIntExtra(EXTRA_ID_ALUR, 0);
         ReuniAlur reuniAlur = new ReuniAlur(this);
-        Alur alur = reuniAlur.getAlur(id_alur);
+        Alur alur = reuniAlur.getAlur(AlurDbSchema.AlurTable.Kolom.ID_ALUR + " = ? ",
+                new String[]{Integer.toString(id_alur)});
         getSupportActionBar().setTitle(alur.getNama());
         boolean progress = isBeforeAlurDone(alur);
         Log.e(TAG, "onCreate: boolean progress " + progress );
@@ -130,8 +132,8 @@ public class KeteranganPagerActivity extends AppCompatActivity {
                 }
             }
             int progress = Math.round(alurBefore.getProgress());
-            Log.e(TAG, "alur before " + alurBefore.getNama());
-            Log.e(TAG, "progress alur before " + alurBefore.getProgress());
+//            Log.e(TAG, "alur before " + alurBefore.getNama());
+//            Log.e(TAG, "progress alur before " + alurBefore.getProgress());
             if (progress == 100){
                 return true;
             }
@@ -152,7 +154,7 @@ public class KeteranganPagerActivity extends AppCompatActivity {
         @Override
         public Fragment getItem(int position) {
             Keterangan keterangan = keteranganList.get(position);
-            return KeteranganFragment.newInstance(keterangan.getId_keterangan(), canChecked, keteranganList.size());
+            return KeteranganFragment.newInstance(keterangan.getId_keterangan(),id_alur, canChecked);
         }
 
         @Override

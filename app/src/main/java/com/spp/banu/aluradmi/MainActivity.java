@@ -4,6 +4,7 @@ import android.app.Dialog;
 
 import android.app.SearchManager;
 
+import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.Intent;
 
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -68,8 +70,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity
         implements Drawer.OnDrawerItemClickListener {
 
-    private boolean isFirstRun;
-
     private final static String TAG_home_fragment = "home_fragment";
     private final static String TAG_bantuan_fragment = "bantuan_fragment";
     private final static String TAG_tentang_fragment = "tentang_fragment";
@@ -111,8 +111,16 @@ public class MainActivity extends AppCompatActivity
             if (intent.hasExtra(SinkronisasiService.KEY_IS_NEW_DATA)){
                 boolean is_new[] = intent.getBooleanArrayExtra(SinkronisasiService.KEY_IS_NEW_DATA);
                 boolean baru = false;
-                for (int i = 0 ; i < is_new.length;i++){
-                    baru = is_new[i];
+//                for(int i = 0 ; i < is_new.length;i++){
+//                    baru = is_new[i];
+//                    if (baru){
+//                        Toast.makeText(MainActivity.this, "Data Sudah Diupdate", Toast.LENGTH_SHORT).show();
+//                        break;
+//                    }
+//                }
+                for (boolean data : is_new
+                     ) {
+                    baru = data;
                     if (baru){
                         Toast.makeText(MainActivity.this, "Data Sudah Diupdate", Toast.LENGTH_SHORT).show();
                         break;
@@ -272,19 +280,6 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         googleServiceAvailable();
-        Log.i("" +this, "onResume: " + isFirstRun);
-        Log.e(TAG, "onResume: " );
-        ReuniJurusan reuniJurusan = new ReuniJurusan(this);
-        /*
-        isFirstRun = reuniJurusan.isSelectedJurusan();
-        if (isFirstRun){
-            if (!isJurusanDialogShown){
-                Log.e(TAG, "memunculkan dialog jurusan pada first run: " );
-                menuJurusan();
-            }
-
-        }
-        */
         result.setSelection(choose_fragment, true);
     }
 
@@ -306,7 +301,20 @@ public class MainActivity extends AppCompatActivity
         }else if (id == R.id.menu_settings){
             Intent intent = new Intent(this, SettingActivity.class);
             startActivity(intent);
-
+        }else if (id == R.id.menu_rate_app){
+            Uri uri = Uri.parse("market://details?id=" + this.getPackageName());
+            Intent goToMarket = new Intent(Intent.ACTION_VIEW, uri);
+            // To count with Play market backstack, After pressing back button,
+            // to taken back to our application, we need to add following flags to intent.
+            goToMarket.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY |
+                    Intent.FLAG_ACTIVITY_NEW_DOCUMENT |
+                    Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            try {
+                startActivity(goToMarket);
+            } catch (ActivityNotFoundException e) {
+                startActivity(new Intent(Intent.ACTION_VIEW,
+                        Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
+            }
         }
         return super.onOptionsItemSelected(item);
     }
@@ -327,17 +335,17 @@ public class MainActivity extends AppCompatActivity
         transaction.commit();
     }
 
-    private void menuJurusan(){
-        isJurusanDialogShown = true;
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
-        dialogFragment.show(fragmentManager, "jurusanDialog");
-        if (isFirstRun){
-            dialogFragment.setCancelable(false);
-        }else {
-            dialogFragment.setCancelable(true);
-        }
-    }
+//    private void menuJurusan(){
+//        isJurusanDialogShown = true;
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
+//        dialogFragment.show(fragmentManager, "jurusanDialog");
+//        if (isFirstRun){
+//            dialogFragment.setCancelable(false);
+//        }else {
+//            dialogFragment.setCancelable(true);
+//        }
+//    }
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -362,12 +370,10 @@ public class MainActivity extends AppCompatActivity
             choose_fragment = id;
             fragment = new BantuanFragment();
             replaceFragment(fragment, TAG_bantuan_fragment);
-            Toast.makeText(this,"Bantuan di klik", Toast.LENGTH_SHORT).show();
         } else if (id == 500000){
             choose_fragment = id;
             fragment = new AboutFragment();
             replaceFragment(fragment, TAG_tentang_fragment);
-            Toast.makeText(this,"Tentang di klik", Toast.LENGTH_SHORT).show();
         } else {
             int id_kategori = (int) id;
             SharedPreferences preferences = getSharedPreferences(KEY_PREFERENCE, Context.MODE_PRIVATE);

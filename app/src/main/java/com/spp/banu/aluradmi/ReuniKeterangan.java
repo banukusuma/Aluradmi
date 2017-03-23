@@ -103,10 +103,11 @@ public class ReuniKeterangan {
                 , new String[]{Integer.toString(id_alur)});
         for (Keterangan keterangan : keteranganList){
             database.update(KeteranganDbSchema.KeteranganTable.TABLE_NAME,
-                    values, KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN+ " = ? AND "
-                            + KeteranganDbSchema.KeteranganTable.Kolom.URUT + " = ? ",
-                    new String[]{Integer.toString(keterangan.getId_keterangan()), Integer.toString(keterangan.getUrut())});
+                    values, KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN+ " = ? ",
+                    new String[]{Integer.toString(keterangan.getId_keterangan())});
         }
 
     }
+
+
 }
