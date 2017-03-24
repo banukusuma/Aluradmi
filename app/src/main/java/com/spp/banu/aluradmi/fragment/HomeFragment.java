@@ -5,13 +5,11 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,9 +23,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Created by banu on 09/01/17.
@@ -37,7 +33,6 @@ public class HomeFragment extends Fragment {
     private RecyclerView homeRecyclerView;
     private HomeAdapter adapter;
     private ReuniJurusan reuniJurusan;
-    private LinearLayout linearLayout;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -115,13 +110,10 @@ public class HomeFragment extends Fragment {
     }
 
     private class WelcomeViewHolder extends RecyclerView.ViewHolder{
-        private Jurusan jurusan;
         public WelcomeViewHolder(View itemView) {
             super(itemView);
         }
         public void bindJurusan(Jurusan jurusan){
-            this.jurusan = jurusan;
-            //text_jurusan.setText(this.jurusan.getNama());
         }
     }
 

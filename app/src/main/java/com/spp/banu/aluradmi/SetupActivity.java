@@ -111,7 +111,7 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
         final Context context = ctx;
         progressBar.setVisibility(View.VISIBLE);
         sad.setVisibility(View.INVISIBLE);
-            GetAllData getAllData = new GetAllData(context, this, textView);
+            GetAllData getAllData = new GetAllData(context, this);
             getAllData.execute();
 
     }

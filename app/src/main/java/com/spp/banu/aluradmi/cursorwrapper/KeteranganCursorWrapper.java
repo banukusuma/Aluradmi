@@ -16,10 +16,8 @@ import com.spp.banu.aluradmi.model.Keterangan;
  */
 
 public class KeteranganCursorWrapper extends CursorWrapper {
-    private Context context;
-    public KeteranganCursorWrapper(Cursor cursor, Context context) {
+    public KeteranganCursorWrapper(Cursor cursor) {
         super(cursor);
-        this.context = context;
     }
     public Keterangan getKeterangan(){
         int id_keterangan = getInt(getColumnIndex(KeteranganDbSchema.KeteranganTable.Kolom.ID_KETERANGAN));

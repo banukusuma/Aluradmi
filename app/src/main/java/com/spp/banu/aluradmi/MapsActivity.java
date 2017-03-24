@@ -5,13 +5,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
-import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -57,14 +55,13 @@ import com.spp.banu.aluradmi.model.Vertex;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
-import java.util.EventListener;
 import java.util.LinkedList;
 import java.util.List;
 
 public class MapsActivity extends AppCompatActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener, DialogInterface.OnClickListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
+        GoogleApiClient.OnConnectionFailedListener, LocationListener, DirectionFinderListener, GoogleMap.InfoWindowAdapter, GoogleMap.OnInfoWindowClickListener {
 
-    private static final String TAG = "LokasiFragment";
+    private static final String TAG = "MapsActivity";
     GoogleMap map;
     public static final double R_bumi = 6372.8; // In kilometers
     private Circle northCircle, southCircle,  midleCircle;
@@ -279,7 +276,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
         switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
@@ -312,7 +308,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (map != null) {
             map.setInfoWindowAdapter(this);
-
         }
 
 
@@ -330,11 +325,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         );
     }
 
-    private void gotoLocation(double lat, double lng) {
-        LatLng latLng = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLng(latLng);
-        map.moveCamera(update);
-    }
 
     private void gotoLocationZoom(double lat, double lng, float zoom) {
         LatLng latLng = new LatLng(lat, lng);
@@ -392,7 +382,8 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
         if (currentLocation != null){
-            map.setOnInfoWindowClickListener(this);
+            //map.setOnInfoWindowClickListener(this);
+            Log.e(TAG, "onConnected: lokasi di ulang lalala" );
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
@@ -401,8 +392,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 currentLocationMarker.remove();
             }
             currentLocationMarker = map.addMarker(options);
+            currentLocationMarker.showInfoWindow();
             boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
-            Log.e(TAG, "onConnected: lokasi di ulang lalala" );
+
             if (isInFT) {
                 STATUS_POSISI = 1;
                 Log.e(TAG, "onConnected: status = " + STATUS_POSISI );
@@ -415,9 +407,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
                 Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
             }
+        }else {
+            changeSetting();
         }
-        changeSetting();
-        Log.e(TAG, "onConnected: setelah change setting" );
+
         Intent intent = getIntent();
         PolylineOptions polylineOptions = new PolylineOptions().
                 geodesic(true).
@@ -509,14 +502,14 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             apiClient.connect();
                         }
                         gotoLocationZoom(-7.771472121215996, 110.38705229759216, 14);
-                        map.setOnInfoWindowClickListener(this);
-                        Toast.makeText(MapsActivity.this, "Layanan Lokasi di aktifkan", Toast.LENGTH_LONG).show();
+
+                        //Toast.makeText(MapsActivity.this, "Layanan Lokasi di aktifkan", Toast.LENGTH_LONG).show();
                         break;
                     }
                     case Activity.RESULT_CANCELED:
                     {
                         gotoLocationZoom(-7.771472121215996, 110.38705229759216, 16);
-                        Toast.makeText(MapsActivity.this, "Layanan Lokasi tidak diperbolehkan oleh pengguna.", Toast.LENGTH_LONG).show();
+                        //Toast.makeText(MapsActivity.this, "Layanan Lokasi tidak diperbolehkan oleh pengguna.", Toast.LENGTH_LONG).show();
                         break;
                     }
                     default:
@@ -569,6 +562,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location == null) {
             Toast.makeText(this, "Can't get current location", Toast.LENGTH_LONG).show();
         } else {
+            map.setOnInfoWindowClickListener(this);
             if (currentLocationMarker != null) {
                 currentLocationMarker.remove();
             }
@@ -578,15 +572,15 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .title("Lokasi Anda")
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             currentLocationMarker = map.addMarker(options);
-                boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
-                if (isInFT) {
+            boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
+            if (isInFT) {
                     STATUS_POSISI = 1;
                     Log.e(TAG, "onLocationChange: status = " + STATUS_POSISI );
-                }
-                else {
-                    STATUS_POSISI = 2;
+            }
+            else {
+                STATUS_POSISI = 2;
                     Log.e(TAG, "onLocationChange: status = " + STATUS_POSISI );
-                }
+            }
         }
 
     }
@@ -716,30 +710,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         return null;
     }
 
-    public void showDialog(final Context ctx, String Mode) {
-        final Context context = ctx;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        if (Mode == "internet") {
-            builder.setCancelable(true);
-            dialogSettingintent = new Intent(Settings.ACTION_WIRELESS_SETTINGS);
-            builder.setMessage("Untuk Menggunakan Fitur Peta Membutuhkan Koneksi internet");
-            builder.setTitle("Tidak Ada Koneksi Internet");
-            builder.setPositiveButton("Buka Setting", this);
-        } else {
-            builder.setCancelable(true);
-            dialogSettingintent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-            builder.setMessage("Untuk Menjalankan Rute Peta Memerlukan GPS dalam keadaan menyala");
-            builder.setTitle("GPS tidak aktif");
-            builder.setPositiveButton("Buka Setting", this);
-        }
-
-        builder.show();
-    }
-
-    @Override
-    public void onClick(DialogInterface dialogInterface, int i) {
-        startActivity(dialogSettingintent);
-    }
 
     @Override
     public View getInfoWindow(Marker marker) {

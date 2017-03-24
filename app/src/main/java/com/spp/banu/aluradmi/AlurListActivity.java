@@ -28,7 +28,6 @@ import java.util.List;
  */
 
 public class AlurListActivity extends AppCompatActivity implements AlurListFragment.onAlurListSelected{
-    public static final String EXTRA_ID_KATEGORI = "com.spp.banu.aluradmi.alurIntent.id_kategori";
     private static final String ALUR_FRAGMENT_TAG = "alur_list_fragment";
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -68,12 +67,6 @@ public class AlurListActivity extends AppCompatActivity implements AlurListFragm
                         .commit();
             }
         }
-    }
-
-    public static Intent newIntent(Context packageContext,int id_kategori){
-        Intent intent = new Intent(packageContext, AlurListActivity.class);
-        intent.putExtra(EXTRA_ID_KATEGORI, id_kategori);
-        return intent;
     }
 
     @Override

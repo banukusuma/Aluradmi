@@ -29,7 +29,6 @@ public class JurusanCursorWrapper extends CursorWrapper {
     }
 
     public String getNamaJurusan(){
-        String nama = getString(getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.NAMA));
-        return nama ;
+        return getString(getColumnIndex(JurusanDbSchema.JurusanTable.Kolom.NAMA));
     }
 }

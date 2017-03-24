@@ -179,8 +179,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void updateData(String table, String field, String field_id, JSONObject jsonObject){
-        JSONObject object = jsonObject;
-        ContentValues values = contentValues(object);
+        ContentValues values = contentValues(jsonObject);
         SQLiteDatabase db = getWritableDatabase();
         db.update(table, values, field + " = ?", new String[] {field_id});
     }

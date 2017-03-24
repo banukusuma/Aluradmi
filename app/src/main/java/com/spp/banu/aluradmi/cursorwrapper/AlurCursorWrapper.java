@@ -9,9 +9,6 @@ import com.spp.banu.aluradmi.ReuniKeterangan;
 import com.spp.banu.aluradmi.dbSchema.AlurDbSchema;
 import com.spp.banu.aluradmi.dbSchema.KeteranganDbSchema;
 import com.spp.banu.aluradmi.model.Alur;
-import com.spp.banu.aluradmi.model.Keterangan;
-
-import java.util.List;
 
 /**
  * Created by banu on 12/12/16.

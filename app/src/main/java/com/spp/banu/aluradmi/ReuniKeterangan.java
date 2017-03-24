@@ -64,7 +64,7 @@ public class ReuniKeterangan {
 
     private KeteranganCursorWrapper queryKeterangan(String whereClause, String[] whereArgs){
         Cursor cursor = cursorKeterangan(whereClause, whereArgs);
-        return new KeteranganCursorWrapper(cursor, context);
+        return new KeteranganCursorWrapper(cursor);
     }
 
     private Cursor cursorKeterangan(String whereClause, String[] whereArgs){

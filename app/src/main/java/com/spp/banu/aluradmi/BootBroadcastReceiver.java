@@ -18,8 +18,6 @@ import java.util.Date;
  */
 
 public class BootBroadcastReceiver extends BroadcastReceiver {
-    private static final String TAG = "BootBroadcastReceiver";
-    public static final String KEY_SETUP_ALARM = "com.spp.aluradmi.banu.setup.alarm.boot";
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent startServiceIntent = new Intent(context, ScheduleAlarmService.class);

@@ -13,7 +13,6 @@ import com.spp.banu.aluradmi.service.ScheduleAlarmService;
 
 public class PeriodicTaskReceiver extends BroadcastReceiver {
     public final static int REQUEST_CODE = 7995;
-    public final static String KEY_INTENT_PERIODIC = "com.spp.banu.aluradmi.periodic.task.syncronisation.receiver";
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent intent1 = new Intent(context,SinkronisasiService.class);

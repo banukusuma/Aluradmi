@@ -1,12 +1,9 @@
 package com.spp.banu.aluradmi;
 
 import android.app.Dialog;
-
-import android.app.SearchManager;
-
+import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 
@@ -20,48 +17,31 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import android.support.v4.content.LocalBroadcastManager;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-
-import com.mikepenz.fontawesome_typeface_library.FontAwesome;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
-
 import com.spp.banu.aluradmi.fragment.AboutFragment;
-
 import com.spp.banu.aluradmi.fragment.BantuanFragment;
 import com.spp.banu.aluradmi.fragment.HomeFragment;
-import com.spp.banu.aluradmi.fragment.JurusanDialogFragment;
-
 import com.spp.banu.aluradmi.model.Kategori;
-
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,21 +60,23 @@ public class MainActivity extends AppCompatActivity
     private ExpandableDrawerItem kategori_expand;
     Drawer result;
     AccountHeader resultHeader;
-    private boolean isJurusanDialogShown;
     FragmentManager fragmentManager;
     Fragment fragment;
+    private ProgressDialog progressDialog;
     public static final String KEY_ID_KATEGORI = "com.spp.banu.aluradmi.key.id.kategori";
     public static final String KEY_PREFERENCE = "com.spp.banu.aluradmi.kategori.pref";
 
     private BroadcastReceiver receiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            if (progressDialog != null){
+                progressDialog.dismiss();
+            }
             if (intent.hasExtra(SinkronisasiService.KEY_INTERNET_CONNECTION)){
                 boolean ada_internet = intent.getBooleanExtra(SinkronisasiService.KEY_INTERNET_CONNECTION, true);
                 Log.e(TAG, "onReceive: " + ada_internet );
                 if (!ada_internet){
-                    Toast.makeText(MainActivity.this, "Tidak Dapat Melakukan Sinkronisasi, " +
-                            "Butuh Koneksi Internet", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this,"Butuh Koneksi Internet", Toast.LENGTH_SHORT).show();
                 }
             }
             if (intent.hasExtra(SinkronisasiService.KEY_IS_SUCCESS_UPDATE)){
@@ -150,7 +132,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         fragmentManager = getSupportFragmentManager();
         fragment = fragmentManager.findFragmentById(R.id.content_main);
-        isJurusanDialogShown = false;
         //Pembuatan Account Header
         resultHeader = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -174,10 +155,6 @@ public class MainActivity extends AppCompatActivity
                 .withIcon(GoogleMaterial.Icon.gmd_help);
 
 
-
-        //perulangan untuk memasukkan kategori ke dalam expand drawer
-        //belum dimasukkan apabila data kosong
-
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
@@ -199,9 +176,6 @@ public class MainActivity extends AppCompatActivity
                 choose_fragment = savedInstanceState.getLong(KEY_CHOOSE_FRAGMENT);
             }
 
-            if (savedInstanceState.keySet().contains(KEY_IS_DIALOG_SHOW)){
-                isJurusanDialogShown = savedInstanceState.getBoolean(KEY_IS_DIALOG_SHOW);
-            }
         }
 
     }
@@ -226,16 +200,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main, menu);
-        /*
-        MenuItem searchitem = menu.findItem(R.id.menu_search_main);
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager) this.getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchitem);
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(
-                new ComponentName(this, AlurSearchActivity.class)));
-        searchView.setIconifiedByDefault(true); // Do not iconify the widget; expand it by default
-        */
         return true;
     }
 
@@ -277,6 +241,15 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onPause() {
+        super.onPause();
+        if (progressDialog != null){
+            progressDialog.dismiss();
+        }
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         googleServiceAvailable();
@@ -292,7 +265,7 @@ public class MainActivity extends AppCompatActivity
             startActivity(intent);
             return true;
         }else if (id == R.id.menu_sync){
-            Toast.makeText(this, "Memulai Sinkronisasi Data", Toast.LENGTH_SHORT).show();
+            progressDialog = ProgressDialog.show(MainActivity.this, "Sinkronisasi Data","Mohon tunggu sebentar...", true);
             Intent intent = new Intent(this, SinkronisasiService.class);
             startService(intent);
         }else if (id == R.id.menu_search_main){
@@ -334,18 +307,6 @@ public class MainActivity extends AppCompatActivity
         transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
         transaction.commit();
     }
-
-//    private void menuJurusan(){
-//        isJurusanDialogShown = true;
-//        FragmentManager fragmentManager = getSupportFragmentManager();
-//        JurusanDialogFragment dialogFragment = new JurusanDialogFragment();
-//        dialogFragment.show(fragmentManager, "jurusanDialog");
-//        if (isFirstRun){
-//            dialogFragment.setCancelable(false);
-//        }else {
-//            dialogFragment.setCancelable(true);
-//        }
-//    }
 
     @Override
     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
@@ -389,7 +350,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putLong(KEY_CHOOSE_FRAGMENT, choose_fragment);
-        outState.putBoolean(KEY_IS_DIALOG_SHOW, isJurusanDialogShown);
         super.onSaveInstanceState(outState);
     }
 }

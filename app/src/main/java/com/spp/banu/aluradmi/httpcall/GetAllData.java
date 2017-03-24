@@ -28,15 +28,13 @@ import java.util.Iterator;
 
 public class GetAllData extends AsyncTask<Void, Void,Boolean> {
     private Context context;
-    private TextView textView;
+
     private AsyncBooleanListener listener;
     private final String TAG = GetAllData.class.getSimpleName();
     private static final String url = "http://aluradmi.pe.hu/data/semua";
-    public GetAllData(Context context, AsyncBooleanListener asyncBooleanListener, TextView textView) {
+    public GetAllData(Context context, AsyncBooleanListener asyncBooleanListener) {
         this.context = context;
         this.listener = asyncBooleanListener;
-        this.textView = textView;
-        this.textView.setText("Sedang Mengunduh Data");
     }
 
     @Override
@@ -58,7 +56,7 @@ public class GetAllData extends AsyncTask<Void, Void,Boolean> {
         String jsonstring = httpHandler.makeServiceCall(url);
         Log.e(TAG, "data json from server: " + jsonstring );
         if (jsonstring != null){
-            JSONObject jsonObject = null;
+            JSONObject jsonObject;
             try {
                 jsonObject = new JSONObject(jsonstring);
                 Iterator<?> keys = jsonObject.keys();

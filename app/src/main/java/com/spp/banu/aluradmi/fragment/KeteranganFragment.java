@@ -240,7 +240,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
                 strings.add(Integer.toString(i) +". " + berkas.getNama());
                 i++;
             }
-            isiBerkas.setText(TextUtils.join("\n\n", strings).toString());
+            isiBerkas.setText(TextUtils.join("\n\n", strings));
         } else {
             labelberkas.setVisibility(View.GONE);
             isiBerkas.setVisibility(View.GONE);
@@ -297,7 +297,7 @@ public class KeteranganFragment extends Fragment implements CompoundButton.OnChe
     private void showWarning(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Membatalkan status ini akan membuat progress setelah alur " +
-        alurIni.getNama() + " kembali ke 0%, Apakah anda yakin ?");
+        alurIni.getNama() + " kembali ke 0%. Apakah anda yakin ?");
         builder.setPositiveButton("Ya", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

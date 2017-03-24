@@ -1,6 +1,5 @@
 package com.spp.banu.aluradmi.model;
 
-import java.util.Date;
 
 /**
  * Created by banu on 01/12/16.
