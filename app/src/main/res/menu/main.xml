@@ -30,4 +30,8 @@
         android:orderInCategory="2"
         android:id="@+id/menu_sync"
         android:icon="@drawable/ic_sync_white_24dp"/>
+    <item android:title="tes pager"
+        android:id="@+id/menu_tes"
+        android:orderInCategory="5"
+        app:showAsAction="never" />
 </menu>

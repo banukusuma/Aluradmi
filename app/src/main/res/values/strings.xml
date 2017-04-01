@@ -3,6 +3,8 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="urut_alur">Urut Alur</string>
+    <string name="sebelumnya">Sebelumnya</string>
+    <string name="selanjutnya">Selanjutnya</string>
     <string name="nama_alur">Nama Alur</string>
     <string name="nama_kategori">Nama Kategori</string>
     <string name="item_lokasi_keterangan">Lokasi : </string>
@@ -32,6 +34,7 @@
     <string name="lantai">Lantai </string>
     <string name="ruang">Ruang </string>
     <string name="unduh_denah">Sedang Mengunduh Denah</string>
+    <string name="unduh_data_awal">Sedang Mendgunduh Data</string>
     <string name="search_hint">Nama Alur....</string>
     <string name="search">Cari Alur</string>
     <string name="sync">Sinkronisasi Data</string>
@@ -48,5 +51,68 @@
     <string name="nim">12520244039</string>
     <string name="sinkronisasi_pengaturan">Sinkrosisasi setiap : </string>
     <string name="pilih_jurusan_header">Silahkan Pilih Salah Satu Jurusan</string>
-    <string name="rate">Berikan Masukan dan Rating</string>
+    <string name="rate">Berikan Review dan Rating</string>
+    <string name="item_bantuan_1_judul">Melihat Alur Administrasi</string>
+    <string name="opening_bantuan_singkat">Berikut panduan singkat penggunaan aplikasi Aluradmi</string>
+    <string name="ending_bantuan_singkat">Apakah Anda sudah paham?</string>
+    <string name="opening_bantuan_lengkap">Berikut adalah daftar bantuan:</string>
+    <string name="button_paham">Ya, Saya Paham</string>
+    <string name="button_tidak_paham">Tidak, Ulangi Lagi</string>
+    <string-array name="bantuan_1">
+        <item>Melihat Alur Administrasi</item>
+        <item>1. Tekan "Menu Utama"</item>
+        <item>2. Tekan "Daftar Administrasi"</item>
+        <item>3. Pilih salah satu administrasi</item>
+        <item>4. Akan terlihat alur administrasi yang dipilih</item>
+    </string-array>
+    <string-array name="bantuan_2">
+        <item>Melihat Detail Alur Administrasi</item>
+        <item>1. Tekan salah satu alur pada tampilan alur administrasi</item>
+        <item>2. Akan terlihat detail alur administrasi yang telah dipilih</item>
+        <item>3. Jika terdapat lebih dari satu detail alur administrasi seperti gambar dibawah ini,
+            geser layar ke kanan untuk melihat detail selanjutnya dan geser layar ke kiri untuk melihat detail sebelumnya</item>
+    </string-array>
+    <string-array name="bantuan_3">
+        <item>Melihat Denah Lokasi</item>
+        <item>Tekan gambar denah di bagian "LOKASI" pada tampilan detail alur administrasi</item>
+        <item>*) Denah lokasi hanya terdapat pada detail alur administrasi tertentu</item>
+    </string-array>
+    <string-array name="bantuan_4">
+        <item>Melihat Rute Menuju Lokasi</item>
+        <item>Tekan tombol "TUNJUKKAN RUTE" di bagian "LOKASI" pada tampilan detail alur administrasi</item>
+        <item>1. Tekan "Peta" pada menu utama</item>
+        <item>2. Pilih lokasi yang akan di tuju</item>
+        <item>3. Tekan "TUNJUKKAN RUTE" pada lokasi yang telah dipilih</item>
+        <item>Cara 1:</item>
+        <item>Cara 2:</item>
+    </string-array>
+    <string-array name="bantuan_5">
+        <item>Menambah Progress</item>
+        <item>1. Tekan salah satu alur pada tampilan alur administrasi</item>
+        <item>2. Teka <i>checkbox</i>"Selesai" pada tampilan detail alur administrasi</item>
+        <item>*) Checkbox akan muncul jika alur sebelumnya telah mencapai progress 100%</item>
+        <item>3. Progress akan terlihat seperti tampilan di bawah ini.</item>
+        <item>4. Jika melakukan pembatalan progress pada alur administrasi yang telah mencapai 100%, akan muncul peringatan seperti tampilan di bawah ini</item>
+    </string-array>
+    <string-array name="bantuan_6">
+        <item>Mengganti Jurusan</item>
+        <item>1. Tekan "Menu Tambahan"</item>
+        <item>2. Tekan "Ganti Jurusan"</item>
+        <item>3. Pilih salah satu jurusan</item>
+        <item>4. Tekan tombol "OK"</item>
+    </string-array>
+    <string-array name="bantuan_7">
+        <item>Melakukan Sinkronisasi Data</item>
+        <item>Tekan menu "Sinkronisasi Data"</item>
+    </string-array>
+    <string-array name="bantuan_8">
+        <item>Mencari Alur Administrasi</item>
+        <item>1. Tekan icon "Search"</item>
+        <item>2. Masukan nama alur yang ingin dicari</item>
+    </string-array>
+    <string-array name="bantuan_9">
+        <item>Melakukan Review dan Rating</item>
+        <item>1. Tekan "Menu Tambahan"</item>
+        <item>2. Tekan "Berikan Review dan Rating"</item>
+    </string-array>
 </resources>

@@ -392,7 +392,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 currentLocationMarker.remove();
             }
             currentLocationMarker = map.addMarker(options);
-            currentLocationMarker.showInfoWindow();
             boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
 
             if (isInFT) {
@@ -440,7 +439,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     }
     private void createLocationRequest(){
         locationRequest = LocationRequest.create();
-        locationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setInterval(300000);
         locationRequest.setFastestInterval(60000);
     }
@@ -572,6 +571,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                     .title("Lokasi Anda")
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             currentLocationMarker = map.addMarker(options);
+            currentLocationMarker.showInfoWindow();
             boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
             if (isInFT) {
                     STATUS_POSISI = 1;

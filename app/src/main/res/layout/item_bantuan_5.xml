@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_marginLeft="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginBottom="@dimen/activity_vertical_margin"
+        android:layout_marginTop="@dimen/activity_vertical_margin"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_bantuan_5_judul"
+            android:textSize="22sp"
+            android:textStyle="normal|bold"
+            android:textAlignment="center" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_bantuan_5_1"
+            android:layout_marginTop="@dimen/margin_bantuan_10"
+            android:layout_marginBottom="@dimen/margin_bantuan_5" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/bantuan_2_4"
+            android:id="@+id/imageView_bantuan_5_1"
+            android:layout_marginBottom="@dimen/margin_bantuan_10"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_bantuan_5_2"
+            android:layout_marginBottom="@dimen/margin_bantuan_5"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/bantuan_3_3"
+            android:id="@+id/imageView_bantuan_5_2"
+            android:layout_marginBottom="@dimen/margin_bantuan_10"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_bantuan_5_3"
+            android:layout_marginBottom="@dimen/margin_bantuan_5"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/bantuan_6_3"
+            android:id="@+id/imageView_bantuan_5_3"
+            android:layout_marginBottom="@dimen/margin_bantuan_10"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_bantuan_5_4"
+            android:layout_marginBottom="@dimen/margin_bantuan_5"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/bantuan_6_4"
+            android:id="@+id/imageView_bantuan_5_4"
+            android:layout_marginBottom="@dimen/margin_bantuan_10"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+    </LinearLayout>
+</ScrollView>

@@ -84,7 +84,7 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
     protected void onStart() {
         super.onStart();
         Log.i("com.spp.aluradmi.Setup", "onStart");
-        textView.setText("Setup");
+        textView.setText(R.string.unduh_data_awal);
         CheckNetwork network = new CheckNetwork(this);
         if(!network.isNetworkAvailable()){
             if (!isDialogOpen){
@@ -147,30 +147,5 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
         startActivity(intent);
         finish();
     }
-    /*
-    // Setup a recurring alarm every half hour
-    public void scheduleAlarm() {
-        // Construct an intent that will execute the AlarmReceiver
-        Intent intent = new Intent(getApplicationContext(), PeriodicTaskReceiver.class);
-        // Create a PendingIntent to be triggered when the alarm goes off
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, PeriodicTaskReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        // Setup periodic alarm every 5 seconds
-        long firstMillis = System.currentTimeMillis(); // alarm is set right away
-        Log.e(TAG, "scheduleAlarm: system current time " + new Date(firstMillis) );
-        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        // First parameter is the type: ELAPSED_REALTIME, ELAPSED_REALTIME_WAKEUP, RTC_WAKEUP
-        // Interval can be INTERVAL_FIFTEEN_MINUTES, INTERVAL_HALF_HOUR, INTERVAL_HOUR, INTERVAL_DAY
-        alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, firstMillis,
-                AlarmManager.INTERVAL_DAY , pIntent);
-    }
 
-    public void cancelAlarm() {
-        Intent intent = new Intent(getApplicationContext(), PeriodicTaskReceiver.class);
-        final PendingIntent pIntent = PendingIntent.getBroadcast(this, PeriodicTaskReceiver.REQUEST_CODE,
-                intent, PendingIntent.FLAG_UPDATE_CURRENT);
-        AlarmManager alarm = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        alarm.cancel(pIntent);
-    }
-    */
 }

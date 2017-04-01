@@ -97,6 +97,8 @@
         </activity>
         <activity android:name=".SettingActivity"
             android:parentActivityName=".MainActivity"/>
+        <activity android:name=".BantuanLengkap_Pager" />
+
         <receiver android:name=".PeriodicTaskReceiver"
             android:process=":remote"/>
         <receiver android:name=".BootBroadcastReceiver">

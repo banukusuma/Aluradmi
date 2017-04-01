@@ -7,4 +7,6 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="margin_bantuan_5">5dip</dimen>
+    <dimen name="margin_bantuan_10">10dip</dimen>
 </resources>

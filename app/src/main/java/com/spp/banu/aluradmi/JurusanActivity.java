@@ -82,6 +82,7 @@ public class JurusanActivity extends AppCompatActivity implements AdapterView.On
         if (isNotSelected_Jurusan){
             startMainActivity();
         }
+        finish();
 
     }
     public void startMainActivity(){
