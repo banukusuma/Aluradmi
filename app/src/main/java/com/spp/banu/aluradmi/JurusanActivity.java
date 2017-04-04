@@ -81,8 +81,10 @@ public class JurusanActivity extends AppCompatActivity implements AdapterView.On
         reuniJurusan.SelectJurusan(selected_jurusan.toString());
         if (isNotSelected_Jurusan){
             startMainActivity();
+        }else {
+            finish();
         }
-        finish();
+
 
     }
     public void startMainActivity(){

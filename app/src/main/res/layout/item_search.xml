@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:background="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_search_nama"
+        android:textStyle="normal|bold"
+        android:textSize="16sp"
+        android:paddingBottom="2dp"
+        android:paddingTop="@dimen/margin_bantuan_5" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView_search_administrasi"
+        android:textSize="12sp"
+        android:paddingBottom="@dimen/margin_bantuan_5" />
+</LinearLayout>

@@ -18,7 +18,12 @@
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/textView_ending_bantuan_singkat">
-
+        <Button
+            android:text="@string/button_tidak_paham"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/button_tidak_paham"
+            android:layout_weight="1" />
         <Button
             android:text="@string/button_paham"
             android:layout_width="wrap_content"
@@ -26,12 +31,7 @@
             android:id="@+id/button_paham"
             android:layout_weight="1" />
 
-        <Button
-            android:text="@string/button_tidak_paham"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/button_tidak_paham"
-            android:layout_weight="1" />
+
     </LinearLayout>
 
 </RelativeLayout>

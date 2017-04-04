@@ -50,6 +50,14 @@
             android:layout_height="wrap_content"
             app:srcCompat="@drawable/bantuan_3_3"
             android:id="@+id/imageView_bantuan_5_2"
+            android:layout_marginBottom="@dimen/margin_bantuan_5"
+            android:layout_marginTop="@dimen/margin_bantuan_5" />
+
+        <TextView
+            android:text="TextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView_bantuan_5_5"
             android:layout_marginBottom="@dimen/margin_bantuan_10"
             android:layout_marginTop="@dimen/margin_bantuan_5" />
 

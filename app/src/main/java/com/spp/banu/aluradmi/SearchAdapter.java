@@ -47,8 +47,10 @@ public class SearchAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
         ViewHolder viewHolder;
         if (view == null) {
+//            view = LayoutInflater.from(context).
+//                    inflate(R.layout.list_item_alur, viewGroup, false);
             view = LayoutInflater.from(context).
-                    inflate(R.layout.list_item_alur, viewGroup, false);
+                    inflate(R.layout.item_search, viewGroup, false);
             viewHolder = new ViewHolder(view);
             view.setTag(viewHolder);
         } else {
@@ -71,11 +73,11 @@ public class SearchAdapter extends BaseAdapter {
         private Alur alur;
         private RelativeLayout layout_urut_alur;
         public ViewHolder(View view) {
-            nama_alur = (TextView) view.findViewById(R.id.nama_alur_text_view);
-            kategori = (TextView) view.findViewById(R.id.progress_text_view);
+            nama_alur = (TextView) view.findViewById(R.id.textView_search_nama);
+            kategori = (TextView) view.findViewById(R.id.textView_search_administrasi);
             //urut_alur = (TextView) view.findViewById(R.id.urut_alur_text_view);
-            layout_urut_alur = (RelativeLayout) view.findViewById(R.id.relative_layout_urut_Alur);
-            layout_urut_alur.setVisibility(View.GONE);
+//            layout_urut_alur = (RelativeLayout) view.findViewById(R.id.relative_layout_urut_Alur);
+//            layout_urut_alur.setVisibility(View.GONE);
             view.setOnClickListener(this);
         }
 
@@ -84,7 +86,7 @@ public class SearchAdapter extends BaseAdapter {
             ReuniKategori reuniKategori = new ReuniKategori(context);
             String nama_kategori = reuniKategori.getKategori(alur.getId_kategori()).getNama();
             nama_alur.setText(alur.getNama());
-            kategori.setText("Kategori : " + nama_kategori);
+            kategori.setText("Administrasi : " + nama_kategori);
 
         }
 

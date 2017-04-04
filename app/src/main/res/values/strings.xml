@@ -56,8 +56,8 @@
     <string name="opening_bantuan_singkat">Berikut panduan singkat penggunaan aplikasi Aluradmi</string>
     <string name="ending_bantuan_singkat">Apakah Anda sudah paham?</string>
     <string name="opening_bantuan_lengkap">Berikut adalah daftar bantuan:</string>
-    <string name="button_paham">Ya, Saya Paham</string>
-    <string name="button_tidak_paham">Tidak, Ulangi Lagi</string>
+    <string name="button_paham">Saya Paham</string>
+    <string name="button_tidak_paham">Ulangi Lagi</string>
     <string-array name="bantuan_1">
         <item>Melihat Alur Administrasi</item>
         <item>1. Tekan "Menu Utama"</item>
@@ -89,7 +89,7 @@
     <string-array name="bantuan_5">
         <item>Menambah Progress</item>
         <item>1. Tekan salah satu alur pada tampilan alur administrasi</item>
-        <item>2. Teka <i>checkbox</i>"Selesai" pada tampilan detail alur administrasi</item>
+        <item>2. Tekan checkbox "Selesai" pada tampilan detail alur administrasi</item>
         <item>*) Checkbox akan muncul jika alur sebelumnya telah mencapai progress 100%</item>
         <item>3. Progress akan terlihat seperti tampilan di bawah ini.</item>
         <item>4. Jika melakukan pembatalan progress pada alur administrasi yang telah mencapai 100%, akan muncul peringatan seperti tampilan di bawah ini</item>

@@ -124,10 +124,12 @@ public class BantuanLengkapMaster extends Fragment {
                 isi_2 = (TextView)view.findViewById(R.id.textView_bantuan_5_2);
                  isi_3 = (TextView) view.findViewById(R.id.textView_bantuan_5_3);
                  isi_4 = (TextView) view.findViewById(R.id.textView_bantuan_5_4);
+                isi_5 = (TextView) view.findViewById(R.id.textView_bantuan_5_5);
                 isi_1.setText(isi[1]);
                 isi_2.setText(isi[2]);
-                isi_3.setText(isi[3]);
-                isi_4.setText(isi[4]);
+                isi_3.setText(isi[4]);
+                isi_4.setText(isi[5]);
+                isi_5.setText(isi[3]);
                 judul.setText(isi[0]);
                 return view;
 

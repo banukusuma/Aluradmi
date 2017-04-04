@@ -2,16 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <android.support.v4.view.ViewPager
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginRight="@dimen/activity_horizontal_margin"
-        android:layout_marginBottom="@dimen/activity_vertical_margin"
-        android:layout_marginTop="@dimen/activity_vertical_margin"
         android:layout_weight="1"
-        android:id="@+id/bantuan_singkat_view_pager">
-    </android.support.v4.view.ViewPager>
+        android:id="@+id/bantuan_singkat_framelayout">
+    </FrameLayout>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content" android:orientation="horizontal">
@@ -22,8 +18,10 @@
             android:layout_height="wrap_content"
             android:id="@+id/button_sebelumnya"
             android:layout_weight="1"
-            android:layout_marginBottom="@dimen/margin_bantuan_10"
-            android:layout_marginTop="@dimen/margin_bantuan_5" />
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:paddingLeft="@dimen/margin_bantuan_10"
+            android:paddingBottom="@dimen/margin_bantuan_5"
+            android:paddingTop="@dimen/margin_bantuan_5" />
 
         <Button
             android:text="@string/selanjutnya"
@@ -31,7 +29,9 @@
             android:layout_height="wrap_content"
             android:id="@+id/button_selanjutnya"
             android:layout_weight="1"
-            android:layout_marginBottom="@dimen/margin_bantuan_10"
-            android:layout_marginTop="@dimen/margin_bantuan_5" />
+            style="@style/Widget.AppCompat.Button.Borderless"
+            android:paddingBottom="@dimen/margin_bantuan_5"
+            android:paddingTop="@dimen/margin_bantuan_5"
+            android:paddingRight="@dimen/margin_bantuan_10" />
     </LinearLayout>
 </LinearLayout>

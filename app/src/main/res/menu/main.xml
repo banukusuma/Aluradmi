@@ -6,7 +6,7 @@
         android:title="@string/action_pilih_jurusan"
         android:orderInCategory="4"
         android:icon="@drawable/ic_account_balance_white_24px"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item android:title="@string/pengaturan"
         android:id="@+id/menu_settings"
         android:icon="@drawable/ic_settings_white_24px"
@@ -30,8 +30,8 @@
         android:orderInCategory="2"
         android:id="@+id/menu_sync"
         android:icon="@drawable/ic_sync_white_24dp"/>
-    <item android:title="tes pager"
-        android:id="@+id/menu_tes"
-        android:orderInCategory="5"
-        app:showAsAction="never" />
+    <item android:id="@+id/menu_tes"
+        app:showAsAction="never"
+        android:orderInCategory="6"
+        android:title="tes"/>
 </menu>

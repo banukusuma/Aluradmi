@@ -46,7 +46,7 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_pencarian);
         image_kosong = (ImageView) findViewById(R.id.imageView_empty_data_search);
         text_tidak_cocok = (TextView) findViewById(R.id.textView_kosong_search);
         image_kosong.setVisibility(View.INVISIBLE);
@@ -57,7 +57,7 @@ public class AlurSearchActivity extends AppCompatActivity implements onSearchLis
         last_query = null;
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.search);
+        //getSupportActionBar().setTitle(R.string.search);
         /*
         if (savedInstanceState != null){
             if (savedInstanceState.keySet().contains(TAG_LAST_QUERY)){

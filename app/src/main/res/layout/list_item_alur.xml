@@ -9,10 +9,6 @@
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
         android:orientation="horizontal"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
         android:layout_marginBottom="3dp"
         android:layout_marginTop="3dp">
         <RelativeLayout
@@ -40,7 +36,7 @@
 
             <TextView
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:id="@+id/nama_alur_text_view"
                 android:textStyle="bold"
                 android:textAlignment="textStart"
@@ -65,8 +61,6 @@
             android:id="@+id/next_image_alur"
             android:layout_height="match_parent"
             android:layout_weight="0.47"/>
-
-
 
     </LinearLayout>
 

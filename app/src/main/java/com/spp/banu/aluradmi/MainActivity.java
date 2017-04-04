@@ -288,8 +288,8 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
             }
-        }else if(id == R.id.menu_tes) {
-            Intent intent = new Intent(this, BantuanLengkap_Pager.class);
+        }else if (id == R.id.menu_tes){
+            Intent intent = new Intent(this, BantuanSingkatActivity.class);
             startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
@@ -331,9 +331,8 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, MapsActivity.class);
             startActivity(intent);
         }else if (id == 400000){
-            choose_fragment = id;
-            fragment = new BantuanFragment();
-            replaceFragment(fragment, TAG_bantuan_fragment);
+            Intent intent = new Intent(this, BantuanLengkapActivity.class);
+            startActivity(intent);
         } else if (id == 500000){
             choose_fragment = id;
             fragment = new AboutFragment();
