@@ -288,9 +288,6 @@ public class MainActivity extends AppCompatActivity
                 startActivity(new Intent(Intent.ACTION_VIEW,
                         Uri.parse("http://play.google.com/store/apps/details?id=" + this.getPackageName())));
             }
-        }else if (id == R.id.menu_tes){
-            Intent intent = new Intent(this, BantuanSingkatActivity.class);
-            startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
     }

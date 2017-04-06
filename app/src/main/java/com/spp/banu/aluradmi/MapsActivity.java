@@ -139,95 +139,193 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nodes.add(new Vertex("30", "node 30", new LatLng(-7.770632327084954, 110.38766384124756)));
         nodes.add(new Vertex("31", "node 31", new LatLng(-7.769086435469498, 110.38814328610897)));
         nodes.add(new Vertex("32", "node 32", new LatLng(-7.769300803147504, 110.38807002827525)));
+        nodes.add(new Vertex("33", "node 33", new LatLng(-7.768944761014929, 110.38795620203018)));
+        nodes.add(new Vertex("34", "node 34", new LatLng(-7.768926157886605,110.38779258728027)));
+        nodes.add(new Vertex("35", "node 35", new LatLng(-7.769223807840961,110.38817077875137)));
+        nodes.add(new Vertex("36", "node 36", new LatLng(-7.7695613213732395,110.38812518119812)));
+        nodes.add(new Vertex("37", "node 37", new LatLng(-7.769699515812122,110.38804739713669)));
+        nodes.add(new Vertex("38", "node 38", new LatLng(-7.769656994451146,110.38750290870667)));
+        nodes.add(new Vertex("39", "node 39", new LatLng(-7.769808476779934,110.38767993450165)));
+        nodes.add(new Vertex("40", "node 40", new LatLng(-7.769944013554107,110.38799375295639)));
+        nodes.add(new Vertex("41", "node 41", new LatLng(-7.77024697794995,110.38755923509598)));
+        nodes.add(new Vertex("42", "node 42", new LatLng(-7.77020179906268,110.38732051849365)));
+        nodes.add(new Vertex("43A", "node 43A", new LatLng(-7.770363911517951,110.38717299699783)));
+        nodes.add(new Vertex("43B", "node 43B", new LatLng(-7.770334678129,110.38795083761215)));
+        nodes.add(new Vertex("44", "node 44", new LatLng(-7.770565887604159,110.38791060447693)));
+        nodes.add(new Vertex("46", "node 46", new LatLng(-7.770937948561239,110.38744658231735)));
+        nodes.add(new Vertex("47", "node 47", new LatLng(-7.770906057634979,110.38733392953873)));
+        nodes.add(new Vertex("48", "node 48", new LatLng(-7.771020333442865,110.38727760314941)));
+        nodes.add(new Vertex("49", "node 49", new LatLng(-7.771020333442865,110.38707375526428)));
+        nodes.add(new Vertex("50", "node 50", new LatLng(-7.771185103157618,110.38750559091568)));
+        nodes.add(new Vertex("51", "node 51", new LatLng(-7.771227624363841,110.38764506578445)));
+        nodes.add(new Vertex("52", "node 52", new LatLng(-7.7712329395143005,110.38696646690369)));
+        nodes.add(new Vertex("53", "node 53", new LatLng(-7.771554505992803,110.38691014051437)));
+        nodes.add(new Vertex("54", "node 54", new LatLng(-7.771692699775653,110.38695573806763)));
+        nodes.add(new Vertex("55", "node 55", new LatLng(-7.771711302781411,110.38714617490768)));
+        nodes.add(new Vertex("56", "node 56", new LatLng(-7.768996077440386, 110.38804672658443)));
+
+
 
         //menghubungkan node tersebut dikurangi 1
         edges = new ArrayList<>();
-        addLane("1", 0, 1);
-        addLane("2", 1, 0);
-        addLane("3", 1, 2);
-        addLane("4", 1, 26);
-        addLane("5", 2, 3);
-        addLane("6", 2, 1);
-        addLane("7", 2, 4);
-        addLane("8", 2, 25);
-        addLane("9", 3, 2);
-        addLane("10", 3, 4);
-        addLane("11", 3, 5);
-        addLane("12", 4, 2);
-        addLane("13", 4, 3);
-        addLane("14", 4, 5);
-        addLane("15", 4, 25);
-        addLane("16", 4, 6);
-        addLane("17", 5, 4);
-        addLane("18", 5, 3);
-        addLane("19", 5, 7);
-        addLane("20", 6, 25);
-        addLane("21", 6, 4);
-        addLane("22", 6, 8);
-        addLane("23", 7, 5);
-        addLane("24", 8, 6);
-        addLane("25", 8, 27);
-        addLane("26", 9, 26);
-        addLane("27", 9, 28);
-        addLane("28", 10, 28);
-        addLane("29", 10, 11);
-        addLane("30", 11, 10);
-        addLane("31", 11, 29);
-        addLane("32", 12, 29);
-        addLane("33", 12, 13);
-        addLane("34", 13, 12);
-        addLane("35", 13, 14);
-        addLane("36", 13, 15);
-        addLane("37", 13, 17);
-        addLane("38", 13, 16);
-        addLane("39", 14, 13);
-        addLane("40", 14, 23);
-        addLane("41", 15, 13);
-        addLane("42", 15, 16);
-        addLane("43", 15, 18);
-        addLane("44", 16, 15);
-        addLane("45", 16, 13);
-        addLane("46", 16, 18);
-        addLane("47", 16, 22);
-        addLane("48", 16, 17);
-        addLane("49", 17, 22);
-        addLane("50", 17, 13);
-        addLane("51", 17, 22);
-        addLane("52", 17, 16);
-        addLane("53", 18, 22);
-        addLane("54", 18, 15);
-        addLane("55", 18, 16);
-        addLane("56", 18, 20);
-        addLane("57", 18, 21);
-        addLane("58", 19, 22);
-        addLane("59", 19, 20);
-        addLane("60", 20, 19);
-        addLane("61", 20, 18);
-        addLane("62", 20, 21);
-        addLane("63", 21, 20);
-        addLane("64", 21, 18);
-        addLane("65", 22, 17);
-        addLane("66", 22, 16);
-        addLane("67", 22, 19);
-        addLane("68", 22, 18);
-        addLane("69", 23, 14);
-        addLane("70", 23, 24);
-        addLane("71", 24, 23);
-        addLane("72", 25, 2);
-        addLane("73", 25, 4);
-        addLane("74", 25, 6);
-        addLane("75", 26, 1);
-        addLane("76", 26, 9);
-        addLane("77", 27, 8);
-        addLane("78", 28, 9);
-        addLane("79", 28, 10);
-        addLane("80", 29, 11);
-        addLane("81", 29, 12);
+        addLane("1 dan 2", 0, 1);
+        addLane("2 dan 1", 1, 0);
+        addLane("2 dan 3", 1, 2);
+        addLane("2 dan 27", 1, 26);
+        addLane("3 dan 4", 2, 3);
+        addLane("3 dan 2", 2, 1);
+        addLane("3 dan 5", 2, 4);
+        addLane("3 dan 26", 2, 25);
+        addLane("4 dan 3", 3, 2);
+        addLane("4 dan 5", 3, 4);
+        addLane("4 dan 6", 3, 5);
+        addLane("5 dan 3", 4, 2);
+        addLane("5 dan 4", 4, 3);
+        addLane("5 dan 6", 4, 5);
+        addLane("5 dan 26", 4, 25);
+        addLane("5 dan 7", 4, 6);
+        addLane("6 dan 5", 5, 4);
+        addLane("6 dan 4", 5, 3);
+        addLane("6 dan 8", 5, 7);
+        addLane("7 dan 26", 6, 25);
+        addLane("7 dan 5", 6, 4);
+        addLane("7 dan 9", 6, 8);
+        addLane("8 dan 6", 7, 5);
+        addLane("9 dan 7", 8, 6);
+        addLane("9 dan 28", 8, 27);
+        addLane("10 dan 27", 9, 26);
+        addLane("10 dan 29", 9, 28);
+        addLane("11 dan 29", 10, 28);
+        addLane("11 dan 12", 10, 11);
+        addLane("12 dan 11", 11, 10);
+        addLane("12 dan 30", 11, 29);
+        addLane("13 dan 30", 12, 29);
+        addLane("14 dan 15", 13, 14);
+        addLane("14 dan 16", 13, 15);
+        addLane("14 dan 18", 13, 17);
+        addLane("14 dan 17", 13, 16);
+        addLane("15 dan 14", 14, 13);
+        addLane("15 dan 24", 14, 23);
+        addLane("16 dan 14", 15, 13);
+        addLane("16 dan 17", 15, 16);
+        addLane("16 dan 19", 15, 18);
+        addLane("17 dan 16", 16, 15);
+        addLane("17 dan 14", 16, 13);
+        addLane("17 dan 18", 16, 18);
+        addLane("17 dan 23", 16, 22);
+        addLane("17 dan 18", 16, 17);
+        addLane("18 dan 23", 17, 22);
+        addLane("18 dan 14", 17, 13);
+        addLane("18 dan 23", 17, 22);
+        addLane("18 dan 17", 17, 16);
+        addLane("19 dan 23", 18, 22);
+        addLane("19 dan 16", 18, 15);
+        addLane("19 dan 17", 18, 16);
+        addLane("19 dan 21", 18, 20);
+        addLane("19 dan 22", 18, 21);
+        addLane("20 dan 23", 19, 22);
+        addLane("20 dan 21", 19, 20);
+        addLane("21 dan 20", 20, 19);
+        addLane("21 dan 19", 20, 18);
+        addLane("21 dan 22", 20, 21);
+        addLane("22 dan 21", 21, 20);
+        addLane("22 dan 19", 21, 18);
+        addLane("23 dan 18", 22, 17);
+        addLane("23 dan 17", 22, 16);
+        addLane("23 dan 20", 22, 19);
+        addLane("23 dan 19", 22, 18);
+        addLane("24 dan 15", 23, 14);
+        addLane("24 dan 25", 23, 24);
+        addLane("25 dan 24", 24, 23);
+        addLane("26 dan 3", 25, 2);
+        addLane("26 dan 5", 25, 4);
+        addLane("26 dan 7", 25, 6);
+        addLane("27 dan 2", 26, 1);
+        addLane("27 dan 10", 26, 9);
+        addLane("28 dan 9", 27, 8);
+        addLane("29 dan 10", 28, 9);
+        addLane("29 dan 11", 28, 10);
+        addLane("30 dan 12", 29, 11);
+        addLane("30 dan 13", 29, 12);
         //tambahan
-        addLane("82", 30, 31);
-        addLane("83", 31, 0);
-        addLane("84", 0, 31);
-        addLane("85", 31, 30);
+        addLane("32 dan 35", 31, 34);
+        addLane("35 dan 32", 34, 31);
+        addLane("31 dan 35", 30, 34);
+        addLane("35 dan 31", 34, 30);
+        addLane("32 dan 1", 31, 0);
+        addLane("1 dan 32", 0, 31);
+        addLane("33 dan 4", 32, 3);
+        addLane("4 dan 33", 3, 32);
+        addLane("34 dan 4", 33, 3);
+        addLane("4 dan 34", 3, 33);
+        addLane("34 dan 5", 33, 4);
+        addLane("5 dan 34", 4, 33);
+        addLane("34 dan 6", 33, 5);
+        addLane("6 dan 34", 33, 5);
+        addLane("33 dan 34", 32, 33);
+        addLane("34 dan 33", 33, 32);
+        addLane("36 dan 1", 35, 0);
+        addLane("1 dan 36", 0, 35);
+        addLane("37 dan 27", 36, 26);
+        addLane("27 dan 37", 26, 36);
+        addLane("9 dan 38", 8, 37);
+        addLane("38 dan 9", 37, 8);
+        addLane("38 dan 28", 37, 27);
+        addLane("28 dan 38", 27, 37);
+        addLane("38 dan 39", 37, 38);
+        addLane("39 dan 38", 38, 37);
+        addLane("39 dan 28", 38, 27);
+        addLane("28 dan 39", 27, 38);
+        addLane("39 dan 10", 38, 9);
+        addLane("10 dan 39", 9, 38);
+        addLane("40 dan 10", 39, 9);
+        addLane("10 dan 40", 9, 39);
+        addLane("41 dan 42", 40 , 41);
+        addLane("42 dan 41", 41,40);
+        addLane("41 dan 11", 40, 10);
+        addLane("11 dan 41", 10 , 40);
+        addLane("42 dan 43A", 41, 42);
+        addLane("43A dan 42", 42, 41);
+        addLane("43B dan 12", 43, 11);
+        addLane("12 dan 43B", 11, 43);
+        addLane("44 dan 30", 44, 29);
+        addLane("30 dan 44", 29 , 44);
+        addLane("46 dan 13", 45, 12);
+        addLane("13 dan 46", 12, 45);
+        addLane("46 dan 47", 45,46);
+        addLane("47 dan 46", 46, 45);
+        addLane("47 dan 48", 46,47);
+        addLane("48 dan 47", 47, 46);
+        addLane("48 dan 49", 47, 48);
+        addLane("49 dan 48", 48, 47);
+        addLane("50 dan 13", 49, 12);
+        addLane("13 dan 50", 12, 49);
+        addLane("50 dan 14", 49, 13);
+        addLane("14 dan 50", 13, 49);
+        addLane("50 dan 51", 49,50);
+        addLane("51 dan 50", 50, 49);
+        addLane("52 dan 18", 51, 17);
+        addLane("18 dan 52", 17, 51);
+        addLane("53 dan 20", 52, 19);
+        addLane("20 dan 53", 19, 52);
+        addLane("53 dan 21", 52, 20);
+        addLane("21 dan 53", 20, 52);
+        addLane("54 dan 21", 53, 20);
+        addLane("21 dan 54", 20, 53);
+        addLane("54 dan 22", 53, 21);
+        addLane("22 dan 54", 21, 53);
+        addLane("54 dan 19", 53, 18);
+        addLane("19 dan 54", 18, 53);
+        addLane("55 dan 19", 53, 18);
+        addLane("19 dan 55", 18 , 54);
+        addLane("55 dan 16", 54, 15);
+        addLane("16 dan 55", 15, 54);
+        addLane("56 dan 31", 55, 30);
+        addLane("31 dan 56", 30, 55);
+        addLane("33 dan 56", 32, 55);
+        addLane("56 dan 33", 55, 32);
+        //setelah ini ditambah 1 lagi karena ada A dan B di 41
+
 
         if (savedInstanceState != null){
             if (savedInstanceState.keySet().contains(ROUTE_KEY)){
@@ -308,6 +406,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
         if (map != null) {
             map.setInfoWindowAdapter(this);
+            map.setOnInfoWindowClickListener(this);
         }
 
 
@@ -323,6 +422,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         southCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.7712030666905685, 110.38731381297112))
                 .radius(76).visible(false)
         );
+        gotoLocationZoom(-7.771472121215996, 110.38705229759216, 16);
     }
 
 
@@ -382,8 +482,6 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         LocationServices.FusedLocationApi.requestLocationUpdates(apiClient, locationRequest, this);
         currentLocation = LocationServices.FusedLocationApi.getLastLocation(apiClient);
         if (currentLocation != null){
-            //map.setOnInfoWindowClickListener(this);
-            Log.e(TAG, "onConnected: lokasi di ulang lalala" );
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
@@ -393,18 +491,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             }
             currentLocationMarker = map.addMarker(options);
             boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
-
             if (isInFT) {
                 STATUS_POSISI = 1;
                 Log.e(TAG, "onConnected: status = " + STATUS_POSISI );
-                gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 18);
-                Toast.makeText(this, "Di dalam FT", Toast.LENGTH_SHORT).show();
             }
             else {
                 STATUS_POSISI = 2;
                 Log.e(TAG, "onConnected: status = " + STATUS_POSISI );
-                gotoLocationZoom(currentLocation.getLatitude(),currentLocation.getLongitude(), 13);
-                Toast.makeText(this, "Di luar FT", Toast.LENGTH_SHORT).show();
             }
         }else {
             changeSetting();
@@ -440,7 +533,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     private void createLocationRequest(){
         locationRequest = LocationRequest.create();
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-        locationRequest.setInterval(300000);
+        locationRequest.setInterval(120000);
         locationRequest.setFastestInterval(60000);
     }
 
@@ -500,14 +593,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                             apiClient.disconnect();
                             apiClient.connect();
                         }
-                        gotoLocationZoom(-7.771472121215996, 110.38705229759216, 14);
 
                         //Toast.makeText(MapsActivity.this, "Layanan Lokasi di aktifkan", Toast.LENGTH_LONG).show();
                         break;
                     }
                     case Activity.RESULT_CANCELED:
                     {
-                        gotoLocationZoom(-7.771472121215996, 110.38705229759216, 16);
                         //Toast.makeText(MapsActivity.this, "Layanan Lokasi tidak diperbolehkan oleh pengguna.", Toast.LENGTH_LONG).show();
                         break;
                     }
@@ -561,7 +652,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (location == null) {
             Toast.makeText(this, "Can't get current location", Toast.LENGTH_LONG).show();
         } else {
-            map.setOnInfoWindowClickListener(this);
+
             if (currentLocationMarker != null) {
                 currentLocationMarker.remove();
             }
@@ -729,10 +820,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        for (Gedung gedung : gedungList){
-            if ((gedung.getLatitude() == marker.getPosition().latitude) && (gedung.getLongitude() == marker.getPosition().longitude)){
-                doRoute(gedung.getId_gedung());
-                break;
+        if (currentLocation != null){
+            for (Gedung gedung : gedungList){
+                if ((gedung.getLatitude() == marker.getPosition().latitude) && (gedung.getLongitude() == marker.getPosition().longitude)){
+                    doRoute(gedung.getId_gedung());
+                    break;
+                }
             }
         }
     }

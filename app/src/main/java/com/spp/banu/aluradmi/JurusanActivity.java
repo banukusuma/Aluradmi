@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Layout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -34,7 +35,6 @@ public class JurusanActivity extends AppCompatActivity implements AdapterView.On
         setContentView(R.layout.jurusan_activity);
         reuniJurusan = new ReuniJurusan(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_semua);
-        TextView textView = (TextView) findViewById(R.id.textView_jurusan);
         isNotSelected_Jurusan = reuniJurusan.isSelectedJurusan();
         if (isNotSelected_Jurusan){
             toolbar.setVisibility(View.GONE);
@@ -42,7 +42,6 @@ public class JurusanActivity extends AppCompatActivity implements AdapterView.On
             setSupportActionBar(toolbar);
             setTitle("Ganti Jurusan");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            //textView.setVisibility(View.GONE);
         }
         ListView listView = (ListView) findViewById(R.id.list_pilih_jurusan);
         btn_oke = (Button) findViewById(R.id.button_oke_pilih_jurusan);
@@ -80,15 +79,15 @@ public class JurusanActivity extends AppCompatActivity implements AdapterView.On
         Toast.makeText(this, selected_jurusan.toString() + " telah di pilih", Toast.LENGTH_SHORT).show();
         reuniJurusan.SelectJurusan(selected_jurusan.toString());
         if (isNotSelected_Jurusan){
-            startMainActivity();
+            startBantuanActivity();
         }else {
             finish();
         }
 
 
     }
-    public void startMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
+    public void startBantuanActivity(){
+        Intent intent = new Intent(this, BantuanSingkatActivity.class);
         startActivity(intent);
         finish();
     }

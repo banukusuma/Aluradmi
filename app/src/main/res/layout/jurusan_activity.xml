@@ -36,5 +36,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/button_oke_pilih_jurusan"
         android:layout_margin="16dp" />
-    <include layout="@layout/copyright_layout"/>
+    <include layout="@layout/copyright_layout"
+        android:id="@+id/copyright_jurusan"/>
 </LinearLayout>

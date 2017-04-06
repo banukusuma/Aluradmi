@@ -34,7 +34,7 @@
     <string name="lantai">Lantai </string>
     <string name="ruang">Ruang </string>
     <string name="unduh_denah">Sedang Mengunduh Denah</string>
-    <string name="unduh_data_awal">Sedang Mendgunduh Data</string>
+    <string name="unduh_data_awal">Sedang Mengunduh Data</string>
     <string name="search_hint">Nama Alur....</string>
     <string name="search">Cari Alur</string>
     <string name="sync">Sinkronisasi Data</string>
