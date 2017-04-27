@@ -38,6 +38,8 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.Circle;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -80,7 +82,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Intent dialogSettingintent;
     private ArrayList<LatLng> pointToUseInRoute;
     //titik pembatas di area ft
-    private final static LatLng southpoint = new LatLng(-7.77186626415878, 110.38690410554409);
+    private final static LatLng southpoint = new LatLng(-7.7718999903646315,110.38685917854309);
     private final static LatLng northpoint = new LatLng(-7.768903792602624, 110.3882696852088);
     private final static LatLng midlepoint = new LatLng(-7.769945766027917, 110.3877255320549);
     List<Gedung> gedungList;
@@ -107,223 +109,285 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 new String[]{"99"});
         pointToUseInRoute = new ArrayList<>();
         //menggambar titik persimpangan node
-        nodes.add(new Vertex("1", "node 1", new LatLng(-7.769449329031687, 110.38801185786724)));
-        nodes.add(new Vertex("2", "node 2", new LatLng(-7.7695613213732395, 110.3878864645958)));
-        nodes.add(new Vertex("3", "node 3", new LatLng(-7.769425784475547, 110.38769602775574)));
-        nodes.add(new Vertex("4", "node 4", new LatLng(-7.769096243600631, 110.38781940937042)));
-        nodes.add(new Vertex("5", "node 5", new LatLng(-7.769223807840961, 110.38768798112869)));
-        nodes.add(new Vertex("6", "node 6", new LatLng(-7.76904574941147, 110.38764238357544)));
-        nodes.add(new Vertex("7", "node 7", new LatLng(-7.769322138583081, 110.387382209301)));
-        nodes.add(new Vertex("8", "node 8", new LatLng(-7.768671029186398, 110.38774967193604)));
-        nodes.add(new Vertex("9", "node 9", new LatLng(-7.769641048939684, 110.38733124732971)));
-        nodes.add(new Vertex("10", "node 10", new LatLng(-7.769901492217901, 110.38780063390732)));
-        nodes.add(new Vertex("11", "node 11", new LatLng(-7.7702602658570425, 110.38768798112869)));
-        nodes.add(new Vertex("12", "node 12", new LatLng(-7.770297471994675, 110.3877604007721)));
-        nodes.add(new Vertex("13", "node 13", new LatLng(-7.770980469792488, 110.38755655288696)));
-        nodes.add(new Vertex("14", "node 14", new LatLng(-7.77137910612597, 110.38744390010834)));
-        nodes.add(new Vertex("15", "node 15", new LatLng(-7.7714535181996265, 110.38761287927628)));
-        nodes.add(new Vertex("16", "node 16", new LatLng(-7.771724590642157, 110.3872936964035)));
-        nodes.add(new Vertex("17", "node 17", new LatLng(-7.77154919084639, 110.38722395896912)));
-        nodes.add(new Vertex("18", "node 18", new LatLng(-7.771302036464343, 110.38710862398148)));
-        nodes.add(new Vertex("19", "node 19", new LatLng(-7.771674096769067, 110.38699865341187)));
-        nodes.add(new Vertex("20", "node 20", new LatLng(-7.771429600034542, 110.38692891597748)));
-        nodes.add(new Vertex("21", "node 21", new LatLng(-7.771655493761666, 110.38685113191605)));
-        nodes.add(new Vertex("22", "node 22", new LatLng(-7.77185746922651, 110.38686722517014)));
-        nodes.add(new Vertex("23", "node 23", new LatLng(-7.771472121215996, 110.38705229759216)));
-        nodes.add(new Vertex("24", "node 24", new LatLng(-7.771631575608071, 110.38757801055908)));
-        nodes.add(new Vertex("25", "node 25", new LatLng(-7.771820263227128, 110.38767457008362)));
-        nodes.add(new Vertex("26", "node 26", new LatLng(-7.769385920673774, 110.38762360811234)));
-        nodes.add(new Vertex("27", "node 27", new LatLng(-7.769731406830022, 110.38785696029663)));
-        nodes.add(new Vertex("28", "node 28", new LatLng(-7.769789873689877, 110.3874546289444)));
-        nodes.add(new Vertex("29", "node 29", new LatLng(-7.770063604789108, 110.38774967193604)));
-        nodes.add(new Vertex("30", "node 30", new LatLng(-7.770632327084954, 110.38766384124756)));
-        nodes.add(new Vertex("31", "node 31", new LatLng(-7.769086435469498, 110.38814328610897)));
-        nodes.add(new Vertex("32", "node 32", new LatLng(-7.769300803147504, 110.38807002827525)));
-        nodes.add(new Vertex("33", "node 33", new LatLng(-7.768944761014929, 110.38795620203018)));
-        nodes.add(new Vertex("34", "node 34", new LatLng(-7.768926157886605,110.38779258728027)));
-        nodes.add(new Vertex("35", "node 35", new LatLng(-7.769223807840961,110.38817077875137)));
-        nodes.add(new Vertex("36", "node 36", new LatLng(-7.7695613213732395,110.38812518119812)));
-        nodes.add(new Vertex("37", "node 37", new LatLng(-7.769699515812122,110.38804739713669)));
-        nodes.add(new Vertex("38", "node 38", new LatLng(-7.769656994451146,110.38750290870667)));
-        nodes.add(new Vertex("39", "node 39", new LatLng(-7.769808476779934,110.38767993450165)));
-        nodes.add(new Vertex("40", "node 40", new LatLng(-7.769944013554107,110.38799375295639)));
-        nodes.add(new Vertex("41", "node 41", new LatLng(-7.77024697794995,110.38755923509598)));
-        nodes.add(new Vertex("42", "node 42", new LatLng(-7.77020179906268,110.38732051849365)));
-        nodes.add(new Vertex("43A", "node 43A", new LatLng(-7.770363911517951,110.38717299699783)));
-        nodes.add(new Vertex("43B", "node 43B", new LatLng(-7.770334678129,110.38795083761215)));
-        nodes.add(new Vertex("44", "node 44", new LatLng(-7.770565887604159,110.38791060447693)));
-        nodes.add(new Vertex("46", "node 46", new LatLng(-7.770937948561239,110.38744658231735)));
-        nodes.add(new Vertex("47", "node 47", new LatLng(-7.770906057634979,110.38733392953873)));
-        nodes.add(new Vertex("48", "node 48", new LatLng(-7.771020333442865,110.38727760314941)));
-        nodes.add(new Vertex("49", "node 49", new LatLng(-7.771020333442865,110.38707375526428)));
-        nodes.add(new Vertex("50", "node 50", new LatLng(-7.771185103157618,110.38750559091568)));
-        nodes.add(new Vertex("51", "node 51", new LatLng(-7.771227624363841,110.38764506578445)));
-        nodes.add(new Vertex("52", "node 52", new LatLng(-7.7712329395143005,110.38696646690369)));
-        nodes.add(new Vertex("53", "node 53", new LatLng(-7.771554505992803,110.38691014051437)));
-        nodes.add(new Vertex("54", "node 54", new LatLng(-7.771692699775653,110.38695573806763)));
-        nodes.add(new Vertex("55", "node 55", new LatLng(-7.771711302781411,110.38714617490768)));
-        nodes.add(new Vertex("56", "node 56", new LatLng(-7.768996077440386, 110.38804672658443)));
 
+        nodes.add(new Vertex("1", new LatLng(-7.76864445327121,110.38788914680481)));
+        nodes.add(new Vertex("2", new LatLng(-7.768702920282386,110.38772016763687)));
+        nodes.add(new Vertex("3", new LatLng(-7.768827827051751,110.38803398609161)));
+        nodes.add(new Vertex("4", new LatLng(-7.768923500296765,110.38780868053436)));
+        nodes.add(new Vertex("5", new LatLng(-7.768979309679639,110.38797497749329)));
+        nodes.add(new Vertex("6", new LatLng(-7.769029803876789,110.38819491863251)));
+        nodes.add(new Vertex("7", new LatLng(-7.769016515930754,110.38755655288696)));
+        nodes.add(new Vertex("8",  new LatLng(-7.769133449841402,110.387744307518)));
+        nodes.add(new Vertex("9", new LatLng(-7.769223807840961,110.3881761431694)));
+        nodes.add(new Vertex("10",  new LatLng(-7.769348714455395,110.38810640573502)));
+        nodes.add(new Vertex("11",  new LatLng(-7.769399208608119,110.38764506578445)));
+        nodes.add(new Vertex("12", new LatLng(-7.769497539309186,110.38795620203018)));
+        nodes.add(new Vertex("13", new LatLng(-7.769566636544804,110.38787841796875)));
+        nodes.add(new Vertex("14", new LatLng(-7.769641048939684,110.38749754428864)));
+        nodes.add(new Vertex("15",  new LatLng(-7.769654336865949,110.38732320070267)));
+        nodes.add(new Vertex("16",  new LatLng(-7.769805819195691,110.3874546289444)));
+        nodes.add(new Vertex("17",  new LatLng(-7.769808476779934,110.38769602775574)));
+        nodes.add(new Vertex("18",  new LatLng(-7.769803161611436,110.38782745599747 )));
+        nodes.add(new Vertex("19",  new LatLng(-7.769896177050572,110.38778990507126)));
+        nodes.add(new Vertex("20",  new LatLng(-7.769811134364164,110.38801789283752)));
+        nodes.add(new Vertex("21",  new LatLng(-7.7699519863041635,110.38796693086624)));
+        nodes.add(new Vertex("22",  new LatLng(-7.770254950694269,110.38768261671066)));
+        nodes.add(new Vertex("23", new LatLng(-7.77028949925117,110.38777649402618)));
+        nodes.add(new Vertex("24",  new LatLng(-7.770324047805247,110.38795351982117)));
+        nodes.add(new Vertex("25", new LatLng(-7.770172565662445,110.38716495037079)));
+        nodes.add(new Vertex("26", new LatLng(-7.77025229311285,110.38756728172302)));
+        nodes.add(new Vertex("27", new LatLng(-7.770337335709897,110.38728833198547)));
+        nodes.add(new Vertex("28", new LatLng(-7.7704914753731655,110.38772016763687)));
+        nodes.add(new Vertex("29", new LatLng(-7.770523366330926,110.38789719343185)));
+        nodes.add(new Vertex("30", new LatLng(-7.770456926832867,110.38705229759216)));
+        nodes.add(new Vertex("31",  new LatLng(-7.770523366330926,110.38738757371902)));
+        nodes.add(new Vertex("32",  new LatLng(-7.770648272558783,110.38765847682953)));
+        nodes.add(new Vertex("33",  new LatLng(-7.770704081712417,110.3878515958786)));
+        nodes.add(new Vertex("34",  new LatLng(-7.770807727263761,110.38761287927628)));
+        nodes.add(new Vertex("35", new LatLng(-7.770860878818622,110.38780331611633)));
+        nodes.add(new Vertex("36",  new LatLng(-7.77086619397375,110.38719177246094)));
+        nodes.add(new Vertex("37", new LatLng(-7.770969839485071,110.38756459951401)));
+        nodes.add(new Vertex("38",  new LatLng(-7.771020333442865,110.3877604007721)));
+        nodes.add(new Vertex("39",  new LatLng(-7.770911372789522,110.3869879245758)));
+        nodes.add(new Vertex("40", new LatLng(-7.77094060613832,110.38744658231735)));
+        nodes.add(new Vertex("41",  new LatLng(-7.7710548819367915,110.38713276386261)));
+        nodes.add(new Vertex("42",  new LatLng(-7.771139924371299,110.3875270485878)));
+        nodes.add(new Vertex("43",  new LatLng(-7.771246227390198,110.3874734044075)));
+        nodes.add(new Vertex("44", new LatLng(-7.771310009188624,110.38769870996475)));
+        nodes.add(new Vertex("45", new LatLng(-7.77129672131475,110.38709789514542)));
+        nodes.add(new Vertex("46", new LatLng(-7.771333927360528,110.38725882768631)));
+        nodes.add(new Vertex("47",  new LatLng(-7.77138973642302,110.38744121789932)));
+        nodes.add(new Vertex("48", new LatLng(-7.7714535181996265,110.38765043020248)));
+        nodes.add(new Vertex("49",  new LatLng(-7.771426942460554,110.38690745830536)));
+        nodes.add(new Vertex("50",  new LatLng(-7.771477436363376,110.38704693317413)));
+        nodes.add(new Vertex("51",  new LatLng(-7.771519957539982,110.38723737001419)));
+        nodes.add(new Vertex("52",  new LatLng(-7.771546533273165,110.38688331842422)));
+        nodes.add(new Vertex("53",  new LatLng(-7.771650178616539,110.38757264614105)));
+        nodes.add(new Vertex("54", new LatLng(-7.771652836189102,110.38680016994476)));
+        nodes.add(new Vertex("55",  new LatLng(-7.771660808906718,110.38700670003891)));
+        nodes.add(new Vertex("56", new LatLng(-7.771724590642157,110.38728564977646)));
+        nodes.add(new Vertex("57", new LatLng(-7.771809632940995,110.38764238357544)));
+        nodes.add(new Vertex("58", new LatLng(-7.771777742080942,110.38692355155945)));
+        nodes.add(new Vertex("59", new LatLng(-7.7718999903646315,110.38685917854309)));
 
 
         //menghubungkan node tersebut dikurangi 1
         edges = new ArrayList<>();
-        addLane("1 dan 2", 0, 1);
-        addLane("2 dan 1", 1, 0);
-        addLane("2 dan 3", 1, 2);
-        addLane("2 dan 27", 1, 26);
-        addLane("3 dan 4", 2, 3);
-        addLane("3 dan 2", 2, 1);
-        addLane("3 dan 5", 2, 4);
-        addLane("3 dan 26", 2, 25);
-        addLane("4 dan 3", 3, 2);
-        addLane("4 dan 5", 3, 4);
-        addLane("4 dan 6", 3, 5);
-        addLane("5 dan 3", 4, 2);
-        addLane("5 dan 4", 4, 3);
-        addLane("5 dan 6", 4, 5);
-        addLane("5 dan 26", 4, 25);
-        addLane("5 dan 7", 4, 6);
-        addLane("6 dan 5", 5, 4);
-        addLane("6 dan 4", 5, 3);
-        addLane("6 dan 8", 5, 7);
-        addLane("7 dan 26", 6, 25);
-        addLane("7 dan 5", 6, 4);
-        addLane("7 dan 9", 6, 8);
-        addLane("8 dan 6", 7, 5);
-        addLane("9 dan 7", 8, 6);
-        addLane("9 dan 28", 8, 27);
-        addLane("10 dan 27", 9, 26);
-        addLane("10 dan 29", 9, 28);
-        addLane("11 dan 29", 10, 28);
-        addLane("11 dan 12", 10, 11);
-        addLane("12 dan 11", 11, 10);
-        addLane("12 dan 30", 11, 29);
-        addLane("13 dan 30", 12, 29);
-        addLane("14 dan 15", 13, 14);
-        addLane("14 dan 16", 13, 15);
-        addLane("14 dan 18", 13, 17);
-        addLane("14 dan 17", 13, 16);
-        addLane("15 dan 14", 14, 13);
-        addLane("15 dan 24", 14, 23);
-        addLane("16 dan 14", 15, 13);
-        addLane("16 dan 17", 15, 16);
-        addLane("16 dan 19", 15, 18);
-        addLane("17 dan 16", 16, 15);
-        addLane("17 dan 14", 16, 13);
-        addLane("17 dan 18", 16, 18);
-        addLane("17 dan 23", 16, 22);
-        addLane("17 dan 18", 16, 17);
-        addLane("18 dan 23", 17, 22);
-        addLane("18 dan 14", 17, 13);
-        addLane("18 dan 23", 17, 22);
-        addLane("18 dan 17", 17, 16);
-        addLane("19 dan 23", 18, 22);
-        addLane("19 dan 16", 18, 15);
-        addLane("19 dan 17", 18, 16);
-        addLane("19 dan 21", 18, 20);
-        addLane("19 dan 22", 18, 21);
-        addLane("20 dan 23", 19, 22);
-        addLane("20 dan 21", 19, 20);
-        addLane("21 dan 20", 20, 19);
-        addLane("21 dan 19", 20, 18);
-        addLane("21 dan 22", 20, 21);
-        addLane("22 dan 21", 21, 20);
-        addLane("22 dan 19", 21, 18);
-        addLane("23 dan 18", 22, 17);
-        addLane("23 dan 17", 22, 16);
-        addLane("23 dan 20", 22, 19);
-        addLane("23 dan 19", 22, 18);
-        addLane("24 dan 15", 23, 14);
-        addLane("24 dan 25", 23, 24);
-        addLane("25 dan 24", 24, 23);
-        addLane("26 dan 3", 25, 2);
-        addLane("26 dan 5", 25, 4);
-        addLane("26 dan 7", 25, 6);
-        addLane("27 dan 2", 26, 1);
-        addLane("27 dan 10", 26, 9);
-        addLane("28 dan 9", 27, 8);
-        addLane("29 dan 10", 28, 9);
-        addLane("29 dan 11", 28, 10);
-        addLane("30 dan 12", 29, 11);
-        addLane("30 dan 13", 29, 12);
-        //tambahan
-        addLane("32 dan 35", 31, 34);
-        addLane("35 dan 32", 34, 31);
-        addLane("31 dan 35", 30, 34);
-        addLane("35 dan 31", 34, 30);
-        addLane("32 dan 1", 31, 0);
-        addLane("1 dan 32", 0, 31);
-        addLane("33 dan 4", 32, 3);
-        addLane("4 dan 33", 3, 32);
-        addLane("34 dan 4", 33, 3);
-        addLane("4 dan 34", 3, 33);
-        addLane("34 dan 5", 33, 4);
-        addLane("5 dan 34", 4, 33);
-        addLane("34 dan 6", 33, 5);
-        addLane("6 dan 34", 33, 5);
-        addLane("33 dan 34", 32, 33);
-        addLane("34 dan 33", 33, 32);
-        addLane("36 dan 1", 35, 0);
-        addLane("1 dan 36", 0, 35);
-        addLane("37 dan 27", 36, 26);
-        addLane("27 dan 37", 26, 36);
-        addLane("9 dan 38", 8, 37);
-        addLane("38 dan 9", 37, 8);
-        addLane("38 dan 28", 37, 27);
-        addLane("28 dan 38", 27, 37);
-        addLane("38 dan 39", 37, 38);
-        addLane("39 dan 38", 38, 37);
-        addLane("39 dan 28", 38, 27);
-        addLane("28 dan 39", 27, 38);
-        addLane("39 dan 10", 38, 9);
-        addLane("10 dan 39", 9, 38);
-        addLane("40 dan 10", 39, 9);
-        addLane("10 dan 40", 9, 39);
-        addLane("41 dan 42", 40 , 41);
-        addLane("42 dan 41", 41,40);
-        addLane("41 dan 11", 40, 10);
-        addLane("11 dan 41", 10 , 40);
-        addLane("42 dan 43A", 41, 42);
-        addLane("43A dan 42", 42, 41);
-        addLane("43B dan 12", 43, 11);
-        addLane("12 dan 43B", 11, 43);
-        addLane("44 dan 30", 44, 29);
-        addLane("30 dan 44", 29 , 44);
-        addLane("46 dan 13", 45, 12);
-        addLane("13 dan 46", 12, 45);
-        addLane("46 dan 47", 45,46);
-        addLane("47 dan 46", 46, 45);
-        addLane("47 dan 48", 46,47);
-        addLane("48 dan 47", 47, 46);
-        addLane("48 dan 49", 47, 48);
-        addLane("49 dan 48", 48, 47);
-        addLane("50 dan 13", 49, 12);
-        addLane("13 dan 50", 12, 49);
-        addLane("50 dan 14", 49, 13);
-        addLane("14 dan 50", 13, 49);
-        addLane("50 dan 51", 49,50);
-        addLane("51 dan 50", 50, 49);
-        addLane("52 dan 18", 51, 17);
-        addLane("18 dan 52", 17, 51);
-        addLane("53 dan 20", 52, 19);
-        addLane("20 dan 53", 19, 52);
-        addLane("53 dan 21", 52, 20);
-        addLane("21 dan 53", 20, 52);
-        addLane("54 dan 21", 53, 20);
-        addLane("21 dan 54", 20, 53);
-        addLane("54 dan 22", 53, 21);
-        addLane("22 dan 54", 21, 53);
-        addLane("54 dan 19", 53, 18);
-        addLane("19 dan 54", 18, 53);
-        addLane("55 dan 19", 53, 18);
-        addLane("19 dan 55", 18 , 54);
-        addLane("55 dan 16", 54, 15);
-        addLane("16 dan 55", 15, 54);
-        addLane("56 dan 31", 55, 30);
-        addLane("31 dan 56", 30, 55);
-        addLane("33 dan 56", 32, 55);
-        addLane("56 dan 33", 55, 32);
+
+        addLane("1-2", 0, 1);
+        addLane("1-3",0,2);
+
+        addLane("2-1",1,0);
+        addLane("2-4",1,3);
+        addLane("2-7",1,6);
+
+        addLane("3-1",2,0);
+        addLane("3-5",2,4);
+
+        addLane("4-5",3,4);
+        addLane("4-2",3,1);
+        addLane("4-7",3,6);
+        addLane("4-8",3,7);
+
+        addLane("5-3",4,2);
+        addLane("5-4",4,3);
+        addLane("5-6",4,5);
+
+        addLane("6-5",5,4);
+        addLane("6-9",5,8);
+
+        addLane("7-2",6,1);
+        addLane("7-4",6,3);
+        addLane("7-8",6,7);
+
+        addLane("8-4",7,3);
+        addLane("8-7",7,6);
+        addLane("8-11",7,10);
+
+        addLane("9-6",8,5);
+        addLane("9-10",8,9);
+
+        addLane("10-9",9,8);
+        addLane("10-12",9,11);
+
+        addLane("11-8",10,7);
+        addLane("11-13", 10,12);
+
+        addLane("12-10",11,9);
+        addLane("12-13",11,12);
+
+        addLane("13-12",12,11);
+        addLane("13-11",12,10);
+        addLane("13-18",12,17);
+
+        addLane("14-15",13,14);
+        addLane("14-16",13,15);
+        addLane("14-17",13,16);
+
+        addLane("15-14",14,13);
+        addLane("15-16",14,15);
+
+        addLane("16-14",15,13);
+        addLane("16-15",15,14);
+        addLane("16-17",15,16);
+
+        addLane("17-14",16,13);
+        addLane("17-16",16,15);
+        addLane("17-19", 16,18);
+
+        addLane("18-13",17,12);
+        addLane("18-19",17,18);
+        addLane("18-20",17,19);
+
+        addLane("19-17",18,16);
+        addLane("19-18",18,17);
+        addLane("19-21",18,20);
+        addLane("19-22",18,21);
+
+        addLane("20-18",19,17);
+
+        addLane("21-19",20,18);
+
+        addLane("22-19",21,18);
+        addLane("22-23",21,22);
+        addLane("22-26",21,25);
+
+        addLane("23-22",22,21);
+        addLane("23-24",22,23);
+        addLane("23-28",22,27);
+
+        addLane("24-23",23,22);
+
+        addLane("25-26",24,25);
+        addLane("25-27",24,26);
+        addLane("25-30",24,29);
+
+        addLane("26-22",25,21);
+        addLane("26-25",25,24);
+        addLane("26-27",25,26);
+        addLane("26-31",26,30);
+
+        addLane("27-25",26,24);
+        addLane("27-26",26,25);
+        addLane("27-30",26,29);
+        addLane("27-31",26,30);
+
+        addLane("28-23",27,22);
+        addLane("28-29",27,28);
+        addLane("28-32",27,31);
+
+        addLane("29-28",28,27);
+
+        addLane("30-25",29,24);
+        addLane("30-27",29,26);
+        addLane("30-31",29,30);
+
+        addLane("31-26",30,25);
+        addLane("31-27",30,26);
+        addLane("31-30",30,29);
+
+        addLane("32-28",31,27);
+        addLane("32-33",31,32);
+        addLane("32-34",31,33);
+
+        addLane("33-32",32,31);
+
+        addLane("34-32",33,31);
+        addLane("34-35",33,34);
+        addLane("34-37",33,36);
+
+        addLane("35-34",34,33);
+
+        addLane("36-39",35,38);
+        addLane("36-40",35,39);
+        addLane("36-41",35,40);
+
+        addLane("37-34",36,33);
+        addLane("37-38",36,37);
+        addLane("37-40",36,39);
+        addLane("37-42",36,41);
+
+        addLane("38-37",37,36);
+
+        addLane("39-36",38,35);
+        addLane("39-41",38,40);
+
+        addLane("40-36",39,35);
+        addLane("40-37",39,36);
+        addLane("40-41",39,40);
+
+        addLane("41-36",40,35);
+        addLane("41-39",40,38);
+        addLane("41-40",40,39);
+
+        addLane("42-37",41,36);
+        addLane("42-43",41,42);
+
+        addLane("43-42",42,41);
+        addLane("43-47",42,46);
+        addLane("43-44",42,43);
+
+        addLane("44-43",43,42);
+        addLane("44-48",43,47);
+
+        addLane("45-46",44,45);
+        addLane("45-50",44,49);
+        addLane("45-51",44,50);
+
+        addLane("46-45",45,44);
+        addLane("46-47",45,46);
+        addLane("46-51",45,50);
+
+        addLane("47-46",46,45);
+        addLane("47-51",46,50);
+        addLane("47-43",46,42);
+        addLane("47-48",46,47);
+
+        addLane("48-44",47,43);
+        addLane("48-47",47,46);
+        addLane("48-53",47,52);
+
+        addLane("49-50",48,49);
+        addLane("49-52",48,51);
+
+        addLane("50-49",49,48);
+        addLane("50-51",49,50);
+        addLane("50-45",49,44);
+        addLane("50-55",49,54);
+
+        addLane("51-45",50,44);
+        addLane("51-46",50,45);
+        addLane("51-47",50,46);
+        addLane("51-50",50,49);
+        addLane("51-55",50,54);
+        addLane("51-56",50,55);
+
+        addLane("52-49",51,48);
+        addLane("52-54",51,53);
+
+        addLane("53-48",52,47);
+        addLane("53-57",52,56);
+
+        addLane("54-52",53,51);
+        addLane("54-58",52,57);
+        addLane("54-55",52,54);
+
+        addLane("55-50",54,49);
+        addLane("55-51",54,50);
+        addLane("55-54",54,53);
+        addLane("55-56",54,55);
+        addLane("55-58",54,57);
+
+        addLane("56-51",55,50);
+        addLane("56-55",55,54);
+
+        addLane("57-",56,52);
+
+        addLane("58-54",57,53);
+        addLane("58-55",57,54);
+        addLane("58-59",57,58);
+
+        addLane("59-58",58,57);
         //setelah ini ditambah 1 lagi karena ada A dan B di 41
 
 
@@ -380,7 +444,10 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 return true;
             case R.id.lokasi_saya:
                 if (currentLocation != null){
-                    gotoLocationZoom(currentLocation.getLatitude(), currentLocation.getLongitude(), 14);
+                    LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+                    CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 14);
+                    map.animateCamera(update);
+                    currentLocationMarker.showInfoWindow();
                 }else {
                     Toast.makeText(this, "Lokasi anda tidak ditemukan", Toast.LENGTH_SHORT).show();
                 }
@@ -422,15 +489,11 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         southCircle = map.addCircle(new CircleOptions().center(new LatLng(-7.7712030666905685, 110.38731381297112))
                 .radius(76).visible(false)
         );
-        gotoLocationZoom(-7.771472121215996, 110.38705229759216, 16);
+        LatLng latLng = new LatLng(-7.771472121215996, 110.38705229759216);
+        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, 16);
+        map.moveCamera(update);
     }
 
-
-    private void gotoLocationZoom(double lat, double lng, float zoom) {
-        LatLng latLng = new LatLng(lat, lng);
-        CameraUpdate update = CameraUpdateFactory.newLatLngZoom(latLng, zoom);
-        map.animateCamera(update);
-    }
 
     @Override
     protected void onStart() {
@@ -484,12 +547,12 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (currentLocation != null){
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biru_kecil))
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                     .visible(true);
-            if (currentLocationMarker != null){
-                currentLocationMarker.remove();
+            if (currentLocationMarker == null){
+                currentLocationMarker = map.addMarker(options);
             }
-            currentLocationMarker = map.addMarker(options);
             boolean isInFT = checkPosition(new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude()));
             if (isInFT) {
                 STATUS_POSISI = 1;
@@ -660,6 +723,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, "onLocationChanged: lattitude longitude" + currentLocation.getLatitude() + "," + currentLocation.getLongitude());
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biru_kecil))
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             currentLocationMarker = map.addMarker(options);
             currentLocationMarker.showInfoWindow();
@@ -762,9 +826,9 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         Log.e(TAG, "current source " +no_current_dalam_edges );
         Log.e(TAG, "tujuan source "  + no_tujuan_dalam_edges);
 
-        Vertex node_current = new Vertex(Integer.toString(id_current_location_node ), "node " + id_current_location_node ,
+        Vertex node_current = new Vertex(Integer.toString(id_current_location_node ),
                 new LatLng(current.latitude, current.longitude));
-        Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node), "node " + id_tujuan_location_node,
+        Vertex node_tujuan = new Vertex(Integer.toString(id_tujuan_location_node),
                 new LatLng(destination.latitude, destination.longitude));
         Vertex terdekat_dari_current = getNearestVertex(node_current);
         Vertex terdekat_dari_tujuan = getNearestVertex(node_tujuan);
@@ -813,7 +877,13 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         TextView textView = (TextView) view.findViewById(R.id.nama_lokasi_text_view);
         Button button = (Button) view.findViewById(R.id.show_rute_btn);
         textView.setText(marker.getTitle());
-        button.setText(R.string.btn_show_route);
+        if (marker.equals(currentLocationMarker)){
+            button.setVisibility(View.GONE);
+        }else {
+            button.setVisibility(View.VISIBLE);
+            button.setText(R.string.btn_show_route);
+        }
+
         return view;
     }
 

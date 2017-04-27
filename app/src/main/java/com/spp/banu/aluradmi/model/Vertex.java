@@ -8,13 +8,11 @@ import com.google.android.gms.maps.model.LatLng;
 
 public class Vertex {
      private String id;
-     private String name;
      private LatLng location;
 
 
-    public Vertex(String id, String name, LatLng location) {
+    public Vertex(String id, LatLng location) {
         this.id = id;
-        this.name = name;
         this.location = location;
     }
     public String getId() {
@@ -25,9 +23,6 @@ public class Vertex {
         return location;
     }
 
-    public String getName() {
-        return name;
-    }
 
     @Override
     public int hashCode() {
