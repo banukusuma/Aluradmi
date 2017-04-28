@@ -23,5 +23,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/textView_search_administrasi"
         android:textSize="12sp"
-        android:paddingBottom="@dimen/margin_bantuan_5" />
+        android:paddingBottom="@dimen/margin_bantuan_5"
+        android:paddingTop="2dp" />
 </LinearLayout>

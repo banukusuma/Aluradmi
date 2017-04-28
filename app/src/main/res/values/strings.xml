@@ -36,7 +36,7 @@
     <string name="unduh_denah">Sedang Mengunduh Denah</string>
     <string name="unduh_data_awal">Sedang Mengunduh Data</string>
     <string name="search_hint">Nama Alur....</string>
-    <string name="search">Cari Alur</string>
+    <string name="search">Cari Langkah</string>
     <string name="sync">Sinkronisasi Data</string>
     <string name="coba">Coba Lagi</string>
     <string name="gagal_mengunduh">Gagal Mengunduh Data</string>
@@ -44,7 +44,7 @@
     <string name="data_tidak_cocok">Tidak Ada Alur yang Cocok</string>
     <string name="pengaturan">Pengaturan</string>
     <string name="penjelasan_aluradmi">Aluradmi adalah aplikasi yang memberikan informasi mengenai
-        prosedur pengurusan administrasi bagi mahasiswa Fakultas Teknik Universitas Negeri Yogyakarta</string>
+         pengurusan administrasi bagi mahasiswa Fakultas Teknik Universitas Negeri Yogyakarta</string>
     <string name="versi">Aluradmi V.1.1</string>
     <string name="powered">Powered by :</string>
     <string name="nama">Banu Kusuma </string>
@@ -67,19 +67,19 @@
     </string-array>
     <string-array name="bantuan_2">
         <item>Melihat Detail Alur Administrasi</item>
-        <item>1. Tekan salah satu alur pada tampilan alur administrasi</item>
-        <item>2. Akan terlihat detail alur administrasi yang telah dipilih</item>
-        <item>3. Jika terdapat lebih dari satu detail alur administrasi seperti gambar dibawah ini,
+        <item>1. Tekan salah satu langkah pada tampilan alur administrasi</item>
+        <item>2. Akan terlihat detail langkah administrasi yang telah dipilih</item>
+        <item>3. Jika terdapat lebih dari satu detail langkah administrasi seperti gambar dibawah ini,
             geser layar ke kanan untuk melihat detail selanjutnya dan geser layar ke kiri untuk melihat detail sebelumnya</item>
     </string-array>
     <string-array name="bantuan_3">
         <item>Melihat Denah Lokasi</item>
-        <item>Tekan gambar denah di bagian "LOKASI" pada tampilan detail alur administrasi</item>
-        <item>*) Denah lokasi hanya terdapat pada detail alur administrasi tertentu</item>
+        <item>Tekan gambar denah di bagian "LOKASI" pada tampilan detail langkah administrasi</item>
+        <item>*) Denah lokasi hanya terdapat pada detail langkah administrasi tertentu</item>
     </string-array>
     <string-array name="bantuan_4">
         <item>Melihat Rute Menuju Lokasi</item>
-        <item>Tekan tombol "TUNJUKKAN RUTE" di bagian "LOKASI" pada tampilan detail alur administrasi</item>
+        <item>Tekan tombol "TUNJUKKAN RUTE" di bagian "LOKASI" pada tampilan detail langkah administrasi</item>
         <item>1. Tekan "Peta" pada menu utama</item>
         <item>2. Pilih lokasi yang akan di tuju</item>
         <item>3. Tekan "TUNJUKKAN RUTE" pada lokasi yang telah dipilih</item>
@@ -88,11 +88,11 @@
     </string-array>
     <string-array name="bantuan_5">
         <item>Menambah Progress</item>
-        <item>1. Tekan salah satu alur pada tampilan alur administrasi</item>
-        <item>2. Tekan checkbox "Selesai" pada tampilan detail alur administrasi</item>
-        <item>*) Checkbox akan muncul jika alur sebelumnya telah mencapai progress 100%</item>
+        <item>1. Tekan salah satu langkah pada tampilan alur administrasi</item>
+        <item>2. Tekan checkbox "Selesai" pada tampilan detail langkah administrasi</item>
+        <item>*) Checkbox akan muncul jika langkah sebelumnya telah mencapai progress 100%</item>
         <item>3. Progress akan terlihat seperti tampilan di bawah ini.</item>
-        <item>4. Jika melakukan pembatalan progress pada alur administrasi yang telah mencapai 100%, akan muncul peringatan seperti tampilan di bawah ini</item>
+        <item>4. Jika melakukan pembatalan progress pada langkah administrasi yang telah mencapai 100%, akan muncul peringatan seperti tampilan di bawah ini</item>
     </string-array>
     <string-array name="bantuan_6">
         <item>Mengganti Jurusan</item>
@@ -106,13 +106,15 @@
         <item>Tekan menu "Sinkronisasi Data"</item>
     </string-array>
     <string-array name="bantuan_8">
-        <item>Mencari Alur Administrasi</item>
+        <item>Mencari Langkah Administrasi</item>
         <item>1. Tekan icon "Search"</item>
-        <item>2. Masukan nama alur yang ingin dicari</item>
+        <item>2. Masukan nama langkah yang ingin dicari</item>
     </string-array>
     <string-array name="bantuan_9">
         <item>Melakukan Review dan Rating</item>
         <item>1. Tekan "Menu Tambahan"</item>
         <item>2. Tekan "Berikan Review dan Rating"</item>
     </string-array>
+    <string name="kritik">Kritik dan Saran:</string>
+    <string name="email">Kirim ke banukusuma11@gmail.com</string>
 </resources>

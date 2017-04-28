@@ -82,7 +82,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
     Intent dialogSettingintent;
     private ArrayList<LatLng> pointToUseInRoute;
     //titik pembatas di area ft
-    private final static LatLng southpoint = new LatLng(-7.7718999903646315,110.38685917854309);
+    private final static LatLng southpoint = new LatLng(-7.77186506821928,110.38687460124493);
     private final static LatLng northpoint = new LatLng(-7.768903792602624, 110.3882696852088);
     private final static LatLng midlepoint = new LatLng(-7.769945766027917, 110.3877255320549);
     List<Gedung> gedungList;
@@ -168,7 +168,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         nodes.add(new Vertex("56", new LatLng(-7.771724590642157,110.38728564977646)));
         nodes.add(new Vertex("57", new LatLng(-7.771809632940995,110.38764238357544)));
         nodes.add(new Vertex("58", new LatLng(-7.771777742080942,110.38692355155945)));
-        nodes.add(new Vertex("59", new LatLng(-7.7718999903646315,110.38685917854309)));
+        nodes.add(new Vertex("59", new LatLng(-7.77186506821928,110.38687460124493)));
 
 
         //menghubungkan node tersebut dikurangi 1
