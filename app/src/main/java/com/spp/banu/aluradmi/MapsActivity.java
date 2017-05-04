@@ -547,7 +547,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (currentLocation != null){
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biru_kecil))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_new))
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()))
                     .visible(true);
             if (currentLocationMarker == null){
@@ -723,7 +723,7 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             Log.e(TAG, "onLocationChanged: lattitude longitude" + currentLocation.getLatitude() + "," + currentLocation.getLongitude());
             MarkerOptions options = new MarkerOptions()
                     .title("Lokasi Anda")
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.marker_biru_kecil))
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.icon_marker_new))
                     .position(new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude()));
             currentLocationMarker = map.addMarker(options);
             currentLocationMarker.showInfoWindow();

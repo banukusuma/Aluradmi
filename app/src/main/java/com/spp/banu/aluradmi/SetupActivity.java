@@ -62,6 +62,7 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 dialogInterface.dismiss();
+                isDialogOpen = false;
             }
         });
         builder.setPositiveButton("Buka Setting", new DialogInterface.OnClickListener() {
@@ -73,12 +74,6 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
         builder.show();
         isDialogOpen = true;
     }
-    public void startMainActivity(){
-        Intent intent = new Intent(SetupActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
-    }
-
 
     @Override
     protected void onStart() {
@@ -111,6 +106,7 @@ public class SetupActivity extends AppCompatActivity implements AsyncBooleanList
         final Context context = ctx;
         progressBar.setVisibility(View.VISIBLE);
         sad.setVisibility(View.INVISIBLE);
+        textView.setText(R.string.unduh_data_awal);
             GetAllData getAllData = new GetAllData(context, this);
             getAllData.execute();
 

@@ -41,7 +41,7 @@
     <string name="coba">Coba Lagi</string>
     <string name="gagal_mengunduh">Gagal Mengunduh Data</string>
     <string name="data_kosong">Data Masih Kosong</string>
-    <string name="data_tidak_cocok">Tidak Ada Alur yang Cocok</string>
+    <string name="data_tidak_cocok">Tidak Ada Langkah yang Cocok</string>
     <string name="pengaturan">Pengaturan</string>
     <string name="penjelasan_aluradmi">Aluradmi adalah aplikasi yang memberikan informasi mengenai
          pengurusan administrasi bagi mahasiswa Fakultas Teknik Universitas Negeri Yogyakarta</string>
